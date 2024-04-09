@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity, ImageBackground, Image} from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+
 
 
 const LoginPage = () => {
@@ -9,18 +11,18 @@ const LoginPage = () => {
     const [password , setPassword] = useState('');
     const navigation = useNavigation();
 
-    const handleLogin = () => {
-        const apiUrl = 'http://10.0.2.2:4000/api/login';
-        axios.post(apiUrl, { mail, password })
-            .then(response => {
-                console.log(response.data);
-                Alert.alert(" Connexion réussie", "Vous êtes maintenant connecté.");
-            })
-            .catch(error => {
-                console.error(error);
-                Alert.alert("Erreur de connexion", "Une erreur est survenue lors de la tentative de connexion.");
-            });
-    };
+    const handleLogin = async () => {
+      const apiUrl = 'http://10.0.2.2:4000/api/login';
+      try {
+          const response = await axios.post(apiUrl, { mail, password });
+          const token = response.data.token;
+          await AsyncStorage.setItem('userToken', token); // Save the token to AsyncStorage
+          navigation.navigate('Profil', { userData: response.data });
+      } catch (error) {
+          console.error(error);
+          Alert.alert("Erreur de connexion", "Une erreur est survenue lors de la tentative de connexion.");
+      }
+  };
 
     return (
         <ImageBackground source={require('../assets/background.png')} style={styles.container}>
