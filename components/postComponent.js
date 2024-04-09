@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import axios from 'axios';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const PostComponent = ({ post, onPostPress, showDetails = true }) => {
 
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     
-    useEffect(() => {
+    useFocusEffect(
+        useCallback(() => {
           const fetchPostCommentsAndLikes = async () => {
             const commentsCount = {};
             const likesCount = {};
@@ -29,7 +34,8 @@ const PostComponent = ({ post, onPostPress, showDetails = true }) => {
 
         fetchPostCommentsAndLikes();
 
-        }, [post.idPublication]);  
+        }, [post.idPublication]) 
+    );
 
     return (
         <TouchableOpacity onPress={onPostPress}>
@@ -44,12 +50,12 @@ const PostComponent = ({ post, onPostPress, showDetails = true }) => {
                     {showDetails && (
                         <View style={styles.postDetails}>
                            <View style={styles.detailItem}>
-                                <Image source={require('../assets/commentaire.png')} style={styles.icon} />
-                                <Text>{postCommentsCount[post.idPublication]}</Text>
+                                <FontAwesome6 name="comments" size={22} color="black" />
+                                <Text style={styles.detailText}>{postCommentsCount[post.idPublication]}</Text>
                             </View>
                             <View style={styles.detailItem}>
-                                <Image source={require('../assets/like.png')} style={styles.icon} />
-                                <Text>{postLikesCount[post.idPublication]}</Text>
+                                <FontAwesome5 name="heart" size={24} color="#BD4F6C" />
+                                <Text style={styles.detailText}>{postLikesCount[post.idPublication]}</Text>
                             </View>
                         </View>
                     )}
@@ -118,6 +124,9 @@ const styles = StyleSheet.create({
            alignItems: 'center',
            marginLeft: 10, 
          },
+         detailText: {
+            marginLeft: 5, 
+        },
     });
 
 export default PostComponent;

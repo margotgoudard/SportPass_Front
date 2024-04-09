@@ -5,12 +5,15 @@ import moment from 'moment';
 import 'moment/locale/fr';
 import PostComponent from '../components/postComponent';
 import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 moment.locale('fr');
 
 const PostDetailsPage = ({ route, navigation }) => {
     const { post } = route.params;
     const [comments, setComments] = useState([]);
+
 
     useEffect(() => {
         const fetchCommentsAndUsers = async () => {
@@ -20,10 +23,13 @@ const PostDetailsPage = ({ route, navigation }) => {
                     try {
                         const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
                         const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/commentaire/${comment.idCommentaire}`);
+                        const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, post.User.idUser); 
+                        console.log("LIKE", isLikedByCurrentUser)
                         return {
                             ...comment,
                             likes: likesResponse.data.length,
                             userPseudo: userResponse.data.pseudo,
+                            isLikedByCurrentUser: isLikedByCurrentUser.exists,
                         };
                     } catch (error) {
                         console.error('Error fetching user details for comments', error);
@@ -41,6 +47,45 @@ const PostDetailsPage = ({ route, navigation }) => {
     
         fetchCommentsAndUsers();
     }, [post.idPublication]);
+
+    const checkIfLikedByCurrentUser = async (commentId, idUser) => {
+        try {
+          const response = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${idUser}`);
+          return response.data; 
+        } catch (error) {
+          console.error('Error checking like status', error);
+          return false; 
+        }
+      };
+   
+      const handleLike = async (commentId, isLiked) => {
+        try {
+            let updatedComments = [...comments]; 
+            const commentIndex = updatedComments.findIndex(comment => comment.idCommentaire === commentId); 
+            if (commentIndex !== -1) { 
+                if (isLiked) {
+                    console.log("commentId", commentId)
+                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${post.User.idUser}`);
+                    updatedComments[commentIndex].isLikedByCurrentUser = false; 
+                    console.log
+                    updatedComments[commentIndex].likes -= 1; 
+                } else {
+                    const likeData = {
+                        idCommentaire: commentId,
+                        idUser: post.User.idUser
+                    };
+                    await axios.post(`http://10.0.2.2:4000/api/likeCommentaireUser`, likeData);
+                    updatedComments[commentIndex].isLikedByCurrentUser = true; 
+                    updatedComments[commentIndex].likes += 1; 
+                }
+                setComments(updatedComments); 
+            }
+        } catch (error) {
+            console.error('Error updating like status', error);
+        }
+    };
+    
+ 
     
     return (
         <ScrollView style={styles.container}>
@@ -60,8 +105,17 @@ const PostDetailsPage = ({ route, navigation }) => {
                     </View>
                     <Text style={styles.commentContent}>{comment.contenu}</Text>
                     <View style={styles.commentInfoContainer}>
-                        <Image source={require('../assets/like.png')} style={styles.icon} />
-                        <Text>{comment.likes}</Text>
+                    <TouchableOpacity 
+                        style={styles.likeButton} 
+                        onPress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
+                    >
+                        {comment.isLikedByCurrentUser ? (
+                            <FontAwesome name="heart" size={24} color="#BD4F6C" />
+                        ) : (
+                            <FontAwesome5 name="heart" size={24} color="#BD4F6C" />
+                        )}
+                    </TouchableOpacity>
+                            <Text>{comment.likes}</Text>
                     </View>
                 </View>
             ))}
