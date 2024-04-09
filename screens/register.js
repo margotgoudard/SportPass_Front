@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState,  useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
+import { Picker } from '@react-native-picker/picker'; 
+
 
 const RegisterPage = () => {
   const [prenom, setPrenom] = useState('');
   const [nom, setNom] = useState('');
-  const [pseudo, setPseudo] = useState('');
   const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [numTel, setNumTel] = useState('');
-  const [adresse, setAdresse] = useState('');
+  const [idEquipe, setIdEquipe] = useState('');
+
+  const [equipes, setEquipes] = useState([]); 
+
+  useEffect(() => {
+    const fetchEquipes = async () => {
+      try {
+        const response = await axios.get('http://10.0.2.2:4000/api/equipe');
+        console.log(response.data);
+        setEquipes(response.data); 
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Erreur de chargement", "Les équipes n'ont pas pu être chargées.");
+      }
+    };
+
+    fetchEquipes();
+  }, []);
 
   const handleRegister = () => {
-    // Remplacez par l'adresse de votre serveur
     const apiUrl = 'http://10.0.2.2:4000/api/registration';
-    axios.post(apiUrl, { prenom, nom, mail, password, numTel, adresse })
+    axios.post(apiUrl, { prenom, nom, mail, password, idEquipe })
       .then(response => {
         console.log(response.data);
         Alert.alert("Inscription réussie", "Votre compte a été créé avec succès.");
@@ -54,19 +70,15 @@ const RegisterPage = () => {
         style={styles.input}
         secureTextEntry
       />
-       <TextInput
-              placeholder="Adresse Postale"
-              value={adresse}
-              onChangeText={setAdresse}
-              style={styles.input}
-       />
-      <TextInput
-        placeholder="Numéro de téléphone"
-        value={numTel}
-        onChangeText={setNumTel}
-        style={styles.input}
-        keyboardType="phone-pad"
-      />
+       <Picker
+        selectedValue={idEquipe}
+        onValueChange={(itemValue, itemIndex) => setIdEquipe(itemValue)}
+        style={styles.picker}
+      >
+        {equipes.map((uneEquipe, index) => (
+          <Picker.Item key={index} label={uneEquipe.nom} value={uneEquipe.idEquipe} />
+        ))}
+      </Picker>
       <Button title="S'inscrire" onPress={handleRegister} />
     </View>
   );
