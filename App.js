@@ -18,7 +18,7 @@ export default function App() {
           component={LoginPage} 
           options={{ headerShown: false }} 
         />
-        <Stack.Screen name="Register" component={RegisterPage}   />
+        <Stack.Screen name="Register" component={RegisterPage}  options={{ headerShown: false }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );
