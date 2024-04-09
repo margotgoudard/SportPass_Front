@@ -137,7 +137,7 @@ const UserProfilePage = ({ route }) => {
             </Text>
             <Text style={styles.details}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="mail" size={24} color="black" />
+                <Ionicons name="mail" size={22} color="black" />
                 <Text style={{ marginLeft: 5 }}>{user.mail}</Text>
               </View>
             </Text>
