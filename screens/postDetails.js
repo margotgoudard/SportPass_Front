@@ -24,7 +24,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                         const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
                         const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/commentaire/${comment.idCommentaire}`);
                         const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, post.User.idUser); 
-                        console.log("LIKE", isLikedByCurrentUser)
                         return {
                             ...comment,
                             likes: likesResponse.data.length,

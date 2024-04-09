@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import LoginPage from './screens/login.js';
 import RegisterPage from './screens/register.js';
