@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { Linking, View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 
 
 const Billet = ({ route, navigation }) => {
@@ -105,6 +106,9 @@ const Billet = ({ route, navigation }) => {
             <Text style={styles.billetText}>Rang {billet.rangee.numero}</Text>
             <Entypo name="dot-single" size={25} color="black" style={styles.detailIcon} />
             <Text style={styles.billetText}>Tribune {billet.tribune.numero}</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(billet.urlPdf)} style={styles.billetText}>
+                <Octicons name="download" size={24} color="#BD4F6C" />
+            </TouchableOpacity>
           </View>
             ))}
             <Text style={styles.totalPriceText}>Total: {group.billets.reduce((acc, curr) => acc + curr.prix, 0)}€</Text>
@@ -147,7 +151,6 @@ const styles = StyleSheet.create({
     },
     totalBilletsText: {
       fontSize: 14,
-      marginBottom: 10,
       fontStyle: 'italic', 
     },
     billetDetailText: {
@@ -156,6 +159,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold', 
     },
     totalPriceText: {
+        marginTop: "2%",
       fontStyle: 'italic',
       fontSize: 16,
       alignSelf: 'flex-end',
@@ -171,13 +175,22 @@ const styles = StyleSheet.create({
 },  
 billetText: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    marginLeft: "2%",
+    marginBottom: "3%"
   },
   detailItem: {
     flexDirection: 'row', 
     alignItems: 'center', 
     flexWrap: 'wrap', 
   },
+  downloadLinkText: {
+    color: '#BD4F6C', 
+    textDecorationLine: 'underline', 
+    fontWeight: 'bold', 
+    alignSelf: 'center', 
+    marginTop: 10, 
+},
 
 });
 

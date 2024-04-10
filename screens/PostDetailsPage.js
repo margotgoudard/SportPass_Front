@@ -26,7 +26,7 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [selectedComment, setSelectedComment] = useState(null);
 
     
-    const openModal = (edit = false, commentId = null, content = '') => {
+    const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
         setEditingCommentId(commentId);
         setMessageText(content);
@@ -49,13 +49,12 @@ const PostDetailsPage = ({ route, navigation }) => {
 
         if (isEditMode) {
             editComment(editingCommentId, messageText);
+            console.log("coucouuuuu")
             closeModal();
         }
         else {
         try {
             const response = await axios.post('http://10.0.2.2:4000/api/commentaireUser', messageData);
-            
-            Alert.alert('Succès', 'Le message a été envoyé avec succès.');
             setMessageText(''); 
             closeModal(); 
             fetchCommentsAndUsers();
@@ -216,8 +215,9 @@ const PostDetailsPage = ({ route, navigation }) => {
             </View>
         </ScrollView>
         <TouchableOpacity 
-                    onPress={openModal} 
-                    style={styles.newMessageIcon}>
+    onPress={() => openModal(false, null, '')} 
+    style={styles.newMessageIcon}
+>
                     <Entypo name="new-message" size={24} color="#BD4F6C" />
         </TouchableOpacity>
         <MessageModal

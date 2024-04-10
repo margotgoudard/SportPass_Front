@@ -219,11 +219,14 @@ const deletePost = async (idPublication) => {
                 <Text style={styles.listItemArrow}>›</Text>
               </View>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Commercant', { userId: userData.idUser })}>
 
               <View style={styles.listItem}>
                 <Text style={styles.listItemText}>Mes favoris</Text>
                 <Text style={styles.listItemArrow}>›</Text>
               </View>
+              </TouchableOpacity>
+
             </View>
           </View>
           <View style={styles.postItemList}>

@@ -8,6 +8,7 @@ import PostDetailsPage from './screens/PostDetailsPage.js';
 import ModificationProfilPage from './screens/ModificationProfilPage.js';
 import PassPage from './screens/PassPage.js'
 import BilletPage from './screens/BilletsPage.js'
+import CommercantPage from './screens/CommercantPage.js'
 
 const Stack  = createStackNavigator();
 
@@ -24,8 +25,9 @@ export default function App() {
         <Stack.Screen name="Profil" component={UserProfilePage}  options={{ headerShown: false }}  />
         <Stack.Screen name="PostDetails" component={PostDetailsPage}  options={{ headerShown: false }} />
         <Stack.Screen name="ModificationProfil" component={ModificationProfilPage}  options={{ headerShown: false }} />
-        <Stack.Screen name="Abonnement" component={PassPage}  options={{ headerShown: false }}  />
+        <Stack.Screen name="Pass" component={PassPage}  options={{ headerShown: false }}  />
         <Stack.Screen name="Billet" component={BilletPage}  options={{ headerShown: false }}  />
+        <Stack.Screen name="Commercant" component={CommercantPage}  options={{ headerShown: false }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );
