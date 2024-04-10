@@ -3,7 +3,7 @@ import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, 
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent';
+import PostComponent from '../components/PostComponent.js';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';

@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent';
+import PostComponent from '../components/PostComponent.js';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native';
 import EditModal from '../components/EditModal.js';
