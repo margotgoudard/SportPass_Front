@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 
-const PostComponent = ({ post, onPostPress, showDetails = true }) => {
+const PostComponent = ({ post, updateTrigger, onPostPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
@@ -45,9 +45,7 @@ const PostComponent = ({ post, onPostPress, showDetails = true }) => {
         }
     };
     
-    
-    useFocusEffect(
-        useCallback(() => {
+     useEffect(() => {
           const fetchPostCommentsAndLikes = async () => {
             const commentsCount = {};
             const likesCount = {};
@@ -68,8 +66,7 @@ const PostComponent = ({ post, onPostPress, showDetails = true }) => {
 
         fetchPostCommentsAndLikes();
 
-        }, [post.idPublication]) 
-    );
+        }, [post.idPublication, updateTrigger]) 
 
     return (
         <TouchableOpacity onPress={onPostPress}>
