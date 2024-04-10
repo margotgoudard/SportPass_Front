@@ -18,6 +18,8 @@ import 'moment/locale/fr';
 import PostComponent from '../components/postComponent';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native';
+import EditModal from '../components/editModal';
+import MessageModal from '../components/messageModal';
 
 moment.locale('fr');
 
@@ -28,6 +30,15 @@ const UserProfilePage = ({ route }) => {
   const [followersCount, setFollowersCount] = useState(0);
   const [followingsCount, setFollowingsCount] = useState(0);
   const navigation = useNavigation();
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [messageText, setMessageText] = useState('');
+  const [inputHeight, setInputHeight] = useState(0); 
+  const [messageModalVisible, setMessageModalVisible] = useState(false);
+
+  const adjustInputHeight = (event) => {
+    setInputHeight(event.nativeEvent.contentSize.height);
+};
 
   const calculateProfileCompletion = (user) => {
     const fields = [
@@ -44,6 +55,37 @@ const UserProfilePage = ({ route }) => {
     return (filledFields.length / fields.length) * 100;
   };
 
+  const handleLongPressOnPost = (post) => {
+    setSelectedPost(post);
+    setEditModalVisible(true);
+  };
+
+  const modifyPost = async (idPublication, newContent) => {
+    const updatedPost = {
+      contenu: newContent,
+      date: new Date().toISOString(), 
+    };
+  
+    try {
+      await axios.put(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`, updatedPost);
+      fetchUserPosts();
+    } catch (error) {
+      console.error('Error updating post:', error);
+      Alert.alert('Error', 'An error occurred while updating the post');
+    }
+  };
+
+const deletePost = async (idPublication) => {
+    try {
+        const response = await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
+        fetchUserPosts();
+      } catch (error) {
+        console.error('Error delete post', error);
+        return false; 
+      }
+    };
+
+
   const handleLogOut = async () => {
     try {
       await AsyncStorage.removeItem('@userToken');
@@ -51,6 +93,17 @@ const UserProfilePage = ({ route }) => {
     } catch (error) {
       console.error('Log out failed', error);
       Alert.alert("Erreur de déconnexion", "La déconnexion a échoué. Veuillez réessayer.");
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    try {
+      const response = await axios.get(`http://10.0.2.2:4000/api/publicationUser/user/${userData.idUser}`);
+      const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
+      setPosts(sortedPosts);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Erreur de chargement", "Les posts n'ont pas pu être chargées.");
     }
   };
 
@@ -75,17 +128,6 @@ const UserProfilePage = ({ route }) => {
         } catch (error) {
           console.error(error);
           Alert.alert("Erreur de chargement", "Les données d'abonnés n'ont pas pu être chargées.");
-        }
-      };
-
-      const fetchUserPosts = async () => {
-        try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/publicationUser/user/${userData.idUser}`);
-          const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
-          setPosts(sortedPosts);
-        } catch (error) {
-          console.error(error);
-          Alert.alert("Erreur de chargement", "Les posts n'ont pas pu être chargées.");
         }
       };
 
@@ -177,10 +219,41 @@ const UserProfilePage = ({ route }) => {
             </View>
           </View>
           <View style={styles.postItemList}>
-            {posts.map((post, index) => (
-              <PostComponent key={index} post={post} onPostPress={() => navigation.navigate('PostDetails', { post })} />
-            ))}
-          </View>
+          {posts.map((post, index) => (
+        <PostComponent
+          key={index}
+          post={post}
+          onPostPress={() => navigation.navigate('PostDetails', { post })}
+          onLongPress={() => handleLongPressOnPost(post)}
+        />
+      ))}
+      <EditModal
+        isVisible={editModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        onEdit={() => {
+          setEditModalVisible(false); 
+          setMessageText(selectedPost.contenu);
+          setMessageModalVisible(true);
+          modifyPost(selectedPost.idPublication, selectedPost.contenu );
+        }}
+        onDelete={() => {
+          setEditModalVisible(false);
+          deletePost(selectedPost.idPublication);
+        }}
+      />
+      <MessageModal
+          isModalVisible={messageModalVisible}
+          closeModal={() => setMessageModalVisible(false)}
+          messageText={messageText}
+          setMessageText={setMessageText}
+          sendMessage={() => {
+              modifyPost(selectedPost.idPublication, messageText);
+              setMessageModalVisible(false);
+          }}
+          adjustInputHeight={adjustInputHeight}
+          inputHeight={inputHeight}
+      />
+    </View>
         </View>
       </ScrollView>
     </ImageBackground>

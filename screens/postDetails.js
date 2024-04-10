@@ -9,6 +9,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import EditModal from '../components/editModal';
+import MessageModal from '../components/messageModal'; 
 
 moment.locale('fr');
 
@@ -219,37 +220,15 @@ const PostDetailsPage = ({ route, navigation }) => {
                     style={styles.newMessageIcon}>
                     <Entypo name="new-message" size={24} color="#BD4F6C" />
         </TouchableOpacity>
-        <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={closeModal}
-            >
-                <View style={styles.centeredView}>
-                    <View style={[styles.modalView, {height: Math.max(250, inputHeight + 160)}]}>
-                        <TouchableOpacity
-                            style={styles.buttonClose}
-                            onPress={closeModal}
-                        >
-                            <Text style={styles.textStyleRose}>Annuler</Text>
-                        </TouchableOpacity>
-                        <TextInput
-                            style={[styles.modalTextInput, {height: Math.max(35, inputHeight)}]} // Utilisation de la hauteur dynamique
-                            placeholder="Ecrire un message..."
-                            onChangeText={setMessageText}
-                            value={messageText}
-                            multiline={true}
-                            onContentSizeChange={adjustInputHeight} // Ajuste la hauteur en fonction du contenu
-                        />
-                        <TouchableOpacity
-                            style={styles.buttonSend}
-                            onPress={sendMessage}
-                        >
-                            <Text style={styles.textStyle}>Envoyer</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+        <MessageModal
+            isModalVisible={isModalVisible}
+            closeModal={closeModal}
+            messageText={messageText}
+            setMessageText={setMessageText}
+            sendMessage={sendMessage}
+            adjustInputHeight={adjustInputHeight}
+            inputHeight={inputHeight}
+        />
             <EditModal
                 isVisible={editDeleteModalVisible}
                 onClose={() => setEditDeleteModalVisible(false)}
@@ -258,7 +237,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                     openModal(true, selectedComment.idCommentaire, selectedComment.contenu);
                 }}
                 onDelete={() => {
-                    console.log("COMMENT", selectedComment)
                     setEditDeleteModalVisible(false);
                     deleteComment(selectedComment.idCommentaire);
                 }}

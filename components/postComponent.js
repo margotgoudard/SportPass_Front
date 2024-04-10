@@ -8,7 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 
-const PostComponent = ({ post, updateTrigger, onPostPress, showDetails = true }) => {
+const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
@@ -69,7 +69,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, showDetails = true })
         }, [post.idPublication, updateTrigger]) 
 
     return (
-        <TouchableOpacity onPress={onPostPress}>
+        <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>
             <View style={styles.postItem}>
                 <View style={styles.postHeader}>
                     <Image source={require('../assets/profil.png')} style={styles.postProfileImage} />
