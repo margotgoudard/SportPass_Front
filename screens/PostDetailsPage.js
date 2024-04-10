@@ -3,13 +3,13 @@ import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, 
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/postComponent';
+import PostComponent from '../components/PostComponent';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import EditModal from '../components/editModal';
-import MessageModal from '../components/messageModal'; 
+import EditModal from '../components/EditModal.js';
+import MessageModal from '../components/MessageModal.js';
 
 moment.locale('fr');
 

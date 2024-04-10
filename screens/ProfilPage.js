@@ -15,11 +15,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/postComponent';
+import PostComponent from '../components/PostComponent';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native';
-import EditModal from '../components/editModal';
-import MessageModal from '../components/messageModal';
+import EditModal from '../components/EditModal.js';
+import MessageModal from '../components/MessageModal.js';
 
 moment.locale('fr');
 
@@ -204,10 +204,12 @@ const deletePost = async (idPublication) => {
               </Text>
             </TouchableOpacity>
             <View style={styles.listContainer}>
-              <View style={styles.listItem}>
+            <View style={styles.listItem}>
+              <TouchableOpacity onPress={() => navigation.navigate('Abonnement', { userId: userData.idUser })}>
                 <Text style={styles.listItemText}>Mon abonnement</Text>
-                <Text style={styles.listItemArrow}>›</Text>
-              </View>
+              </TouchableOpacity>
+              <Text style={styles.listItemArrow}>›</Text>
+            </View>
               <View style={styles.listItem}>
                 <Text style={styles.listItemText}>Mes billets</Text>
                 <Text style={styles.listItemArrow}>›</Text>
