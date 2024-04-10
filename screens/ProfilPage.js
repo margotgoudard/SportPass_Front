@@ -204,16 +204,22 @@ const deletePost = async (idPublication) => {
               </Text>
             </TouchableOpacity>
             <View style={styles.listContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Pass', { userId: userData.idUser })}>
+
             <View style={styles.listItem}>
-              <TouchableOpacity onPress={() => navigation.navigate('Abonnement', { userId: userData.idUser })}>
                 <Text style={styles.listItemText}>Mon abonnement</Text>
-              </TouchableOpacity>
+              
               <Text style={styles.listItemArrow}>›</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Billet', { userId: userData.idUser })}>
+
               <View style={styles.listItem}>
                 <Text style={styles.listItemText}>Mes billets</Text>
                 <Text style={styles.listItemArrow}>›</Text>
               </View>
+              </TouchableOpacity>
+
               <View style={styles.listItem}>
                 <Text style={styles.listItemText}>Mes favoris</Text>
                 <Text style={styles.listItemArrow}>›</Text>
