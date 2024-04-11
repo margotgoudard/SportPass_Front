@@ -88,7 +88,7 @@ const deletePost = async (idPublication) => {
 
   const handleLogOut = async () => {
     try {
-      await AsyncStorage.removeItem('@userToken');
+      await AsyncStorage.removeItem('userToken');
       navigation.navigate('Login');
     } catch (error) {
       console.error('Log out failed', error);
