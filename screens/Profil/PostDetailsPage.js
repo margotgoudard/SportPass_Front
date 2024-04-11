@@ -3,13 +3,13 @@ import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, 
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent.js';
+import PostComponent from '../../components/PostComponent.js';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import EditModal from '../components/EditModal.js';
-import MessageModal from '../components/MessageModal.js';
+import EditModal from '../../components/EditModal.js';
+import MessageModal from '../../components/MessageModal.js';
 
 moment.locale('fr');
 
@@ -189,7 +189,7 @@ const PostDetailsPage = ({ route, navigation }) => {
             >
                 <View key={index} style={styles.commentContainer}>
                     <View style={styles.commentHeader}>
-                        <Image source={require('../assets/profil.png')} style={styles.avatar} />
+                        <Image source={require('../../assets/profil.png')} style={styles.avatar} />
                         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                             <Text style={styles.commentUserPseudo}>{comment.userPseudo}</Text>
                             <Text style={styles.commentTime}>{moment(comment.date).fromNow()}</Text>

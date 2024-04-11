@@ -3,13 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 
 
-import LoginPage from './Login.js';
-import RegisterPage from './Register.js';
-import Accueil from'./Accueil.js';
-import Billeterie from'./Billeterie.js';
-import Commercant from'./Commercant.js';
-import Forum from'./Forum.js';
-import AuthNavigator from './AuthNavigator.js';
+import LoginPage from '../screens/Profil/LoginPage.js';
+import RegisterPage from '../screens/Profil/RegisterPage.js';
+import Accueil from'../screens/Accueil/AccueilPage.js';
+import Billeterie from'../screens/Billeterie/BilleteriePage.js';
+import Commercant from'../screens/Commercant/CommercantPage.js';
+import Forum from'../screens/Forum/ForumPage.js';
+import AuthNavigator from '../Navigation/AuthNavigator.js';
 
 //icons
 import { Entypo } from '@expo/vector-icons';

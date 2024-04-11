@@ -57,7 +57,7 @@ const ModificationProfilPage = ({ route }) => {
   };
 
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+    <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       <ScrollView>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
@@ -68,7 +68,7 @@ const ModificationProfilPage = ({ route }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.headerContainer}>
-          <Image source={require('../assets/avatar.png')} style={styles.avatar} />
+          <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
           <View style={styles.modifcontainer}>
             <Text style={styles.inputLabel}>Pseudo</Text>
             <TextInput

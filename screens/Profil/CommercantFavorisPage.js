@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, Alert, Touc
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 
-const Commercant = ({ route, navigation }) => {
+const CommercantFavoris = ({ route, navigation }) => {
   const { userId } = route.params;
   const [favorites, setFavorites] = useState([]);
   const [userInfo, setUserInfo] = useState();
@@ -27,20 +27,20 @@ const Commercant = ({ route, navigation }) => {
   }, [userId]);
 
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+    <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       <ScrollView>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
           <AntDesign name="arrowleft" size={26} color="#BD4F6C" />
         </TouchableOpacity>
         {favorites.map((favorite, index) => (
           <View key={index} style={styles.favoriteItem}>
-            <Image source={require('../assets/boucherie.png')} style={styles.image} />
+            <Image source={require('../../assets/boucherie.png')} style={styles.image} />
             <View style={styles.infoContainer}>
               <Text style={styles.name}>{favorite.nom}</Text>
               <Text style={styles.address}>{favorite.adresse}</Text>
               <Text style={styles.phone}>{favorite.tel}</Text>
               <View style={styles.cashbackContainer}>
-                <Image source={require('../assets/palier.png')} style={styles.palierImage} />
+                <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
                 <Text style={styles.cashbackText}>Cashback : {userInfo.Palier.cashbackPalier}%</Text>
               </View>
             </View>
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Commercant;
+export default CommercantFavoris;

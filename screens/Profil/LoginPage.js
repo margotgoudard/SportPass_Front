@@ -32,9 +32,9 @@ const LoginPage = () => {
   };
 
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+    <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} />
+        <Image source={require('../../assets/logo.png')} style={styles.logo} />
       </View>
       <Text style={styles.header}>Connexion</Text>
       <TextInput
@@ -54,7 +54,7 @@ const LoginPage = () => {
       <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Se connecter</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.signUpTextContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Register' }})}style={styles.signUpTextContainer}>
         <Text style={styles.signUpText}>
           Vous n'avez pas encore de compte? <Text style={styles.signUpLink}>S'inscrire</Text>
         </Text>

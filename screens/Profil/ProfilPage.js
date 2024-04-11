@@ -15,11 +15,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent.js';
+import PostComponent from '../../components/PostComponent.js';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native';
-import EditModal from '../components/EditModal.js';
-import MessageModal from '../components/MessageModal.js';
+import EditModal from '../../components/EditModal.js';
+import MessageModal from '../../components/MessageModal.js';
 
 moment.locale('fr');
 
@@ -139,7 +139,7 @@ const deletePost = async (idPublication) => {
 
   if (!user) {
     return (
-        <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+        <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />
             </View>
@@ -152,7 +152,7 @@ const deletePost = async (idPublication) => {
   };
 
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+    <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       <ScrollView>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogOut}>
@@ -163,13 +163,13 @@ const deletePost = async (idPublication) => {
           </TouchableOpacity>
         </View>
         <View style={styles.headerContainer}>
-          <Image source={require('../assets/avatar.png')} style={styles.avatar} />
+          <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
           <View style={styles.userInfoContainer}>
             <View style={styles.vipStatusContainer}>
               <Text style={styles.vipStatus}>
                 Palier {user.Palier?.nom}
               </Text>
-              <Image source={require('../assets/palier.png')} style={styles.palierImage} />
+              <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
@@ -219,7 +219,7 @@ const deletePost = async (idPublication) => {
                 <Text style={styles.listItemArrow}>›</Text>
               </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Commercant', { userId: userData.idUser })}>
+              <TouchableOpacity onPress={() => navigation.navigate('CommercantFavoris', { userId: userData.idUser })}>
 
               <View style={styles.listItem}>
                 <Text style={styles.listItemText}>Mes favoris</Text>
