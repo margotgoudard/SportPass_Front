@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 
-import LoginPage from '../screens/Profil/LoginPage.js';
-import RegisterPage from '../screens/Profil/RegisterPage.js';
 import Accueil from'../screens/Accueil/AccueilPage.js';
 import Billeterie from'../screens/Billeterie/BilleteriePage.js';
 import Commercant from'../screens/Commercant/CommercantPage.js';
@@ -34,6 +34,24 @@ const screenOptions = {
 }
 
 export default function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useFocusEffect(() => {
+    const checkUserToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        console.log('token : ',token)
+        setIsLoggedIn(!!token); // Mettre à jour l'état en fonction de la présence du token
+      } catch (error) {
+        console.error('Erreur lors de la récupération du token:', error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkUserToken();
+  });
+
+
   return (
     <Tab.Navigator screenOptions={screenOptions} >
       <Tab.Screen
@@ -87,7 +105,7 @@ export default function Navbar() {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <FontAwesome5 name="user-alt" size={25} color={focused ? "#008900" : "#111"} />
+              <FontAwesome5 name={isLoggedIn ? "user-alt" : "sign-in-alt"} size={25} color={focused ? "#008900" : "#111"} />
             </View>
           )
         }}
