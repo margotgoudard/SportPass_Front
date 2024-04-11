@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity, ImageBackground, Image} from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import Navbar from './Navbar';
 
 
 const LoginPage = () => {
@@ -45,7 +46,7 @@ const LoginPage = () => {
           <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Se connecter</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.signUpTextContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Register' }})} style={styles.signUpTextContainer}>
             <Text style={styles.signUpText}>
               Vous n'avez pas encore de compte? <Text style={styles.signUpLink}>S'inscrire</Text>
             </Text>

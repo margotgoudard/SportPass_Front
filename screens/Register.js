@@ -95,7 +95,7 @@ const RegisterPage = () => {
       <TouchableOpacity onPress={handleRegister} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>S'inscrire</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.signUpTextContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }})} style={styles.signUpTextContainer}>
             <Text style={styles.signUpText}>
               Vous avez déjà un compte? <Text style={styles.signUpLink}>Se Connecter</Text>
             </Text>
