@@ -14,4 +14,8 @@ npm install @react-navigation/bottom-tabs
 
 npm install @react-navigation/stack
 
-npm install @heroicons/react
+npm install @react-native-async-storage/async-storage
+
+npm install moment
+
+npm install react-native-pdf-lib react-native-qrcode-svg
