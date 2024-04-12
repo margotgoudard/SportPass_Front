@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image,StyleSheet } from 'react-native';
+import { View, Text, Image,StyleSheet,ScrollView,ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Checkbox from '../../components/Checkbox';
+import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default function Billeterie({ navigation}){
     const [matchs, setMatchs] = useState([]);
@@ -76,14 +80,14 @@ export default function Billeterie({ navigation}){
     }
 
     return (
-        <View>
+        <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+        <ScrollView>
             <Checkbox 
             text="Voir tous les matchs" 
             isChecked={showAllMatches} 
             onPress={()=> setShowAllMatches(!showAllMatches)}
             container = {styles.checkbox}
             />
-            
 
         <Text>Liste des matchs :</Text>
         
@@ -109,34 +113,79 @@ export default function Billeterie({ navigation}){
         })
               
         .map((matchItem, index) => (
-            <View key={index}>
-            <Text>ID du match : {matchItem.idMatch}</Text>
-            <Image
-                source={{ uri: matchItem.EquipeDomicile.logo }}
-                style={{ width: 50, height: 50 }} 
-            />
-            <Text>Equipe domicile : {matchItem.EquipeDomicile.nom}</Text>
+            <View key={index} style={styles.container}>
+            <View style={styles.teamContainer}>
+                <Image 
+                    source={{ uri: matchItem.EquipeDomicile.logo }}
+                    style={styles.teamLogo} 
+                />
+                <Text style={styles.teamName}>{matchItem.EquipeDomicile.nom}</Text>
+            </View>
 
-            <Text>{formateHeure(matchItem.heure_debut)}</Text>
-            <Text>{formateDate(matchItem.date)}</Text>
+            <View style={styles.dateContainer}>
+                <Text style={styles.dateTime}>
+                    {formateDate(matchItem.date)} - {formateHeure(matchItem.heure_debut)}
+                </Text>
+            </View>
 
+            <View style={styles.teamContainer}>
+                <Image
+                    source={{ uri: matchItem.EquipeExterieure.logo }}
+                    style={styles.teamLogo} 
+                />
+                <Text style={styles.teamName}>{matchItem.EquipeExterieure.nom}</Text>
 
-            <Image
-                source={{ uri: matchItem.EquipeExterieure.logo }}
-                style={{ width: 50, height: 50 }} 
-            />
-            <Text>Équipe externe : {matchItem.EquipeExterieure.nom}</Text>
-
-            <Text>Billetterie : {matchItem.billeterieOuverte==1 ? 'Ouverte' : 'Fermée'}</Text>
+                {matchItem.billeterieOuverte === 1 ? (
+                    <Ionicons name="lock-open" size={24} color="black" />
+                ) : (
+                    <Ionicons name="lock-closed" size={24} color="black" />            
+                    )}
+                </View>
 
             </View>
+
         ))}
-      </View>
+      </ScrollView>
+      </ImageBackground>
+
     ) 
 };
 const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center',
+    },
     checkbox:{
         marginHorizontal:10,
         marginVertical:5,
+    },
+    container: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 20,
+        borderRadius: 10, 
+        backgroundColor: '#f0f0f5',
+        margin : 5,
+    },
+    teamContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    teamLogo: {
+        width: 50,
+        height: 50,
+    },
+    teamName: {
+        marginLeft: 10,
+    },
+    dateContainer: {
+        alignItems: 'center',
+    },
+    dateTime: {
+        textAlign: 'center',
+    },
+    billetterie: {
+        marginTop: 10,
     },
 });
