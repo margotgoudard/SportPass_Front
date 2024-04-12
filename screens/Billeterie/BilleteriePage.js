@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image,StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Checkbox from '../../components/Checkbox';
 
 export default function Billeterie({ navigation}){
     const [matchs, setMatchs] = useState([]);
     const [matchsUser, setMatchsUser] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showAllMatches, setShowAllMatches] = useState(true);
+    const [showAllMatches, setShowAllMatches] = useState(false);
 
 
     const formateDate = (dateString) => {
@@ -76,10 +77,38 @@ export default function Billeterie({ navigation}){
 
     return (
         <View>
+            <Checkbox 
+            text="Voir tous les matchs" 
+            isChecked={showAllMatches} 
+            onPress={()=> setShowAllMatches(!showAllMatches)}
+            container = {styles.checkbox}
+            />
             
 
         <Text>Liste des matchs :</Text>
-        {matchsUser.map((matchItem, index) => (
+        
+        {matchsUser
+        .sort((a, b) => {
+            //trie des matchs par ordre chronologique
+            const dateA = new Date(a.date + 'T' + a.heure_debut);
+            const dateB = new Date(b.date + 'T' + b.heure_debut);
+        
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+        
+            const heureA = a.heure_debut.split(':').map(Number);
+            const heureB = b.heure_debut.split(':').map(Number);
+        
+            if (heureA[0] < heureB[0]) return -1;
+            if (heureA[0] > heureB[0]) return 1;
+        
+            if (heureA[1] < heureB[1]) return -1;
+            if (heureA[1] > heureB[1]) return 1;
+        
+            return 0;
+        })
+              
+        .map((matchItem, index) => (
             <View key={index}>
             <Text>ID du match : {matchItem.idMatch}</Text>
             <Image
@@ -103,5 +132,11 @@ export default function Billeterie({ navigation}){
             </View>
         ))}
       </View>
-    )
-}
+    ) 
+};
+const styles = StyleSheet.create({
+    checkbox:{
+        marginHorizontal:10,
+        marginVertical:5,
+    },
+});
