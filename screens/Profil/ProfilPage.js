@@ -141,7 +141,7 @@ const deletePost = async (idPublication) => {
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#008900" />
             </View>
         </ImageBackground>
     );
