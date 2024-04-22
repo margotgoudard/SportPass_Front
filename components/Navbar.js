@@ -16,6 +16,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import BilleterieNavigation from '../Navigation/BilleterieNavigator.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -80,7 +81,7 @@ export default function Navbar() {
 
       <Tab.Screen
         name="Billeterie"
-        component={Billeterie}
+        component={BilleterieNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>

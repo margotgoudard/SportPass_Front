@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image,StyleSheet,ScrollView,ImageBackground } from 'react-native';
+import { View, Text, Image,StyleSheet,ScrollView,ImageBackground,TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Checkbox from '../../components/Checkbox';
@@ -11,9 +11,10 @@ export default function Billeterie({ navigation}){
     const [matchs, setMatchs] = useState([]);
     const [matchsUser, setMatchsUser] = useState([]);
     const [matchsUserId, setMatchsUserId] = useState([]);
-
+    const [match, setMatch] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showAllMatches, setShowAllMatches] = useState(false);
+
 
 
     const formateDate = (dateString) => {
@@ -72,6 +73,10 @@ export default function Billeterie({ navigation}){
     
         fetchMatchs();
       }, [showAllMatches]);
+
+    const handleNextButton = () => {
+        navigation.navigate('Navbar', {screen:'Billeterie',params: { screen: 'Place' }});
+    }
 
     if (loading) {
         return (
@@ -154,6 +159,11 @@ export default function Billeterie({ navigation}){
 
         ))}
       </ScrollView>
+
+        <TouchableOpacity style={styles.nextButton} onPress={handleNextButton}>
+            <Text style={styles.nextButtonText}>Suivant</Text>
+        </TouchableOpacity>
+
       </ImageBackground>
 
     ) 
@@ -235,7 +245,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold', 
         color:'#BD4F6C',
-
     },
     billetterie: {
         marginTop: 10,
@@ -246,6 +255,23 @@ const styles = StyleSheet.create({
         right: 0,
         marginRight: 10, 
         marginBottom: 10,
+    },
+    nextButton: {
+        position: 'absolute',
+        bottom: 80,
+        right: 15,
+        backgroundColor: '#008900',
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingTop: 5,
+        paddingBottom: 5,
+        borderRadius: 10,
+        zIndex:4,
+    },
+    nextButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize:20,
     },
     
 });
