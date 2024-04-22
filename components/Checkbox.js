@@ -19,6 +19,7 @@ const Checkbox = ({
 
     return(
         <View style= {[styles.container,containerStyle]}>
+            <Text style={[styles.checkboxText, textStyle]}>{text}</Text>
             <TouchableOpacity 
                 onPress={()=>{
                     startAnimation();
@@ -26,10 +27,9 @@ const Checkbox = ({
                 }}  
                 style= {[styles.checkbox, isChecked && styles.checkboxSelected, checkboxStyle,]}>
                 <Animated.View style ={{width:animatedWidth}}> 
-                <Ionicons name="checkmark" size={30} color="white" />                
+                <Ionicons name="checkmark" size={25} color="white" />                
                 </Animated.View>
             </TouchableOpacity>
-            <Text style={[styles.checkboxText, textStyle]}>{text}</Text>
         </View>
     );
 };
@@ -40,21 +40,24 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         marginTop:10,
+        marginBottom:10,
     },
     checkbox:{
         borderColor: '#008900',
         borderWidth :1,
         borderRadius: 5,
-        height: 30,
-        width:30,
+        height: 25,
+        width:25,
     },
     checkboxSelected : {
         backgroundColor:'#008900',
-
     },
     checkboxText:{
         fontSize:16,
-        marginLeft:10,
+        marginRight:10,
+        marginLeft:20,
+        color:'green',
+        fontWeight:'bold',
     },
 });
 
