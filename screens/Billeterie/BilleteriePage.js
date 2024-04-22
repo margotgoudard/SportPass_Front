@@ -3,14 +3,15 @@ import { View, Text, Image,StyleSheet,ScrollView,ImageBackground } from 'react-n
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Checkbox from '../../components/Checkbox';
-import { FontAwesome } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import ProgressBar from '../../components/ProgressBar';
 import { Ionicons } from '@expo/vector-icons';
 
 
 export default function Billeterie({ navigation}){
     const [matchs, setMatchs] = useState([]);
     const [matchsUser, setMatchsUser] = useState([]);
+    const [matchsUserId, setMatchsUserId] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [showAllMatches, setShowAllMatches] = useState(false);
 
@@ -58,6 +59,7 @@ export default function Billeterie({ navigation}){
             setMatchs(allMatchs);
 
             const filteredMatchs = allMatchs.filter(match => showAllMatches || match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe);
+            setMatchsUserId(allMatchs.filter(match => match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe));
 
             setMatchsUser(filteredMatchs);
             setLoading(false);
@@ -82,6 +84,7 @@ export default function Billeterie({ navigation}){
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
         <ScrollView>
+        <ProgressBar currentPage={1} />
             <Checkbox 
             text="Voir tous les matchs" 
             isChecked={showAllMatches} 
@@ -111,44 +114,42 @@ export default function Billeterie({ navigation}){
         })
               
         .map((matchItem, index) => (
-            <View key={index} style={styles.container}>
-        <View style={styles.teamContainerDomicile}>
-            <Text style={styles.teamNameDomicile}>{matchItem.EquipeDomicile.nom}</Text>
-            <Image 
-                source={{ uri: matchItem.EquipeDomicile.logo }}
-                style={styles.teamLogoDomicile} 
-            />
-
-        <View style={styles.innerContainer}>
-
-        <View style={styles.dateContainer}>
-            <Text style={styles.time}>
-                    {formateHeure(matchItem.heure_debut)}
-            </Text>
-            <Text style={styles.date}>
-                {formateDate(matchItem.date)}
-            </Text>
-        </View>
-        </View>
-
-
-        <View style={styles.teamContainerExterieur}>
-            <Image
-                source={{ uri: matchItem.EquipeExterieure.logo }}
-                style={styles.teamLogoExterieur} 
-            />
-            <Text style={styles.teamNameExterieur}>{matchItem.EquipeExterieure.nom}</Text>
+            <View key={index} style={[styles.container, matchsUserId.includes(matchItem) ? styles.newMatch : null]}>
+            <View style={styles.teamContainerDomicile}>
+                <Text style={styles.teamNameDomicile}>{matchItem.EquipeDomicile.nom}</Text>
+                <Image 
+                    source={{ uri: matchItem.EquipeDomicile.logo }}
+                    style={styles.teamLogoDomicile} 
+                />
+    
+    
+            <View style={styles.dateContainer}>
+                <Text style={styles.time}>
+                        {formateHeure(matchItem.heure_debut)}
+                </Text>
+                <Text style={styles.date}>
+                    {formateDate(matchItem.date)}
+                </Text>
+            </View>
+    
+    
+            <View style={styles.teamContainerExterieur}>
+                <Image
+                    source={{ uri: matchItem.EquipeExterieure.logo }}
+                    style={styles.teamLogoExterieur} 
+                />
+                <Text style={styles.teamNameExterieur}>{matchItem.EquipeExterieure.nom}</Text>
+                </View>
+            </View>
+    
+        <View style={styles.billetterie}>
+            {matchItem.billeterieOuverte == 1 ? (
+                <Ionicons name="lock-open" size={16} color="#008900" />
+            ) : (
+                <Ionicons name="lock-closed" size={16} color="#5D2E46" />            
+                )}
         </View>
     </View>
-
-    <View style={styles.billetterie}>
-        {matchItem.billeterieOuverte == 1 ? (
-            <Ionicons name="lock-open" size={16} color="#008900" />
-        ) : (
-            <Ionicons name="lock-closed" size={16} color="#5D2E46" />            
-            )}
-    </View>
-</View>
 
 
         ))}
@@ -165,20 +166,33 @@ const styles = StyleSheet.create({
     },
     checkbox:{
         marginHorizontal:10,
-        marginVertical:35,
+        margin:35,
     },
     container: {
         padding: 15,
         borderRadius: 20, 
-        backgroundColor: '#f0f0f5',
+        backgroundColor: '#D9D9D9',
         margin : 5,
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'center',
-        
+        alignItems:'center'
     },
-    innerContainer: {
+    newMatch: {
+        padding: 15,
+        borderRadius: 20, 
+        backgroundColor: '#FFFFFF',
+        margin : 5,
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems:'center',
+        shadowColor: '#000', 
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.25, 
+            shadowRadius: 3.84, 
+            elevation: 5, 
     },
     teamContainerDomicile: {
         flexDirection: 'row',
@@ -209,16 +223,19 @@ const styles = StyleSheet.create({
         textAlign: 'right', 
     },
     dateContainer: {
-        alignItems: 'center',
+        justifyContent: 'center',
+
     },
     date: {
         textAlign: 'center',
         color: '#5C5C5C', 
+
     },
     time: {
         textAlign: 'center',
         fontWeight: 'bold', 
-        color:'#BD4F6C'
+        color:'#BD4F6C',
+
     },
     billetterie: {
         marginTop: 10,
