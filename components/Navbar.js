@@ -6,7 +6,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 
 import Accueil from'../screens/Accueil/AccueilPage.js';
-import Billeterie from'../screens/Billeterie/BilleteriePage.js';
+import Billeterie from'../screens/Billeterie/MatchsPage.js';
 import Commercant from'../screens/Commercant/CommercantPage.js';
 import Forum from'../screens/Forum/ForumPage.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
