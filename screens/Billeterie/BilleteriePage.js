@@ -88,8 +88,6 @@ export default function Billeterie({ navigation}){
             onPress={()=> setShowAllMatches(!showAllMatches)}
             container = {styles.checkbox}
             />
-
-        <Text>Liste des matchs :</Text>
         
         {matchsUser
         .sort((a, b) => {
@@ -114,35 +112,44 @@ export default function Billeterie({ navigation}){
               
         .map((matchItem, index) => (
             <View key={index} style={styles.container}>
-            <View style={styles.teamContainer}>
-                <Image 
-                    source={{ uri: matchItem.EquipeDomicile.logo }}
-                    style={styles.teamLogo} 
-                />
-                <Text style={styles.teamName}>{matchItem.EquipeDomicile.nom}</Text>
-            </View>
+        <View style={styles.teamContainerDomicile}>
+            <Text style={styles.teamNameDomicile}>{matchItem.EquipeDomicile.nom}</Text>
+            <Image 
+                source={{ uri: matchItem.EquipeDomicile.logo }}
+                style={styles.teamLogoDomicile} 
+            />
 
-            <View style={styles.dateContainer}>
-                <Text style={styles.dateTime}>
-                    {formateDate(matchItem.date)} - {formateHeure(matchItem.heure_debut)}
-                </Text>
-            </View>
+        <View style={styles.innerContainer}>
 
-            <View style={styles.teamContainer}>
-                <Image
-                    source={{ uri: matchItem.EquipeExterieure.logo }}
-                    style={styles.teamLogo} 
-                />
-                <Text style={styles.teamName}>{matchItem.EquipeExterieure.nom}</Text>
+        <View style={styles.dateContainer}>
+            <Text style={styles.time}>
+                    {formateHeure(matchItem.heure_debut)}
+            </Text>
+            <Text style={styles.date}>
+                {formateDate(matchItem.date)}
+            </Text>
+        </View>
+        </View>
 
-                {matchItem.billeterieOuverte === 1 ? (
-                    <Ionicons name="lock-open" size={24} color="black" />
-                ) : (
-                    <Ionicons name="lock-closed" size={24} color="black" />            
-                    )}
-                </View>
 
-            </View>
+        <View style={styles.teamContainerExterieur}>
+            <Image
+                source={{ uri: matchItem.EquipeExterieure.logo }}
+                style={styles.teamLogoExterieur} 
+            />
+            <Text style={styles.teamNameExterieur}>{matchItem.EquipeExterieure.nom}</Text>
+        </View>
+    </View>
+
+    <View style={styles.billetterie}>
+        {matchItem.billeterieOuverte == 1 ? (
+            <Ionicons name="lock-open" size={16} color="#008900" />
+        ) : (
+            <Ionicons name="lock-closed" size={16} color="#5D2E46" />            
+            )}
+    </View>
+</View>
+
 
         ))}
       </ScrollView>
@@ -158,34 +165,70 @@ const styles = StyleSheet.create({
     },
     checkbox:{
         marginHorizontal:10,
-        marginVertical:5,
+        marginVertical:35,
     },
     container: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: 20,
-        borderRadius: 10, 
+        padding: 15,
+        borderRadius: 20, 
         backgroundColor: '#f0f0f5',
         margin : 5,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        
     },
-    teamContainer: {
+    innerContainer: {
+        flexDirection: 'row',
+    },
+    teamContainerDomicile: {
         flexDirection: 'row',
         alignItems: 'center',
     },
-    teamLogo: {
+    teamLogoDomicile: {
         width: 50,
         height: 50,
+        marginRight : 10,
     },
-    teamName: {
+    teamNameDomicile: {
         marginLeft: 10,
+        fontWeight: 'bold', 
+        marginRight: 10,
+    },
+    teamContainerExterieur: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },    
+    teamLogoExterieur: {
+        width: 50,
+        height: 50,
+        marginLeft: 10, 
+    },
+    teamNameExterieur: {
+        marginLeft: 10,
+        fontWeight: 'bold',
+        textAlign: 'right', 
     },
     dateContainer: {
         alignItems: 'center',
     },
-    dateTime: {
+    date: {
         textAlign: 'center',
+        color: '#5C5C5C', 
+    },
+    time: {
+        textAlign: 'center',
+        fontWeight: 'bold', 
+        color:'#BD4F6C'
     },
     billetterie: {
         marginTop: 10,
     },
+    billetterie: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        marginRight: 10, 
+        marginBottom: 10,
+    },
+    
 });
