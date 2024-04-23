@@ -42,7 +42,7 @@ export default function Navbar() {
       try {
         const token = await AsyncStorage.getItem('userToken');
         console.log('token : ',token)
-        setIsLoggedIn(!!token); // Mettre à jour l'état en fonction de la présence du token
+        setIsLoggedIn(!!token);
       } catch (error) {
         console.error('Erreur lors de la récupération du token:', error);
         setIsLoggedIn(false);

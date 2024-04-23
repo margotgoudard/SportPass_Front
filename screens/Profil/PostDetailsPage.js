@@ -3,9 +3,11 @@ import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, 
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent.js';
+import PostComponent from '../../components/PostComponent.js';
 import { AntDesign, Entypo } from '@expo/vector-icons';
-import CommentComponent from '../components/CommentComponent.js';
+import CommentComponent from '../../components/CommentComponent.js';
+import EditActions from '../../components/EditActionsComponent.js';
+import MessageModal from '../../components/MessageModal.js';
 
 moment.locale('fr');
 
@@ -18,11 +20,10 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [inputHeight, setInputHeight] = useState(0);
-    const [editDeleteModalVisible, setEditDeleteModalVisible] = useState(false);
     const [selectedComment, setSelectedComment] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isBlurEffect, setIsBlurEffect] = useState(false);
-
+      
     const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
         setEditingCommentId(commentId);
@@ -162,7 +163,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                 <CommentComponent
                     comment={selectedComment}
                     onLongPress={() => { }}
-                    avatar={require('../assets/profil.png')}
+                    avatar={require('../../assets/profil.png')}
                 />
                 <EditActions
                     onClose={() => {
@@ -270,7 +271,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                                     onLongPress={() => comment.idUser === post.User.idUser ? handleCommentLongPress(comment) : null}
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
-                                    avatar={require('../assets/profil.png')}
+                                    avatar={require('../../assets/profil.png')}
                                 />
                             ))}
                         </View>
@@ -291,6 +292,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
+        marginBottom:  "15%"
     },
     container2: {
         backgroundColor: "white",
@@ -309,11 +311,11 @@ const styles = StyleSheet.create({
     },
     newMessageIcon: {
         position: 'absolute',
-        bottom: 20,
+        bottom: 80,
         right: 20,
         padding: 10,
         borderRadius: 50,
-        backgroundColor: "#BD4F6C"
+        backgroundColor: "#BD4F6C",
     },
     blurOverlay: {
         position: 'absolute',

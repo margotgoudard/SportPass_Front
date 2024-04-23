@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
-
+import { useFocusEffect } from '@react-navigation/native';
 
 const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -44,7 +44,8 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         }
     };
     
-     useEffect(() => {
+    useFocusEffect(
+        useCallback(() => {     
           const fetchPostCommentsAndLikes = async () => {
             const commentsCount = {};
             const likesCount = {};
@@ -66,6 +67,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         fetchPostCommentsAndLikes();
 
         }, [post.idPublication, updateTrigger]) 
+    );
 
     return (
         <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>

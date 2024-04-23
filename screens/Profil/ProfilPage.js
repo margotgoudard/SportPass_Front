@@ -15,10 +15,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../components/PostComponent.js';
+import PostComponent from '../../components/PostComponent.js';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import EditActions from '../components/EditActionsComponent.js';
-import MessageModal from '../components/MessageModal.js';
+import EditActions from '../../components/EditActionsComponent.js';
+import MessageModal from '../../components/MessageModal.js';
 
 moment.locale('fr');
 
@@ -36,6 +36,7 @@ const ProfilePage = ({ route }) => {
   const [messageModalVisible, setMessageModalVisible] = useState(false);
   const [blurEffect, setBlurEffect] = useState(false);
   const [postComponentVisible, setPostComponentVisible] = useState(false);
+
 
   const adjustInputHeight = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
@@ -106,7 +107,6 @@ const ProfilePage = ({ route }) => {
 
   const renderSelectedPost = () => {
     if (!selectedPost || !blurEffect) return null;
-    console.log(selectedPost, blurEffect);
     return (
       <View>
         <View style={styles.selectedPostContainer}>
@@ -184,18 +184,18 @@ const ProfilePage = ({ route }) => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchUserDetails = async () => {
-        try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/user/${userData.idUser}`);
-          setUser(response.data);
-        } catch (error) {
-          console.error(error);
-          Alert.alert("Erreur de chargement", "Le user n'ont pas pu être chargées.");
-        }
-      };
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userData.idUser}`);
+      setUser(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Erreur de chargement", "Le user n'ont pas pu être chargées.");
+    }
+  };
 
+  useFocusEffect(
+    useCallback(() => {      
       const fetchUserFollowersAndFollowings = async () => {
         try {
           const followersResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/followers/${userData.idUser}`);
@@ -216,7 +216,7 @@ const ProfilePage = ({ route }) => {
 
   if (!user) {
     return (
-      <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+      <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
@@ -224,31 +224,30 @@ const ProfilePage = ({ route }) => {
     );
   }
 
-  const navigateToModifyProfile = () => {
-    navigation.navigate('ModificationProfil', { user });
-  };
-
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.container}>
+    <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       {renderBlurOverlay()}
-      {renderSelectedPost()} 
+      {renderSelectedPost()}
       <ScrollView>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogOut}>
             <Text style={styles.logoutText}>Se déconnecter</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToModifyProfile}>
+          <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+            screen: 'Profil', 
+            params: { screen: 'ModificationProfil', params: { user } }
+          })}>
             <Text style={styles.editProfileText}>Modifier</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.headerContainer}>
-          <Image source={require('../assets/avatar.png')} style={styles.avatar} />
+          <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
           <View style={styles.userInfoContainer}>
             <View style={styles.vipStatusContainer}>
               <Text style={styles.vipStatus}>
                 Palier {user.Palier?.nom}
               </Text>
-              <Image source={require('../assets/palier.png')} style={styles.palierImage} />
+              <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
@@ -285,30 +284,42 @@ const ProfilePage = ({ route }) => {
               </>
             )}
             <View style={styles.listContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('Pass', { userId: userData.idUser })}>
+              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+                screen: 'Profil', 
+                params: { screen: 'Pass', params: { userId: userData.idUser } }
+              })}>
                 <View style={styles.listItem}>
                   <Text style={styles.listItemText}>Mon abonnement</Text>
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Billet', { userId: userData.idUser })}>
+  
+              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+                screen: 'Profil', 
+                params: { screen: 'Billet', params: { userId: userData.idUser } }
+              })}>
                 <View style={styles.listItem}>
                   <Text style={styles.listItemText}>Mes billets</Text>
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Commercant', { userId: userData.idUser })}>
+  
+              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+                screen: 'Profil', 
+                params: { screen: 'CommercantFavoris', params: { userId: userData.idUser } }
+              })}>
                 <View style={styles.listItem}>
                   <Text style={styles.listItemText}>Mes favoris</Text>
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
+  
               <View style={styles.postItemList}>
                 {posts.map((post, index) => (
                   <PostComponent
                     key={index}
                     post={post}
-                    onPostPress={() => navigation.navigate('PostDetails', { post })}
+                    onPostPress={() =>  navigation.navigate('PostDetails', { post })}
                     onLongPress={() => handleLongPressOnPost(post)}
                     style={styles.postComponentStyle}
                   />
@@ -319,7 +330,7 @@ const ProfilePage = ({ route }) => {
         </View>
       </ScrollView>
     </ImageBackground>
-  );
+ );
 };
 
 const styles = StyleSheet.create({
@@ -330,6 +341,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 50, 
+    marginBottom: "15%"
   },
   avatar: {
     width: 100,
