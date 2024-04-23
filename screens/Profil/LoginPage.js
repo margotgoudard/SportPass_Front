@@ -23,7 +23,7 @@ const LoginPage = () => {
     try {
       const response = await axios.post(apiUrl, { mail, password });
       const token = response.data.token;
-      await AsyncStorage.setItem('userToken', token); // Save the token to AsyncStorage
+      await AsyncStorage.setItem('userToken', token); 
       await AsyncStorage.setItem('userId', String(response.data.idUser));
       const UserId = await AsyncStorage.getItem('userId');
       console.log(UserId)
