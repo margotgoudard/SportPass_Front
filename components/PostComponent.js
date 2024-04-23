@@ -4,7 +4,6 @@ import moment from 'moment';
 import axios from 'axios';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 
@@ -109,7 +108,6 @@ const styles = StyleSheet.create({
        postItem: {
            backgroundColor: 'white',
            padding: 10,
-           marginTop: 5,
            borderRadius: 5,
        },
        postItemText: {
@@ -136,6 +134,7 @@ const styles = StyleSheet.create({
        postTime: {
            color: '#A9A9A9', 
            fontSize: 14, 
+           marginRight: "2%"
        },
        icon: {
            width: 20, 
