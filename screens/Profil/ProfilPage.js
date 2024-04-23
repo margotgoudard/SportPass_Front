@@ -19,6 +19,7 @@ import PostComponent from '../../components/PostComponent.js';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 moment.locale('fr');
 
@@ -247,7 +248,7 @@ const ProfilePage = ({ route }) => {
               <Text style={styles.vipStatus}>
                 Palier {user.Palier?.nom}
               </Text>
-              <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
+              <MaterialCommunityIcons name="flag-checkered" size={24} color="green" style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>

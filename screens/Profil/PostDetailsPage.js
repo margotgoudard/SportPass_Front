@@ -163,7 +163,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                 <CommentComponent
                     comment={selectedComment}
                     onLongPress={() => { }}
-                    avatar={require('../../assets/profil.png')}
                 />
                 <EditActions
                     onClose={() => {
@@ -271,7 +270,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                                     onLongPress={() => comment.idUser === post.User.idUser ? handleCommentLongPress(comment) : null}
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
-                                    avatar={require('../../assets/profil.png')}
                                 />
                             ))}
                         </View>

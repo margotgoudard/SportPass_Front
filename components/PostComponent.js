@@ -6,6 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { useFocusEffect } from '@react-navigation/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -73,7 +74,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>
             <View style={styles.postItem}>
                 <View style={styles.postHeader}>
-                    <Image source={require('../assets/profil.png')} style={styles.postProfileImage} />
+                <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
                     <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
                     <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
                 </View>
@@ -123,8 +124,6 @@ const styles = StyleSheet.create({
            justifyContent: 'space-between', 
        },
        postProfileImage: {
-           width: 40, 
-           height: 40, 
            marginLeft: "2%",
            borderRadius: 20, 
            marginRight: 10,

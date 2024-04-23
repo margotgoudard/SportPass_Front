@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CommercantFavoris = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -40,7 +41,7 @@ const CommercantFavoris = ({ route, navigation }) => {
               <Text style={styles.address}>{favorite.adresse}</Text>
               <Text style={styles.phone}>{favorite.tel}</Text>
               <View style={styles.cashbackContainer}>
-                <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
+              <MaterialCommunityIcons name="flag-checkered" size={24} color="green" style={styles.palierImage} />
                 <Text style={styles.cashbackText}>Cashback : {userInfo.Palier.cashbackPalier}%</Text>
               </View>
             </View>
