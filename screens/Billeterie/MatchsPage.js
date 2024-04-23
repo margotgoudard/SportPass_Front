@@ -14,7 +14,8 @@ export default function Billeterie({ navigation}){
     const [match, setMatch] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showAllMatches, setShowAllMatches] = useState(false);
-
+    const [selectedMatch, setSelectedMatch] = useState(null);
+    const [userEquipeId, setUserEquipeId] = useState(null);
 
 
     const formateDate = (dateString) => {
@@ -54,6 +55,7 @@ export default function Billeterie({ navigation}){
             const userId = await AsyncStorage.getItem('userId');
             const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
             const userData = response.data;
+            setUserEquipeId(userData.Equipe.idEquipe)
 
             const matchResponse = await axios.get('http://10.0.2.2:4000/api/matchs');
             const allMatchs = matchResponse.data;
@@ -72,11 +74,13 @@ export default function Billeterie({ navigation}){
         };
     
         fetchMatchs();
-      }, [showAllMatches]);
+        console.log(selectedMatch)
+      }, [showAllMatches,userEquipeId]);
 
-    const handleNextButton = () => {
-        navigation.navigate('Navbar', {screen:'Billeterie',params: { screen: 'Place' }});
+      const handleNextButton = () => {
+        navigation.navigate('Tribune', { selectedMatch: selectedMatch });
     }
+    
 
     if (loading) {
         return (
@@ -89,6 +93,7 @@ export default function Billeterie({ navigation}){
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
         <ScrollView>
+            <View style={styles.matchs}>
         <ProgressBar currentPage={1} />
             <Checkbox 
             text="Voir tous les matchs" 
@@ -119,7 +124,13 @@ export default function Billeterie({ navigation}){
         })
               
         .map((matchItem, index) => (
-            <View key={index} style={[styles.container, matchsUserId.includes(matchItem) ? styles.newMatch : null]}>
+            <TouchableOpacity
+                key={index}
+                onPress={() => selectedMatch != matchItem ? setSelectedMatch(matchItem) : setSelectedMatch(null)}
+                disabled={(matchItem.idEquipeDomicile != userEquipeId && matchItem.idEquipeExterieure != userEquipeId) || matchItem.billeterieOuverte != 1}
+
+            >
+            <View style={[styles.container, matchsUserId.includes(matchItem) ? matchItem == selectedMatch ? styles.newMatchSelected : styles.newMatch : null]}>
             <View style={styles.teamContainerDomicile}>
                 <Text style={styles.teamNameDomicile}>{matchItem.EquipeDomicile.nom}</Text>
                 <Image 
@@ -155,14 +166,22 @@ export default function Billeterie({ navigation}){
                 )}
         </View>
     </View>
+    </TouchableOpacity>
+
 
 
         ))}
+         </View>
       </ScrollView>
 
-        <TouchableOpacity style={styles.nextButton} onPress={handleNextButton}>
+      {selectedMatch && (
+            <TouchableOpacity
+                    style={styles.nextButton}
+                    onPress={handleNextButton}
+            >
             <Text style={styles.nextButtonText}>Suivant</Text>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        )}
 
       </ImageBackground>
 
@@ -178,6 +197,9 @@ const styles = StyleSheet.create({
         marginHorizontal:10,
         margin:35,
     },
+    matchs:{
+        marginBottom: 60,
+    },
     container: {
         padding: 15,
         borderRadius: 20, 
@@ -185,7 +207,8 @@ const styles = StyleSheet.create({
         margin : 5,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems:'center',
+
     },
     newMatch: {
         padding: 15,
@@ -203,6 +226,26 @@ const styles = StyleSheet.create({
             shadowOpacity: 0.25, 
             shadowRadius: 3.84, 
             elevation: 5, 
+    },
+
+    newMatchSelected: {
+        padding: 15,
+        borderRadius: 20,
+        backgroundColor: '#ACCFA5', 
+        margin: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        overlayColor: '#008900',
+    
     },
     teamContainerDomicile: {
         flexDirection: 'row',
