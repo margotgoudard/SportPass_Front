@@ -21,3 +21,8 @@ npm install moment
 npm install react-native-pdf-lib react-native-qrcode-svg
 
 npm i react-native-vector-icons
+
+npm install @expo/vector-icons
+
+npm install @react-navigation/material-top-tabs react-native-tab-view
+

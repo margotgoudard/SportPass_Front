@@ -8,7 +8,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Accueil from'../screens/Accueil/AccueilPage.js';
 import Billeterie from'../screens/Billeterie/MatchsPage.js';
 import Commercant from'../screens/Commercant/CommercantPage.js';
-import Forum from'../screens/Forum/ForumPage.js';
+import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
 
 //icons
@@ -91,7 +91,7 @@ export default function Navbar() {
         }}
       />
       <Tab.Screen name="Forum"
-        component={Forum}
+        component={ForumNavigation}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
