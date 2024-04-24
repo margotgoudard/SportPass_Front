@@ -13,6 +13,10 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
 
+    if (!post || !post.User) {
+        return null;
+    }
+
     const checkIfLikedByCurrentUser = async (postId, idUser) => {
         try {
           const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/${postId}/${idUser}`);
@@ -25,6 +29,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
     };
 
     const handleLike = async (postId) => {
+        if (!postId) return;
         try {
             let newLikesCount = {...postLikesCount}; 
             if (isLikedByCurrentUser) {
@@ -48,15 +53,18 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
     useFocusEffect(
         useCallback(() => {     
           const fetchPostCommentsAndLikes = async () => {
+            if (!post) return;
             const commentsCount = {};
             const likesCount = {};
 
             try {
+                if(post){
                 const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireUser/publication/${post.idPublication}`);
                 const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/publication/${post.idPublication}`);
                 commentsCount[post.idPublication] = commentsResponse.data.length;
                 likesCount[post.idPublication] = likesResponse.data.length;
                 await checkIfLikedByCurrentUser(post.idPublication, post.User.idUser);
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération des commentaires et likes', error);
             }
@@ -67,7 +75,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
 
         fetchPostCommentsAndLikes();
 
-        }, [post.idPublication, updateTrigger]) 
+        }, [post?.idPublication, updateTrigger]) 
     );
 
     return (

@@ -19,7 +19,7 @@ const CommunauteForumPage = () => {
   const [inputHeight, setInputHeight] = useState(0); 
   const [messageModalVisible, setMessageModalVisible] = useState(false);
   const [blurEffect, setBlurEffect] = useState(false);
-
+  const [reloadKey, setReloadKey] = useState(0);
 
   const adjustInputHeight = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
@@ -110,6 +110,7 @@ const CommunauteForumPage = () => {
 
       const combinedPosts = interleavePosts(postsUser, postsCommercant);
       setPosts(combinedPosts);
+      console.log("COMBINED", combinedPosts)
     } catch (error) {
       console.error('Error fetching posts:', error);
       Alert.alert('Error', 'An error occurred while fetching posts');
@@ -161,7 +162,7 @@ const CommunauteForumPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [reloadKey]);
 
   const interleavePosts = (postsUser, postsCommercant) => {
     const result = [];
@@ -182,7 +183,9 @@ const CommunauteForumPage = () => {
   };
 
   const isPostCommercant = (post) => {
-    return post.hasOwnProperty('idCommercant'); 
+    if (post) {
+        return post.hasOwnProperty('idCommercant'); 
+    }
   };
 
   return (
