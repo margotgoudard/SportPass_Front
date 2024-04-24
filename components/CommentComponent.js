@@ -38,8 +38,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopWidth: 1,
         borderTopColor: 'black',
-        marginLeft: "5%",
-        marginRight: "5%",
         borderRadius: 10
     },
     commentHeader: {

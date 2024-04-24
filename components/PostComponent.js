@@ -74,7 +74,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>
             <View style={styles.postItem}>
                 <View style={styles.postHeader}>
-                <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
+                    <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
                     <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
                     <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
                 </View>
@@ -82,25 +82,27 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
                     <Text style={styles.postItemText}>{post.contenu}</Text>
                     {showDetails && (
                         <View style={styles.postDetails}>
-                           <View style={styles.detailItem}>
+                            <View style={styles.detailItem}>
                                 <FontAwesome6 name="comments" size={22} color="black" />
-                                <Text style={styles.detailText}>{postCommentsCount[post.idPublication]}</Text>
                             </View>
                             <View style={styles.detailItem}>
-                            <TouchableOpacity 
-                                style={styles.likeButton} 
-                                onPress={() => handleLike(post.idPublication)}
-                            >
-                                {isLikedByCurrentUser ? (
-                                    <FontAwesome name="heart" size={24} color="#BD4F6C" />
-                                ) : (
-                                    <FontAwesome5 name="heart" size={24} color="#BD4F6C" />
-                                )}
-                            </TouchableOpacity>
-                                <Text style={styles.detailText}>{postLikesCount[post.idPublication]}</Text>
+                                <TouchableOpacity 
+                                    style={styles.likeButton} 
+                                    onPress={() => handleLike(post.idPublication)}
+                                >
+                                    {isLikedByCurrentUser ? (
+                                        <FontAwesome name="heart" size={24} color="#BD4F6C" />
+                                    ) : (
+                                        <FontAwesome5 name="heart" size={24} color="#BD4F6C" />
+                                    )}
+                                </TouchableOpacity>
                             </View>
                         </View>
                     )}
+                    <Text style={styles.footerText}>
+                        <Text style={styles.footerNumber}>{postCommentsCount[post.idPublication] || 0}</Text> commentaires{"   "}
+                        <Text style={styles.footerNumber}>{postLikesCount[post.idPublication] || 0}</Text> likes
+                    </Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -118,6 +120,18 @@ const styles = StyleSheet.create({
            marginLeft: "15%",
            marginBottom: "2%"
        },
+       footerText: {
+        color: 'grey', 
+        fontStyle: 'italic', 
+        fontSize: 14, 
+        position: 'absolute', 
+        bottom: 10, 
+        left: 10
+    },
+    footerNumber: {
+        color: 'black', 
+        fontStyle: 'normal'
+    },
        postHeader: {
            flexDirection: 'row',
            alignItems: 'center',
@@ -163,10 +177,8 @@ const styles = StyleSheet.create({
            flexDirection: 'row',
            alignItems: 'center',
            marginLeft: 10, 
+           marginBottom: 5
          },
-         detailText: {
-            marginLeft: 5, 
-        },
     });
 
 export default PostComponent;

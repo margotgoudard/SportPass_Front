@@ -23,6 +23,7 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [selectedComment, setSelectedComment] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isBlurEffect, setIsBlurEffect] = useState(false);
+    const [postComponentHeight, setPostComponentHeight] = useState(0); 
       
     const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
@@ -70,6 +71,10 @@ const PostDetailsPage = ({ route, navigation }) => {
 
     const adjustInputHeight = (event) => {
         setInputHeight(event.nativeEvent.contentSize.height);
+    };
+
+    const adjustInputHeightPost = (event) => {
+        setPostComponentHeight(event.nativeEvent.contentSize.height);
     };
 
     const fetchCommentsAndUsers = async () => {
@@ -151,6 +156,9 @@ const PostDetailsPage = ({ route, navigation }) => {
                     sendMessage={isEditMode ? handleEditComment : sendMessage}
                     adjustInputHeight={adjustInputHeight}
                     inputHeight={inputHeight}
+                    post={post}
+                    adjustInputHeightPost={adjustInputHeightPost}
+                    postComponentHeight={postComponentHeight}
                 />
             </View>
         );
