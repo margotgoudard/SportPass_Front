@@ -10,10 +10,6 @@ export default function Tribune({ route, navigation }) {
   const [tribunes, setTribunes] = useState([]);
   const [selectedTribune, setSelectedTribune] = useState(null);
 
-  
-
-  
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +45,7 @@ export default function Tribune({ route, navigation }) {
         <View style={styles.container}>
           {stade && (
             <View style ={styles.containerStade}>
-              <Text>{stade.nom}</Text>
+              <Image source={require('../../assets/stade/stade_globale.png')}  style={styles.stadeImage} />
             </View>
           )}
           {tribunes.length > 0 && (
@@ -93,8 +89,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 55,
   },
-  containerStade:{
+  containerStade: {
     justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+    marginHorizontal: 10,
+  },
+  stadeImage: {
+    width: 400,
+    height: 400,
+    borderRadius: 30,
   },
   containerTribunes:{
     justifyContent: 'start',
