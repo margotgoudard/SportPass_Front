@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, ImageBackground,TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import ProgressBar from '../../components/ProgressBar';
+import AppLoader from '../../components/AppLoader';
+import LottieView from 'lottie-react-native';
+
 
 export default function Tribune({ route, navigation }) {
   const { selectedMatch } = route.params;
@@ -65,27 +68,27 @@ export default function Tribune({ route, navigation }) {
     roussillon : require('../../assets/stade/roussillon.png'),
   };
 
-  const handleTribuneSelect = async (tribune) => {
-    if (selectedTribune != tribune) {
-      setSelectedTribune(tribune);
-      setImageLoading(true); 
-
-      setTimeout(() => {
-        setImageLoading(false); 
-      }, 1000); 
-    } else {
-      setSelectedTribune(null);
-    }
-  };
+  if (loading) {
+    return (
+      <AppLoader/>
+    );
+  }
   
 
   return (
+    <>
     <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
       <View>
       <ProgressBar currentPage={2} />
       {stade && (
             <View style ={styles.containerStade}>
               <Image source={selectedTribune ? images[formatNom(selectedTribune.nom)] : images['stade_globale']} style={styles.stadeImage} />
+              <LottieView source={require('../../assets/loading_ball.json')}
+                  style={{width: "100%", height: "100%", zindex:5, bottom:5,position:'absolute'
+                }}
+                  autoPlay
+                  loop
+                  />
             </View>
           )}
       </View>
@@ -97,8 +100,8 @@ export default function Tribune({ route, navigation }) {
               <View style={styles.containerTribunes}>
                 {tribunes.map((tribune, index) => (
                   <TouchableOpacity 
-                    key={index} 
-                    onPress={() => handleTribuneSelect(tribune)}
+                    key={index}  
+                    onPress={() => selectedTribune == tribune ? setSelectedTribune(null) : setSelectedTribune(tribune) }
                   >
                     <View style={[styles.containerTribune, index !== tribunes.length - 1 && styles.separator, selectedTribune === tribune && styles.selectedTribune]}>
                       {selectedTribune == tribune &&(
@@ -113,6 +116,7 @@ export default function Tribune({ route, navigation }) {
 
           )}
         </View>
+        
       </ScrollView>
       {selectedTribune && (
             <TouchableOpacity
@@ -123,6 +127,7 @@ export default function Tribune({ route, navigation }) {
             </TouchableOpacity>
         )}
     </ImageBackground>
+    </>
   );
 }
 
@@ -145,7 +150,20 @@ const styles = StyleSheet.create({
   stadeImage: {
     width: 350,
     height: 350,
-    borderRadius: 30,
+    borderRadius: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    zIndex:6,
+    bottom:0,
+    right: 0,
+  },
+  stadeImageBase: {
+    position:'absolute',
+    width: 350,
+    height: 350,
+    borderRadius: 20,
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 10,
@@ -209,7 +227,6 @@ const styles = StyleSheet.create({
     marginTop:10,
     marginRight:25,
     borderRadius:5,
-
   },
 
 });

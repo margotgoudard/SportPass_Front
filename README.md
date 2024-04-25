@@ -21,3 +21,5 @@ npm install moment
 npm install react-native-pdf-lib react-native-qrcode-svg
 
 npm i react-native-vector-icons
+
+npm i lottie-react-native
