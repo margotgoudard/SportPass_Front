@@ -9,6 +9,8 @@ export default function Tribune({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const [tribunes, setTribunes] = useState([]);
   const [selectedTribune, setSelectedTribune] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false); 
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,36 +36,81 @@ export default function Tribune({ route, navigation }) {
     fetchData();
   }, [selectedMatch.idStade]);
 
+  const formatNom = (nom) => {
+    let formattedNom = nom.toLowerCase();
+    formattedNom = formattedNom.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    formattedNom = formattedNom.replace(/\s/g, "_");
+    return formattedNom;
+  };
+  
+
   const handleNextButton = () => {
     navigation.navigate('Place', { selectedTribune: selectedTribune });
   }
 
+  //images des stades
+  const images = {
+    stade_globale: require('../../assets/stade/stade_globale.png'),
+    corbiere: require('../../assets/stade/corbiere.png'),
+    aigoual : require('../../assets/stade/aigoual.png'),
+    canigou : require('../../assets/stade/canigou.png'),
+    cevennes : require('../../assets/stade/cevennes.png'),
+    etang_de_thau : require('../../assets/stade/etang_de_thau.png'),
+    gevaudan : require('../../assets/stade/gevaudan.png'),
+    haut_languedoc : require('../../assets/stade/haut_languedoc.png'),
+    larzac : require('../../assets/stade/larzac.png'),
+    mediterranee : require('../../assets/stade/mediterannee.png'),
+    minervoi : require('../../assets/stade/minervoi.png'),
+    petite_camargue : require('../../assets/stade/petite_camargue.png'),
+    roussillon : require('../../assets/stade/roussillon.png'),
+  };
+
+  const handleTribuneSelect = async (tribune) => {
+    if (selectedTribune != tribune) {
+      setSelectedTribune(tribune);
+      setImageLoading(true); 
+
+      setTimeout(() => {
+        setImageLoading(false); 
+      }, 1000); 
+    } else {
+      setSelectedTribune(null);
+    }
+  };
+  
+
   return (
     <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
-      <ScrollView>
-        <ProgressBar currentPage={2} />
-        <View style={styles.container}>
-          {stade && (
+      <View>
+      <ProgressBar currentPage={2} />
+      {stade && (
             <View style ={styles.containerStade}>
-              <Image source={require('../../assets/stade/stade_globale.png')}  style={styles.stadeImage} />
+              <Image source={selectedTribune ? images[formatNom(selectedTribune.nom)] : images['stade_globale']} style={styles.stadeImage} />
             </View>
           )}
+      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          
           {tribunes.length > 0 && (
-            <View style={styles.containerTribunes}>
-              {tribunes.map((tribune, index) => (
-                <TouchableOpacity 
-                key={index} 
-                onPress={() => selectedTribune!= tribune ? setSelectedTribune(tribune) : setSelectedTribune(null)}
-                >
-                  <View style={[styles.containerTribune, index !== tribunes.length - 1 && styles.separator, selectedTribune === tribune && styles.selectedTribune]}>
-                    {selectedTribune == tribune &&(
-                    <View style={styles.selectionIndicator} />
-                    )}
+            <ScrollView>
+              <View style={styles.containerTribunes}>
+                {tribunes.map((tribune, index) => (
+                  <TouchableOpacity 
+                    key={index} 
+                    onPress={() => handleTribuneSelect(tribune)}
+                  >
+                    <View style={[styles.containerTribune, index !== tribunes.length - 1 && styles.separator, selectedTribune === tribune && styles.selectedTribune]}>
+                      {selectedTribune == tribune &&(
+                        <View style={styles.selectionIndicator} />
+                      )}
                       <Text key={tribune.id} style={styles.textTribune}>{tribune.nom}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+
           )}
         </View>
       </ScrollView>
@@ -88,17 +135,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 55,
+    zIndex:1,
   },
   containerStade: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
     marginHorizontal: 10,
   },
   stadeImage: {
-    width: 400,
-    height: 400,
+    width: 350,
+    height: 350,
     borderRadius: 30,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    zIndex:5,
+    bottom:0,
+    right: 0,
   },
   containerTribunes:{
     justifyContent: 'start',
@@ -106,7 +160,9 @@ const styles = StyleSheet.create({
     borderRadius: 20, 
     paddingRight:15,
     paddingLeft:15,
-    margin : 15,
+    marginRight : 20,
+    marginLeft : 20,
+    marginBottom : 20,
   },
   containerTribune:{
     padding: 15,
