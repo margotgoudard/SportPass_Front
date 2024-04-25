@@ -8,6 +8,7 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import CommentComponent from '../../components/CommentComponent.js';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 moment.locale('fr');
 
@@ -23,6 +24,7 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [selectedComment, setSelectedComment] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isBlurEffect, setIsBlurEffect] = useState(false);
+    const [postComponentHeight, setPostComponentHeight] = useState(0); 
       
     const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
@@ -70,6 +72,10 @@ const PostDetailsPage = ({ route, navigation }) => {
 
     const adjustInputHeight = (event) => {
         setInputHeight(event.nativeEvent.contentSize.height);
+    };
+
+    const adjustInputHeightPost = (event) => {
+        setPostComponentHeight(event.nativeEvent.contentSize.height);
     };
 
     const fetchCommentsAndUsers = async () => {
@@ -151,6 +157,9 @@ const PostDetailsPage = ({ route, navigation }) => {
                     sendMessage={isEditMode ? handleEditComment : sendMessage}
                     adjustInputHeight={adjustInputHeight}
                     inputHeight={inputHeight}
+                    post={post}
+                    adjustInputHeightPost={adjustInputHeightPost}
+                    postComponentHeight={postComponentHeight}
                 />
             </View>
         );
@@ -163,7 +172,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                 <CommentComponent
                     comment={selectedComment}
                     onLongPress={() => { }}
-                    avatar={require('../../assets/profil.png')}
                 />
                 <EditActions
                     onClose={() => {
@@ -251,6 +259,16 @@ const PostDetailsPage = ({ route, navigation }) => {
         }
     };
 
+    useEffect(() => {
+        if (route.params?.showModal) {
+            setModalVisible(true);
+            setIsBlurEffect(true);
+            if (route.params.post) {
+                setMessageText(''); 
+            }
+        }
+    }, [route.params]);
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {renderBlurOverlay()}
@@ -263,7 +281,13 @@ const PostDetailsPage = ({ route, navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.container2}>
                         <View style={styles.premiercontainer}>
-                            <PostComponent post={post} updateTrigger={updateTrigger} onPostPress={() => navigation.navigate('PostDetails', { post })} />
+                        <PostComponent
+                            post={post}
+                            updateTrigger={updateTrigger}
+                            onPostPress={() => navigation.navigate('PostDetails', { post })}
+                            openModal={openModal}  
+                            onLongPress={handleCommentLongPress}
+                        />
                             {comments.map((comment, index) => (
                                 <CommentComponent
                                     key={index}
@@ -271,7 +295,6 @@ const PostDetailsPage = ({ route, navigation }) => {
                                     onLongPress={() => comment.idUser === post.User.idUser ? handleCommentLongPress(comment) : null}
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
-                                    avatar={require('../../assets/profil.png')}
                                 />
                             ))}
                         </View>
@@ -281,7 +304,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                     onPress={() => openModal(false, null, '')}
                     style={styles.newMessageIcon}
                 >
-                    <Entypo name="new-message" size={24} color="white" />
+                    <FontAwesome5 name="comment" size={24} color="white" />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

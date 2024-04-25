@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,7 +8,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Accueil from'../screens/Accueil/AccueilPage.js';
 import Billeterie from'../screens/Billeterie/MatchsPage.js';
 import Commercant from'../screens/Commercant/CommercantPage.js';
-import Forum from'../screens/Forum/ForumPage.js';
+import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
 
 //icons
@@ -37,6 +37,9 @@ const screenOptions = {
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const navigation = useNavigation();
+
+
   useFocusEffect(() => {
     const checkUserToken = async () => {
       try {
@@ -52,6 +55,14 @@ export default function Navbar() {
     checkUserToken();
   });
 
+  const checkTokenAndNavigateForum = useCallback(async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
+      navigation.navigate('Navbar', {screen:'Forum',params: { screen: 'ForumPage' }});
+    } else {
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+    }
+  }, [navigation]);
 
   return (
     <Tab.Navigator screenOptions={screenOptions} >
@@ -90,8 +101,15 @@ export default function Navbar() {
           )
         }}
       />
-      <Tab.Screen name="Forum"
-        component={Forum}
+      <Tab.Screen
+        name="Forum"
+        component={ForumNavigation}
+        listeners={({ navigation }) => ({
+          tabPress: async (e) => {
+            e.preventDefault();
+            checkTokenAndNavigateForum(navigation);
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>

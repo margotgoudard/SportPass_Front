@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentUser, avatar }) => {
+const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentUser }) => {
     return (
         <TouchableOpacity onLongPress={onLongPress}>
             <View style={styles.commentContainer}>
                 <View style={styles.commentHeader}>
-                    <Image source={avatar} style={styles.avatar} />
+                <MaterialCommunityIcons name="account-circle-outline" size={24} color="black" style={styles.avatar} />
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.commentUserPseudo}>{comment.userPseudo}</Text>
                         <Text style={styles.commentTime}>{moment(comment.date).fromNow()}</Text>
@@ -37,8 +38,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopWidth: 1,
         borderTopColor: 'black',
-        marginLeft: "5%",
-        marginRight: "5%",
         borderRadius: 10
     },
     commentHeader: {
@@ -47,8 +46,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     avatar: {
-        width: 35,
-        height: 35,
         borderRadius: 20,
         marginRight: "5%",
         marginLeft: "5%"

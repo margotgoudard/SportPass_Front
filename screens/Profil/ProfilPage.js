@@ -19,6 +19,7 @@ import PostComponent from '../../components/PostComponent.js';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 moment.locale('fr');
 
@@ -76,6 +77,7 @@ const ProfilePage = ({ route }) => {
     try {
       await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
       fetchUserPosts();
+      setBlurEffect(false); 
     } catch (error) {
       console.error('Error delete post', error);
       return false; 
@@ -133,6 +135,7 @@ const ProfilePage = ({ route }) => {
                 setEditModalVisible(false);
                 setPostComponentVisible(false);
                 deletePost(selectedPost.idPublication);
+                setBlurEffect(false); 
               }}
             />
           )}
@@ -165,7 +168,8 @@ const ProfilePage = ({ route }) => {
 
   const handleLogOut = async () => {
     try {
-      await AsyncStorage.removeItem('@userToken');
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userId');
       navigation.navigate('Login');
     } catch (error) {
       console.error('Log out failed', error);
@@ -247,7 +251,7 @@ const ProfilePage = ({ route }) => {
               <Text style={styles.vipStatus}>
                 Palier {user.Palier?.nom}
               </Text>
-              <Image source={require('../../assets/palier.png')} style={styles.palierImage} />
+              <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
@@ -371,7 +375,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   vipStatus: {
-    color: 'green',
+    color: '#008900',
     fontWeight: 'bold',
     fontSize: 15
   },
@@ -382,7 +386,7 @@ const styles = StyleSheet.create({
   teamName: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'green', 
+    color: '#008900', 
     fontWeight: 'bold',
     textAlign: 'center'
   },
@@ -406,7 +410,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: 'green',
+    backgroundColor: '#008900',
     borderRadius: 10,
   },
   progressBarText: {
@@ -459,13 +463,13 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   editProfileText: {
-    color: 'green',
+    color: '#008900',
     fontWeight: 'bold',
     fontSize: 16,
   },
   profileCompleted: {
     textDecorationLine: 'underline',
-    color: 'green',
+    color: '#008900',
   },
   loadingContainer: {
     flex: 1,

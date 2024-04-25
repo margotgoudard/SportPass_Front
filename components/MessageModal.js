@@ -1,7 +1,18 @@
 import React from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
-const MessageModal = ({ isModalVisible, closeModal, messageText, setMessageText, sendMessage, adjustInputHeight, inputHeight }) => {
+import PostComponent from './PostComponent'; 
+
+const MessageModal = ({
+    isModalVisible,
+    closeModal,
+    messageText,
+    setMessageText,
+    sendMessage,
+    adjustInputHeight,
+    inputHeight,
+    post,
+}) => {
     return (
         <Modal
             animationType="slide"
@@ -10,27 +21,34 @@ const MessageModal = ({ isModalVisible, closeModal, messageText, setMessageText,
             onRequestClose={closeModal}
         >
             <View style={styles.centeredView}>
-                <View style={[styles.modalView, {height: Math.max(250, inputHeight + 160)}]}>
-                    <TouchableOpacity
-                        style={styles.buttonClose}
-                        onPress={closeModal}
-                    >
-                        <Text style={styles.textStyleRose}>Annuler</Text>
-                    </TouchableOpacity>
-                    <TextInput
-                        style={[styles.modalTextInput, {height: Math.max(35, inputHeight)}]}
-                        placeholder="Ecrire un message..."
-                        onChangeText={setMessageText}
-                        value={messageText}
-                        multiline={true}
-                        onContentSizeChange={adjustInputHeight}
-                    />
-                    <TouchableOpacity
-                        style={styles.buttonSend}
-                        onPress={sendMessage}
-                    >
-                        <Text style={styles.textStyle}>Envoyer</Text>
-                    </TouchableOpacity>
+                <View style={styles.modalView}>
+                    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                        {post && (
+                            <PostComponent post={post} style={styles.postStyle}/>
+                        )}
+                        <TextInput
+                            style={[styles.modalTextInput, {height: Math.max(150, inputHeight)}]}
+                            placeholder="Ecrire un message..."
+                            onChangeText={setMessageText}
+                            value={messageText}
+                            multiline={true}
+                            onContentSizeChange={adjustInputHeight}
+                        />
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity
+                                style={styles.buttonClose}
+                                onPress={closeModal}
+                            >
+                                <Text style={styles.textStyleRose}>Annuler</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buttonSend}
+                                onPress={sendMessage}
+                            >
+                                <Text style={styles.textStyle}>Envoyer</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
@@ -42,45 +60,51 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
     },
     modalView: {
-        margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
         shadowColor: "#000",
-        width: '80%', 
-        height: '40%', 
+        width: '90%', 
+        maxHeight: '80%',
+    },
+    scrollViewContainer: {
+        flexGrow: 1,
+        margin: "2%",
+        justifyContent: "center"
+    },
+    postStyle: {
+        flex: 1,
     },
     modalTextInput: {
         textAlignVertical: "top", 
         textAlign: "left",
-        height: "70%",
-        marginBottom: 15,
+        margin : "5%",
+        marginTop: "10%",
+        marginBottom: "10%",
         borderWidth: 1,
         borderColor: "#ddd",
         padding: 10,
-        width: "100%",
         borderRadius: 10,
         backgroundColor: '#F0F0F0', 
-        marginTop: "10%"
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    controlsContainer: {
+        backgroundColor: "#008900"
     },
     buttonClose: {
         backgroundColor: "transparent", 
         padding: 10,
-        position: 'absolute',
-        top: "3%",
-        left: "3%"
+        margin: "4%"
     },
     buttonSend: {
-        backgroundColor: "green", 
-        borderRadius : 10,
+        backgroundColor: "#008900", 
+        borderRadius: 10,
         padding: 10,
-        position: 'absolute', 
-        bottom: "5%", 
-        right: "5%",
+        margin: "4%"
     },
     textStyle: {
         color: "white",

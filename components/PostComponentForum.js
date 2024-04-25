@@ -7,11 +7,14 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true, openModal }) => {
+
+const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
+    const navigation = useNavigation();
 
     if (!post || !post.User) {
         return null;
@@ -90,31 +93,31 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
                     <Text style={styles.postItemText}>{post.contenu}</Text>
                     {showDetails && (
                         <View style={styles.postDetails}>
-                            <View style={styles.detailItem}>
+                        <View style={styles.detailItem}>
+                            <Text style={styles.detailText}>{postCommentsCount[post.idPublication] || 0}</Text>
                             <TouchableOpacity 
-                                    onPress={() => openModal(false, null, '') }
-                                >
+                                onPress={() => navigation.navigate('PostDetails', { post, showModal: true })}
+                            >
                                 <FontAwesome6 name="comments" size={22} color="black" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.detailItem}>
-                                <TouchableOpacity 
-                                    style={styles.likeButton} 
-                                    onPress={() => handleLike(post.idPublication)}
-                                >
-                                    {isLikedByCurrentUser ? (
-                                        <FontAwesome name="heart" size={24} color="#BD4F6C" />
-                                    ) : (
-                                        <FontAwesome5 name="heart" size={24} color="#BD4F6C" />
-                                    )}
-                                </TouchableOpacity>
-                            </View>
+                            </TouchableOpacity>
                         </View>
+                        <View style={styles.detailItem}>
+                            <Text style={styles.detailText}>{postLikesCount[post.idPublication] || 0}</Text>
+                            <TouchableOpacity 
+                                style={styles.likeButton} 
+                                onPress={() => handleLike(post.idPublication)}
+                            >
+                                {isLikedByCurrentUser ? (
+                                    <FontAwesome name="heart" size={24} color="#BD4F6C" style={styles.likeIcon} />
+                                ) : (
+                                    <FontAwesome5 name="heart" size={24} color="#BD4F6C" style={styles.likeIcon} />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    
                     )}
-                    <Text style={styles.footerText}>
-                        <Text style={styles.footerNumber}>{postCommentsCount[post.idPublication] || 0}</Text> commentaires{"   "}
-                        <Text style={styles.footerNumber}>{postLikesCount[post.idPublication] || 0}</Text> likes
-                    </Text>
+                    
                 </View>
             </View>
         </TouchableOpacity>
@@ -163,11 +166,6 @@ const styles = StyleSheet.create({
            fontSize: 14, 
            marginRight: "2%"
        },
-       icon: {
-           width: 20, 
-           height: 20,
-           marginRight: 5, 
-       },
        postItem: {
            backgroundColor: 'white',
            padding: 10,
@@ -188,9 +186,17 @@ const styles = StyleSheet.create({
          detailItem: {
            flexDirection: 'row',
            alignItems: 'center',
-           marginLeft: 10, 
            marginBottom: 5
          },
+         detailText: {
+            marginRight: "3%",
+        },
+        likeIcon: {
+            marginRight: 5, 
+        },
+        commentIcon: {
+            marginRight: 5,
+        },
     });
 
 export default PostComponent;
