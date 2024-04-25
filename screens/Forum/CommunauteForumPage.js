@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import PostComponent from '../../components/PostComponent'; 
-import PostCommercantComponent from '../../components/PostCommercantComponent'; // Ensure this component is correctly imported
+import PostComponentForum from '../../components/PostComponentForum'; 
+import PostCommercantComponent from '../../components/PostCommercantComponent'; 
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 
@@ -14,7 +16,7 @@ const CommunauteForumPage = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [user, setUser] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [postComponentVisible, setPostComponentVisible] = useState(false);
+  const [PostComponentForumVisible, setPostComponentForumVisible] = useState(false);
   const [messageText, setMessageText] = useState('');
   const [inputHeight, setInputHeight] = useState(0); 
   const [messageModalVisible, setMessageModalVisible] = useState(false);
@@ -28,7 +30,7 @@ const CommunauteForumPage = () => {
   const handleLongPressOnPost = (post) => {
     setSelectedPost(post);
     setEditModalVisible(true);
-    setPostComponentVisible(true);
+    setPostComponentForumVisible(true);
     setBlurEffect(true);
   };
 
@@ -37,8 +39,8 @@ const CommunauteForumPage = () => {
     return (
       <View>
         <View style={styles.selectedPostContainer}>
-          {postComponentVisible && (
-            <PostComponent
+          {PostComponentForumVisible && (
+            <PostComponentForum
               post={selectedPost}
               onPostPress={() => {}}
               onLongPress={() => {}}
@@ -48,17 +50,19 @@ const CommunauteForumPage = () => {
             <EditActions
               onClose={() => {
                 setEditModalVisible(false);
-                setPostComponentVisible(false);
+                setPostComponentForumVisible(false);
+                setBlurEffect(false)
               }}
               onEdit={() => {
                 setEditModalVisible(false);
-                setPostComponentVisible(false); 
+                setPostComponentForumVisible(false); 
                 setMessageText(selectedPost.contenu);
                 setMessageModalVisible(true);
               }}
               onDelete={() => {
                 setEditModalVisible(false);
-                setPostComponentVisible(false);
+                setPostComponentForumVisible(false);
+                setBlurEffect(false)
                 deletePost(selectedPost.idPublication);
               }}
             />
@@ -69,7 +73,7 @@ const CommunauteForumPage = () => {
           closeModal={() => {
             setMessageModalVisible(false);
             setEditModalVisible(false); 
-            setPostComponentVisible(false);
+            setPostComponentForumVisible(false);
             setBlurEffect(false); 
             setSelectedPost(null);
           }}
@@ -78,7 +82,7 @@ const CommunauteForumPage = () => {
           sendMessage={() => {
             modifyPost(selectedPost.idPublication, messageText);
             setMessageModalVisible(false);
-            setPostComponentVisible(false);
+            setPostComponentForumVisible(false);
             setEditModalVisible(false); 
             setBlurEffect(false);
             setSelectedPost(null); 
@@ -89,6 +93,12 @@ const CommunauteForumPage = () => {
       </View>
     );
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPosts(); 
+    }, [])
+  );
 
   const fetchPosts = async () => {
     try {
@@ -146,7 +156,7 @@ const CommunauteForumPage = () => {
   const disableBlurAndEditModal = () => {
     setBlurEffect(false);
     setEditModalVisible(false);
-    setPostComponentVisible(true);
+    setPostComponentForumVisible(true);
     setSelectedPost(null);
     renderSelectedPost();
   };
@@ -197,7 +207,7 @@ const CommunauteForumPage = () => {
           {posts.map((post, index) => isPostCommercant(post) ? (
             <PostCommercantComponent key={`commercant-${index}`} post={post} />
           ) : (
-            <PostComponent
+            <PostComponentForum
               key={`user-${index}`}
               post={post}
               onPostPress={() => navigation.navigate('PostDetails', { post })}
@@ -216,11 +226,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#D9D9D9"
+    backgroundColor: "#D9D9D9",
   },
   scrollView: {
     flex: 1,
     width: "100%",
+    paddingBottom: "20%"
   },
   view: {
     margin: "3%"

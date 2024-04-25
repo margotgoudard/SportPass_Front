@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     controlsContainer: {
-        backgroundColor: "green"
+        backgroundColor: "#008900"
     },
     buttonClose: {
         backgroundColor: "transparent", 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         margin: "4%"
     },
     buttonSend: {
-        backgroundColor: "green", 
+        backgroundColor: "#008900", 
         borderRadius: 10,
         padding: 10,
         margin: "4%"

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderRadius: 5,
         flex: 1,
-        borderColor: 'green', 
+        borderColor: '#008900', 
         borderWidth: 2
     },
     postProfileImage: {

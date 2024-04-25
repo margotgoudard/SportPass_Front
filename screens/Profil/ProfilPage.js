@@ -77,6 +77,7 @@ const ProfilePage = ({ route }) => {
     try {
       await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
       fetchUserPosts();
+      setBlurEffect(false); 
     } catch (error) {
       console.error('Error delete post', error);
       return false; 
@@ -134,6 +135,7 @@ const ProfilePage = ({ route }) => {
                 setEditModalVisible(false);
                 setPostComponentVisible(false);
                 deletePost(selectedPost.idPublication);
+                setBlurEffect(false); 
               }}
             />
           )}
@@ -248,7 +250,7 @@ const ProfilePage = ({ route }) => {
               <Text style={styles.vipStatus}>
                 Palier {user.Palier?.nom}
               </Text>
-              <MaterialCommunityIcons name="flag-checkered" size={24} color="green" style={styles.palierImage} />
+              <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
@@ -372,7 +374,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   vipStatus: {
-    color: 'green',
+    color: '#008900',
     fontWeight: 'bold',
     fontSize: 15
   },
@@ -383,7 +385,7 @@ const styles = StyleSheet.create({
   teamName: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'green', 
+    color: '#008900', 
     fontWeight: 'bold',
     textAlign: 'center'
   },
@@ -407,7 +409,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: 'green',
+    backgroundColor: '#008900',
     borderRadius: 10,
   },
   progressBarText: {
@@ -460,13 +462,13 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   editProfileText: {
-    color: 'green',
+    color: '#008900',
     fontWeight: 'bold',
     fontSize: 16,
   },
   profileCompleted: {
     textDecorationLine: 'underline',
-    color: 'green',
+    color: '#008900',
   },
   loadingContainer: {
     flex: 1,

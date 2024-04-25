@@ -41,7 +41,7 @@ const CommercantFavoris = ({ route, navigation }) => {
               <Text style={styles.address}>{favorite.adresse}</Text>
               <Text style={styles.phone}>{favorite.tel}</Text>
               <View style={styles.cashbackContainer}>
-              <MaterialCommunityIcons name="flag-checkered" size={24} color="green" style={styles.palierImage} />
+              <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
                 <Text style={styles.cashbackText}>Cashback : {userInfo.Palier.cashbackPalier}%</Text>
               </View>
             </View>
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   cashbackText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "green"
+    color: "#008900"
   },
 });
 

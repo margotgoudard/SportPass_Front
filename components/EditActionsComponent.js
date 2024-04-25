@@ -4,7 +4,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 const EditActions = ({ onEdit, onDelete }) => {
-    const editColor = "green";
+    const editColor = "#008900";
     const deleteColor = "#5D2E46";
 
     return (

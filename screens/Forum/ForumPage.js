@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ClubPage from './ClubForumPage';
 import CommunautePage from './CommunauteForumPage';
@@ -41,8 +41,14 @@ const ForumPage = () => {
         setPostComponentHeight(event.nativeEvent.contentSize.height);
     };
 
+    useEffect(() => {
+        setIsBlurEffect(false);
+    }, []);
+    
     const renderMessageModal = () => {
         if (!isModalVisible) return null;
+        console.log(isBlurEffect)
+
         return (
             <View style={styles.messageModalStyle}>
                 <MessageModal
@@ -83,8 +89,20 @@ const ForumPage = () => {
 
     };
 
+    const renderBlurOverlay = () => (
+        <TouchableOpacity
+            style={[styles.blurOverlay, { display: isBlurEffect ? 'flex' : 'none' }]}
+            onPress={() => {
+                setIsBlurEffect(false);
+                console.log(isBlurEffect)
+            }}
+            activeOpacity={1}
+        />
+    );
+
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+            {renderBlurOverlay()}
             {renderMessageModal()}
             <View style={styles.logoContainer}>
                 <Image source={require('../../assets/logo.png')} style={styles.logo} />
@@ -92,13 +110,19 @@ const ForumPage = () => {
             <ScrollView style={styles.tabsContainer}>
                 <Tab.Navigator
                     screenOptions={{
-                        tabBarStyle: styles.tabBar,
+                        tabBarStyle: {
+                            elevation: 0, 
+                            shadowOpacity: 0, 
+                            shadowOffset: { height: 0, width: 0 },
+                            shadowRadius: 0,
+                            shadowColor: 'transparent',
+                        },
                         tabBarIndicatorContainerStyle: {
                             backgroundColor: "#D9D9D9",
                         },
                         tabBarActiveTintColor: 'black',
-                        tabBarInactiveTintColor: 'gray',
-                        tabBarIndicatorStyle: { backgroundColor: 'green' },
+                        tabBarInactiveTintColor: '#A4A5A2',
+                        tabBarIndicatorStyle: { backgroundColor: '#008900'},
                     }}
                 >
                     <Tab.Screen name="Club" children={() => <ClubPage key={reloadKey} />} />
@@ -122,7 +146,7 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         marginLeft: "4%",
-        marginTop: "5%",
+        marginTop: "-6%",
     },
     logo: {
         width: "50%",
@@ -130,14 +154,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain' 
     },
     tabsContainer: {
-        flex: 1,
-        marginTop: "-50%",
-        marginLeft: "4%",
-        marginRight: "4%", 
+        marginTop: "-55%", 
         backgroundColor: 'transparent' 
-    },
-    tabBar: {
-        marginRight:"18%"   
     },
     newMessageIcon: {
         position: 'absolute',
@@ -146,6 +164,15 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 50,
         backgroundColor: "#BD4F6C",
+    },
+    blurOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 5,
     },
     messageModalStyle: {
         zIndex: 100,
