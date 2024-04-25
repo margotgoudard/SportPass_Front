@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
       fontStyle: 'italic',
       fontSize: 16,
       alignSelf: 'flex-end',
-      color: "green"
+      color: "#008900"
     },
     nobilletText: {
       textAlign: 'center',

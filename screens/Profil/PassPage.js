@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   abonnementText: {
     fontSize: 18,
-    color: 'green',
+    color: '#008900',
     fontWeight: 'bold', 
   },
   abonnementTextValidité: {

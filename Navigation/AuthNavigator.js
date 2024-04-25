@@ -25,7 +25,7 @@ export default function AuthNavigator() {
         options={{ headerShown: false }}  
       />
       <Stack.Screen 
-        name="Profil" 
+        name="ProfilPage" 
         component={UserProfilPage}  
         options={{ headerShown: false }}  
       />

@@ -27,7 +27,7 @@ const LoginPage = () => {
       await AsyncStorage.setItem('userId', String(response.data.idUser));
       const UserId = await AsyncStorage.getItem('userId');
       console.log(UserId)
-      navigation.navigate('Profil', { userData: response.data });
+      navigation.navigate('ProfilPage', { userData: response.data });
     } catch (error) {
       console.error(error);
       Alert.alert("Erreur de connexion", "Une erreur est survenue lors de la tentative de connexion.");
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderWidth: 0, 
   },
   buttonContainer: {
-    backgroundColor: 'green', 
+    backgroundColor: '#008900', 
     borderRadius: 5,
     padding: 10,
     margin: 10,

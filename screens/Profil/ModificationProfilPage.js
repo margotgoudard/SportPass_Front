@@ -25,7 +25,7 @@ const ModificationProfilPage = ({ route }) => {
       await axios.put(`http://10.0.2.2:4000/api/user/${user.idUser}`, updatedUser);
       const response = await axios.get(`http://10.0.2.2:4000/api/user/${user.idUser}`);
       const userData = response.data;
-      navigation.navigate('Profil', { userData });
+      navigation.navigate('ProfilPage', { userData });
     } catch (error) {
       console.error('Erreur lors de la mise à jour du profil :', error);
     }
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'center', 
         alignItems: 'center', 
-        backgroundColor: 'green', 
+        backgroundColor: '#008900', 
         borderRadius: 10,
         padding: 10,
     },
