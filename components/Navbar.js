@@ -55,7 +55,7 @@ export default function Navbar() {
     checkUserToken();
   });
 
-  const checkTokenAndNavigate = useCallback(async () => {
+  const checkTokenAndNavigateForum = useCallback(async () => {
     const token = await AsyncStorage.getItem('userToken');
     if (token) {
       navigation.navigate('Navbar', {screen:'Forum',params: { screen: 'ForumPage' }});
@@ -63,7 +63,6 @@ export default function Navbar() {
       navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
     }
   }, [navigation]);
-
 
   return (
     <Tab.Navigator screenOptions={screenOptions} >
@@ -108,7 +107,7 @@ export default function Navbar() {
         listeners={({ navigation }) => ({
           tabPress: async (e) => {
             e.preventDefault();
-            checkTokenAndNavigate(navigation);
+            checkTokenAndNavigateForum(navigation);
           },
         })}
         options={{
