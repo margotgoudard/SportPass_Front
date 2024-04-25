@@ -10,7 +10,7 @@ import PostCommercantComponent from '../../components/PostCommercantComponent';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 
-const CommunauteForumPage = () => {
+const CommunauteForumPage = ({searchTerm}) => {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
   const [selectedPost, setSelectedPost] = useState(null);
@@ -33,6 +33,7 @@ const CommunauteForumPage = () => {
     setPostComponentForumVisible(true);
     setBlurEffect(true);
   };
+
 
   const renderSelectedPost = () => {
     if (!selectedPost || !blurEffect) return null;
@@ -194,9 +195,21 @@ const CommunauteForumPage = () => {
 
   const isPostCommercant = (post) => {
     if (post) {
+      console
         return post.hasOwnProperty('idCommercant'); 
     }
   };
+
+  const filteredPosts = posts.filter(post => {
+    if(post) {
+    const contentMatch = post.contenu.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    const pseudoMatch = !isPostCommercant(post) && post.User.pseudo.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    return contentMatch || pseudoMatch;
+  }
+  });
+  
 
   return (
     <View style={styles.container}>
@@ -204,7 +217,7 @@ const CommunauteForumPage = () => {
         {renderSelectedPost()}
       <ScrollView style={styles.scrollView}>
         <View style={styles.view}>
-          {posts.map((post, index) => isPostCommercant(post) ? (
+          {filteredPosts.map((post, index) => isPostCommercant(post) ? (
             <PostCommercantComponent key={`commercant-${index}`} post={post} />
           ) : (
             <PostComponentForum
