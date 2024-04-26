@@ -6,6 +6,7 @@ import ForumPage from '../screens/Forum/ForumPage';
 import PostDetailsPage from '../screens/Profil/PostDetailsPage';
 import LoginPage from '../screens/Profil/LoginPage';
 import PostClubDetailsPage from '../screens/Forum/PostClubDetailsPage';
+import ProfileUserPage from '../screens/Forum/ProfilUserPage';
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,11 @@ export default function ForumNavigator() {
       <Stack.Screen
         name="PostClubDetails"
         component={PostClubDetailsPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfilUser"
+        component={ProfileUserPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

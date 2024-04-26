@@ -7,11 +7,14 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true, openModal }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
+
+    const navigation = useNavigation();
 
     if (!post || !post.User) {
         return null;
@@ -78,12 +81,20 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         }, [post?.idPublication, updateTrigger]) 
     );
 
+    const navigateToProfile = () => {
+        navigation.navigate('ProfilUser', { userData: post.User });
+    };
+
     return (
         <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>
             <View style={styles.postItem}>
                 <View style={styles.postHeader}>
-                    <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
-                    <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
+                <TouchableOpacity onPress={navigateToProfile}>
+                        <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={navigateToProfile} style={{ flex: 1 }}>
+                        <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
                 </View>
                 <View style={styles.postContentContainer}>
@@ -92,10 +103,10 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
                         <View style={styles.postDetails}>
                             <View style={styles.detailItem}>
                             <TouchableOpacity 
-                                    onPress={() => openModal(false, null, '') }
-                                >
+                                onPress={() => navigation.navigate('PostDetails', { post, showModal: true })}
+                            >
                                 <FontAwesome6 name="comments" size={22} color="black" />
-                                </TouchableOpacity>
+                            </TouchableOpacity>
                             </View>
                             <View style={styles.detailItem}>
                                 <TouchableOpacity 

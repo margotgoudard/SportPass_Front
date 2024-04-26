@@ -10,7 +10,7 @@ const PostCommercantComponent = ({ post, showDetails = true }) => {
         const fetchCommercantName = async () => {
             try {
                 const response = await axios.get(`http://10.0.2.2:4000/api/commercant/${post.idCommercant}`);
-                setCommercantName(response.data.nom); // Ensure that your API returns an object with 'nom'
+                setCommercantName(response.data.nom); 
             } catch (error) {
                 console.error('Error fetching commercant name:', error);
             }
