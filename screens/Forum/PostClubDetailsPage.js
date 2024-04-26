@@ -312,7 +312,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
                     onPress={() => openModal(false, null, '')}
                     style={styles.newMessageIcon}
                 >
-                    <FontAwesome5 name="comment" size={24} color="white" />
+                    <FontAwesome5 name="comment" size={30} color="white" />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

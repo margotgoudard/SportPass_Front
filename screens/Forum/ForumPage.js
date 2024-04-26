@@ -155,7 +155,7 @@ const ForumPage = () => {
                         onPress={() => openModal('')}
                         style={styles.newMessageIcon}
                     >
-                        <Entypo name="new-message" size={24} color="white" />
+                        <Entypo name="new-message" size={30} color="white" />
                     </TouchableOpacity>
             </ImageBackground>
     );
