@@ -26,3 +26,8 @@ npm i lottie-react-native
 
 npm install @react-navigation/material-top-tabs react-native-tab-view
 
+npm install react-native-3d-model-view //pas nécessaire 
+
+npm install react-iframe
+
+npm install react-native-webview

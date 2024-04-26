@@ -8,12 +8,8 @@ const { selectedTribune } = route.params;
 
   return (
     <View>
-          <LottieView source={require('../../assets/loading.json')}
-          style={{width: "100%", height: "100%"}}
-          autoPlay
-          loop
-          />
-      </View>
+        <Text>Page Place </Text>
+    </View>
   );
 }
 
@@ -24,4 +20,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-

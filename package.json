@@ -23,7 +23,9 @@
     "lottie-react-native": "^6.7.2",
     "moment": "^2.30.1",
     "react": "18.2.0",
+    "react-iframe": "^1.8.5",
     "react-native": "^0.73.6",
+    "react-native-3d-model-view": "^1.2.0",
     "react-native-animatable": "^1.4.0",
     "react-native-config": "^1.5.1",
     "react-native-gesture-handler": "^2.16.0",
@@ -31,7 +33,8 @@
     "react-native-pdf-lib": "^1.0.0",
     "react-native-qrcode-svg": "^6.3.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vector-icons": "^10.0.3"
+    "react-native-vector-icons": "^10.0.3",
+    "react-native-webview": "^13.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

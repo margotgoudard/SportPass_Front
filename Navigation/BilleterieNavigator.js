@@ -5,6 +5,8 @@ import TribunePage from '../screens/Billeterie/TribunePage.js';
 import PlacePage from '../screens/Billeterie/PlacePage.js';
 import PaiementPage from '../screens/Billeterie/PaiementPage.js';
 import ResumePage from '../screens/Billeterie/ResumePage.js';
+import Visualisation3D from '../screens/Billeterie/Visualistation3D.js';
+import Stade3D from '../components/Stade3D.js';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +37,20 @@ export default function BilleterieNavigation() {
         name="Résumé" 
         component={ResumePage}  
         options={{ headerShown: false }}  
+      />
+      <Stack.Screen 
+        name="Visualisation3D" 
+        component={Stade3D}  
+        options={{ 
+          headerShown: true,
+          headerTitle: 'Retour', 
+          headerTintColor: '#BD4F6C', 
+          headerTitleStyle: {
+            fontWeight: 'bold', 
+            fontSize: 20,
+          }, 
+
+         }}  
       />
     </Stack.Navigator>
   );

@@ -4,6 +4,7 @@ import axios from 'axios';
 import ProgressBar from '../../components/ProgressBar';
 import AppLoader from '../../components/AppLoader';
 import LottieView from 'lottie-react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 export default function Tribune({ route, navigation }) {
@@ -51,6 +52,10 @@ export default function Tribune({ route, navigation }) {
     navigation.navigate('Place', { selectedTribune: selectedTribune });
   }
 
+  const handle3DButton = () => {
+    navigation.navigate('Visualisation3D');
+  }
+
   //images des stades
   const images = {
     stade_globale: require('../../assets/stade/stade_globale.png'),
@@ -81,6 +86,10 @@ export default function Tribune({ route, navigation }) {
       <View>
       <ProgressBar currentPage={2} />
       {stade && (
+            <View>
+            <TouchableOpacity style={styles.rotateButton} onPress={() => navigation.navigate('Visualisation3D')}>
+            <MaterialIcons name="3d-rotation" size={40} color="#5D2E46"/>
+          </TouchableOpacity>
             <View style ={styles.containerStade}>
               <Image source={selectedTribune ? images[formatNom(selectedTribune.nom)] : images['stade_globale']} style={styles.stadeImage} />
               <LottieView source={require('../../assets/loading_ball.json')}
@@ -90,6 +99,8 @@ export default function Tribune({ route, navigation }) {
                   loop
                   />
             </View>
+            </View>
+
           )}
       </View>
       <ScrollView>
@@ -155,23 +166,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 10,
     marginTop: 10,
-    zIndex:6,
-    bottom:0,
-    right: 0,
-  },
-  stadeImageBase: {
-    position:'absolute',
-    width: 350,
-    height: 350,
-    borderRadius: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    marginTop: 10,
     zIndex:5,
     bottom:0,
     right: 0,
   },
+  
   containerTribunes:{
     justifyContent: 'start',
     backgroundColor: '#FFFFFF',
@@ -227,6 +226,14 @@ const styles = StyleSheet.create({
     marginTop:10,
     marginRight:25,
     borderRadius:5,
+  },
+  rotateButton: {
+    position: 'absolute',
+    top: -50,
+    right: 5,
+    zIndex: 6,
+    borderRadius: 20,
+    padding: 10,
   },
 
 });
