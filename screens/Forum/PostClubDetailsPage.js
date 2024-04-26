@@ -114,6 +114,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
     };
 
     const handleCommentLongPress = (comment) => {
+        console.log("coucou")
         setSelectedComment(comment);
         setIsEditModalVisible(true);
         setIsBlurEffect(true);
@@ -300,7 +301,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
                                 <CommentComponent
                                     key={index}
                                     comment={comment}
-                                    onLongPress={() => comment.idUser === iduser ? handleCommentLongPress(comment) : null}
+                                    onLongPress={() => comment.idUser == iduser ? handleCommentLongPress(comment) : null }
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
                                 />

@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
-const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
+const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
     const [postLikesCount, setPostLikesCount] = useState({});
     const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(false);
@@ -19,6 +19,11 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
     if (!post || !post.User) {
         return null;
     }
+
+    const navigateToProfile = () => {
+        console.log(post.User)
+        navigation.navigate('ProfilUser', { userData: post.User });
+    };
 
     const checkIfLikedByCurrentUser = async (postId, idUser) => {
         try {
@@ -85,8 +90,12 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         <TouchableOpacity onPress={onPostPress} onLongPress={() => onLongPress(post)}>
             <View style={styles.postItem}>
                 <View style={styles.postHeader}>
-                    <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
-                    <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
+                <TouchableOpacity onPress={navigateToProfile}>
+                        <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={navigateToProfile} style={{ flex: 1 }}>
+                        <Text style={styles.postPseudo}>{post.User.pseudo}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
                 </View>
                 <View style={styles.postContentContainer}>
@@ -199,4 +208,4 @@ const styles = StyleSheet.create({
         },
     });
 
-export default PostComponent;
+export default PostComponentForum;

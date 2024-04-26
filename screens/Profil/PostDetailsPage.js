@@ -9,6 +9,7 @@ import CommentComponent from '../../components/CommentComponent.js';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 moment.locale('fr');
 
@@ -25,7 +26,13 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isBlurEffect, setIsBlurEffect] = useState(false);
     const [postComponentHeight, setPostComponentHeight] = useState(0); 
+    const [iduser, setIduser] = useState(null);
       
+    const getUserId = async () => {
+        const idUser = await AsyncStorage.getItem('userId');
+        setIduser(idUser)
+    };
+
     const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
         setEditingCommentId(commentId);
@@ -49,7 +56,7 @@ const PostDetailsPage = ({ route, navigation }) => {
             contenu: messageText,
             date: new Date().toISOString(),
             idPublication: post.idPublication,
-            idUser: post.User.idUser
+            idUser: iduser
         };
 
         if (isEditMode) {
@@ -85,7 +92,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                 try {
                     const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
                     const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/commentaire/${comment.idCommentaire}`);
-                    const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, post.User.idUser);
+                    const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, iduser);
                     return {
                         ...comment,
                         likes: likesResponse.data.length,
@@ -221,6 +228,7 @@ const PostDetailsPage = ({ route, navigation }) => {
     };
 
     useEffect(() => {
+        getUserId();
         fetchCommentsAndUsers();
     }, [post.idPublication]);
 
@@ -240,13 +248,13 @@ const PostDetailsPage = ({ route, navigation }) => {
             const commentIndex = updatedComments.findIndex(comment => comment.idCommentaire === commentId);
             if (commentIndex !== -1) {
                 if (isLiked) {
-                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${post.User.idUser}`);
+                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${iduser}`);
                     updatedComments[commentIndex].isLikedByCurrentUser = false;
                     updatedComments[commentIndex].likes -= 1;
                 } else {
                     const likeData = {
                         idCommentaire: commentId,
-                        idUser: post.User.idUser
+                        idUser: iduser
                     };
                     await axios.post(`http://10.0.2.2:4000/api/likeCommentaireUser`, likeData);
                     updatedComments[commentIndex].isLikedByCurrentUser = true;
@@ -286,13 +294,13 @@ const PostDetailsPage = ({ route, navigation }) => {
                             updateTrigger={updateTrigger}
                             onPostPress={() => navigation.navigate('PostDetails', { post })}
                             openModal={openModal}  
-                            onLongPress={handleCommentLongPress}
+                            onLongPress={() => iduser === post.idUser ? handleLongPressOnPost(post) : null}
                         />
                             {comments.map((comment, index) => (
                                 <CommentComponent
                                     key={index}
                                     comment={comment}
-                                    onLongPress={() => comment.idUser === post.User.idUser ? handleCommentLongPress(comment) : null}
+                                    onLongPress={() => comment.idUser == iduser ? handleCommentLongPress(comment) : null}
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
                                 />

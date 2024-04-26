@@ -257,7 +257,7 @@ const ProfilePage = ({ route }) => {
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
             <Text style={styles.center}>{user.biographie || "Veuillez saisir votre biographie..."}</Text>
             <Text style={styles.center}>
-              <Text style={styles.boldNumbers}>{followersCount}</Text> abonnés | <Text style={styles.boldNumbers}>{followingsCount}</Text> abonnements
+              <Text style={styles.boldNumbers}>{followersCount}</Text> abonnés <Text style={styles.boldNumbers}>{followingsCount}</Text> abonnements
             </Text>
             <Text style={styles.details}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
