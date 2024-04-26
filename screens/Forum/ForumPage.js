@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ClubPage from './ClubForumPage';
 import CommunautePage from './CommunauteForumPage';
-import { Image, ImageBackground, StyleSheet, View } from 'react-native';
+import { Image, ImageBackground, StyleSheet, View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessageModal from '../../components/MessageModal.js';
 import axios from 'axios';
-
+import { FontAwesome } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -20,6 +20,7 @@ const ForumPage = () => {
     const [isBlurEffect, setIsBlurEffect] = useState(false);
     const [postComponentHeight, setPostComponentHeight] = useState(0); 
     const [reloadKey, setReloadKey] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const openModal = (content) => {
         setMessageText(content);
@@ -47,8 +48,6 @@ const ForumPage = () => {
     
     const renderMessageModal = () => {
         if (!isModalVisible) return null;
-        console.log(isBlurEffect)
-
         return (
             <View style={styles.messageModalStyle}>
                 <MessageModal
@@ -94,50 +93,74 @@ const ForumPage = () => {
             style={[styles.blurOverlay, { display: isBlurEffect ? 'flex' : 'none' }]}
             onPress={() => {
                 setIsBlurEffect(false);
-                console.log(isBlurEffect)
             }}
             activeOpacity={1}
         />
     );
 
     return (
-        <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
-            {renderBlurOverlay()}
-            {renderMessageModal()}
-            <View style={styles.logoContainer}>
-                <Image source={require('../../assets/logo.png')} style={styles.logo} />
-            </View>
-            <ScrollView style={styles.tabsContainer}>
-                <Tab.Navigator
-                    screenOptions={{
-                        tabBarStyle: {
-                            elevation: 0, 
-                            shadowOpacity: 0, 
-                            shadowOffset: { height: 0, width: 0 },
-                            shadowRadius: 0,
-                            shadowColor: 'transparent',
-                        },
-                        tabBarIndicatorContainerStyle: {
-                            backgroundColor: "#D9D9D9",
-                        },
-                        tabBarActiveTintColor: 'black',
-                        tabBarInactiveTintColor: '#A4A5A2',
-                        tabBarIndicatorStyle: { backgroundColor: '#008900'},
-                    }}
-                >
-                    <Tab.Screen name="Club" children={() => <ClubPage key={reloadKey} />} />
-                    <Tab.Screen name="Communaute" children={() => <CommunautePage key={reloadKey} />} />
-                </Tab.Navigator>
-            </ScrollView>
-            <TouchableOpacity
-                    onPress={() => openModal('')}
-                    style={styles.newMessageIcon}
-                >
-                    <Entypo name="new-message" size={24} color="white" />
-                </TouchableOpacity>
-        </ImageBackground>
+      
+            <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+                {renderBlurOverlay()}
+                {renderMessageModal()}
+                <View >
+                <View style={styles.logoContainer}>
+                    <Image source={require('../../assets/logo.png')} style={styles.logo} />
+
+                </View>
+                <View style={styles.searchContainer}>
+                        <FontAwesome name="search" size={24} color="black" style={styles.searchIcon} />
+                        <TextInput
+                            placeholder="Rechercher ..."
+                            value={searchTerm}
+                            onChangeText={setSearchTerm}
+                            style={styles.searchInput}
+                            placeholderTextColor="gray" 
+                        />
+                    </View>
+                    </View>
+                <ScrollView style={styles.tabsContainer}>
+                    <Tab.Navigator
+                        screenOptions={{
+                            tabBarStyle: {
+                                elevation: 0, 
+                                shadowOpacity: 0, 
+                                shadowOffset: { height: 0, width: 0 },
+                                shadowRadius: 0,
+                                shadowColor: 'transparent',
+                                height: 40,
+                            },
+                            tabBarLabelStyle: {
+                                fontSize: 13, 
+                                margin: 0, 
+                                paddingBottom: 50,
+                            },
+                            tabBarIndicatorContainerStyle: {
+                                backgroundColor: "#D9D9D9",
+                            },
+                            tabBarActiveTintColor: 'black',
+                            tabBarInactiveTintColor: '#A4A5A2',
+                            tabBarIndicatorStyle: { backgroundColor: '#008900'},
+                        }}
+                    >
+                        <Tab.Screen name="Club">
+                            {() => <ClubPage searchTerm={searchTerm} key={reloadKey} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Communaute">
+                            {() => <CommunautePage searchTerm={searchTerm} key={reloadKey} />}
+                        </Tab.Screen>
+                    </Tab.Navigator>
+                </ScrollView>
+                <TouchableOpacity
+                        onPress={() => openModal('')}
+                        style={styles.newMessageIcon}
+                    >
+                        <Entypo name="new-message" size={30} color="white" />
+                    </TouchableOpacity>
+            </ImageBackground>
     );
 };
+
 
 
 const styles = StyleSheet.create({
@@ -146,7 +169,7 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         marginLeft: "4%",
-        marginTop: "-6%",
+        marginTop: "1%",
     },
     logo: {
         width: "50%",
@@ -154,8 +177,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain' 
     },
     tabsContainer: {
-        marginTop: "-55%", 
-        backgroundColor: 'transparent' 
+        marginTop: "-60%", 
+        backgroundColor: 'transparent',
     },
     newMessageIcon: {
         position: 'absolute',
@@ -177,6 +200,29 @@ const styles = StyleSheet.create({
     messageModalStyle: {
         zIndex: 100,
     },
+    searchContainer: {
+        padding: 10,
+        marginTop: "-28%",
+        margin: "4%",
+        backgroundColor: "#f0f0f0", 
+        marginBottom: "10%",
+        borderRadius: 30, 
+        borderWidth: 1,
+        borderColor: "#E8E8E8",
+        flexDirection: 'row', 
+        alignItems: 'center', 
+    },
+    searchInput: {
+        flex: 1, 
+        height: 20,
+        borderColor: 'transparent', 
+        paddingLeft: 10,
+        borderRadius: 30, 
+        fontSize: 16, 
+    },
+    searchIcon: {
+        marginRight: 10, 
+    }
 });
 
 export default ForumPage;

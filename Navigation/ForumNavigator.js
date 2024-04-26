@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ForumPage from '../screens/Forum/ForumPage';
 import PostDetailsPage from '../screens/Profil/PostDetailsPage';
 import LoginPage from '../screens/Profil/LoginPage';
+import PostClubDetailsPage from '../screens/Forum/PostClubDetailsPage';
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,11 @@ export default function ForumNavigator() {
         name="Login" 
         component={LoginPage} 
         options={{ headerShown: false }} 
+      />
+      <Stack.Screen
+        name="PostClubDetails"
+        component={PostClubDetailsPage}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

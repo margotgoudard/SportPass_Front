@@ -26,7 +26,6 @@ const LoginPage = () => {
       await AsyncStorage.setItem('userToken', token); 
       await AsyncStorage.setItem('userId', String(response.data.idUser));
       const UserId = await AsyncStorage.getItem('userId');
-      console.log(UserId)
       navigation.navigate('ProfilPage', { userData: response.data });
     } catch (error) {
       console.error(error);

@@ -3,16 +3,17 @@ import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, 
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
-import PostComponent from '../../components/PostComponent.js';
+import PostClubComponent from '../../components/PostClubComponent.js';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import CommentComponent from '../../components/CommentComponent.js';
 import EditActions from '../../components/EditActionsComponent.js';
-import MessageModal from '../../components/MessageModal.js';
+import MessageModalClub from '../../components/MessageModalClub.js';
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 moment.locale('fr');
 
-const PostDetailsPage = ({ route, navigation }) => {
+const PostClubDetailsPage = ({ route, navigation }) => {
     const { post } = route.params;
     const [comments, setComments] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
@@ -25,13 +26,19 @@ const PostDetailsPage = ({ route, navigation }) => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isBlurEffect, setIsBlurEffect] = useState(false);
     const [postComponentHeight, setPostComponentHeight] = useState(0); 
-      
+    const [iduser, setIduser] = useState(null);
+
     const openModal = (edit, commentId, content) => {
         setIsEditMode(edit);
         setEditingCommentId(commentId);
         setMessageText(content);
         setModalVisible(true);
         setIsBlurEffect(true);
+    };
+
+    const getUserId = async () => {
+        const idUser = await AsyncStorage.getItem('userId');
+        setIduser(idUser)
     };
 
     const closeModal = () => {
@@ -49,7 +56,7 @@ const PostDetailsPage = ({ route, navigation }) => {
             contenu: messageText,
             date: new Date().toISOString(),
             idPublication: post.idPublication,
-            idUser: post.User.idUser
+            idUser: iduser
         };
 
         if (isEditMode) {
@@ -57,7 +64,7 @@ const PostDetailsPage = ({ route, navigation }) => {
             closeModal();
         } else {
             try {
-                const response = await axios.post('http://10.0.2.2:4000/api/commentaireUser', messageData);
+                const response = await axios.post('http://10.0.2.2:4000/api/commentaireClub', messageData);
                 setMessageText('');
                 closeModal();
                 fetchCommentsAndUsers();
@@ -80,12 +87,12 @@ const PostDetailsPage = ({ route, navigation }) => {
 
     const fetchCommentsAndUsers = async () => {
         try {
-            const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireUser/publication/${post.idPublication}`);
+            const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireClub/publication/${post.idPublication}`);
             let commentsWithDetails = await Promise.all(commentsResponse.data.map(async (comment) => {
                 try {
                     const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
-                    const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/commentaire/${comment.idCommentaire}`);
-                    const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, post.User.idUser);
+                    const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireClub/commentaire/${comment.idCommentaire}`);
+                    const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, iduser);
                     return {
                         ...comment,
                         likes: likesResponse.data.length,
@@ -136,7 +143,7 @@ const PostDetailsPage = ({ route, navigation }) => {
         };
 
         try {
-            await axios.put(`http://10.0.2.2:4000/api/commentaireUser/${editingCommentId}`, updatedComment);
+            await axios.put(`http://10.0.2.2:4000/api/commentaireClub/${editingCommentId}`, updatedComment);
             fetchCommentsAndUsers();
             closeModal();
         } catch (error) {
@@ -149,7 +156,7 @@ const PostDetailsPage = ({ route, navigation }) => {
         if (!isModalVisible) return null;
         return (
             <View style={styles.messageModalStyle}>
-                <MessageModal
+                <MessageModalClub
                     isModalVisible={isModalVisible}
                     closeModal={closeModal}
                     messageText={messageText}
@@ -201,7 +208,7 @@ const PostDetailsPage = ({ route, navigation }) => {
         };
 
         try {
-            await axios.put(`http://10.0.2.2:4000/api/commentaireUser/${commentId}`, updatedComment);
+            await axios.put(`http://10.0.2.2:4000/api/commentaireClub/${commentId}`, updatedComment);
             fetchCommentsAndUsers();
         } catch (error) {
             console.error('Error updating comment:', error);
@@ -211,7 +218,7 @@ const PostDetailsPage = ({ route, navigation }) => {
 
     const deleteComment = async (commentId) => {
         try {
-            const response = await axios.delete(`http://10.0.2.2:4000/api/commentaireUser/${commentId}`);
+            const response = await axios.delete(`http://10.0.2.2:4000/api/commentaireClub/${commentId}`);
             fetchCommentsAndUsers();
             setUpdateTrigger(updateTrigger + 1);
         } catch (error) {
@@ -221,12 +228,13 @@ const PostDetailsPage = ({ route, navigation }) => {
     };
 
     useEffect(() => {
+        getUserId()
         fetchCommentsAndUsers();
     }, [post.idPublication]);
 
     const checkIfLikedByCurrentUser = async (commentId, idUser) => {
         try {
-            const response = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${idUser}`);
+            const response = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireClub/${commentId}/${idUser}`);
             return response.data;
         } catch (error) {
             console.error('Error checking like status', error);
@@ -240,15 +248,15 @@ const PostDetailsPage = ({ route, navigation }) => {
             const commentIndex = updatedComments.findIndex(comment => comment.idCommentaire === commentId);
             if (commentIndex !== -1) {
                 if (isLiked) {
-                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireUser/${commentId}/${post.User.idUser}`);
+                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireClub/${commentId}/${iduser}`);
                     updatedComments[commentIndex].isLikedByCurrentUser = false;
                     updatedComments[commentIndex].likes -= 1;
                 } else {
                     const likeData = {
                         idCommentaire: commentId,
-                        idUser: post.User.idUser
+                        idUser: iduser
                     };
-                    await axios.post(`http://10.0.2.2:4000/api/likeCommentaireUser`, likeData);
+                    await axios.post(`http://10.0.2.2:4000/api/likeCommentaireClub`, likeData);
                     updatedComments[commentIndex].isLikedByCurrentUser = true;
                     updatedComments[commentIndex].likes += 1;
                 }
@@ -281,7 +289,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.container2}>
                         <View style={styles.premiercontainer}>
-                        <PostComponent
+                        <PostClubComponent
                             post={post}
                             updateTrigger={updateTrigger}
                             onPostPress={() => navigation.navigate('PostDetails', { post })}
@@ -292,7 +300,7 @@ const PostDetailsPage = ({ route, navigation }) => {
                                 <CommentComponent
                                     key={index}
                                     comment={comment}
-                                    onLongPress={() => comment.idUser === post.User.idUser ? handleCommentLongPress(comment) : null}
+                                    onLongPress={() => comment.idUser === iduser ? handleCommentLongPress(comment) : null}
                                     onLikePress={() => handleLike(comment.idCommentaire, comment.isLikedByCurrentUser)}
                                     isLikedByCurrentUser={comment.isLikedByCurrentUser}
                                 />
@@ -361,4 +369,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PostDetailsPage;
+export default PostClubDetailsPage;
