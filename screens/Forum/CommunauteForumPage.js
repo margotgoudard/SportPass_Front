@@ -121,7 +121,6 @@ const CommunauteForumPage = ({searchTerm}) => {
 
       const combinedPosts = interleavePosts(postsUser, postsCommercant);
       setPosts(combinedPosts);
-      console.log("COMBINED", combinedPosts)
     } catch (error) {
       console.error('Error fetching posts:', error);
       Alert.alert('Error', 'An error occurred while fetching posts');

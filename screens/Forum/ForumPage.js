@@ -48,8 +48,6 @@ const ForumPage = () => {
     
     const renderMessageModal = () => {
         if (!isModalVisible) return null;
-        console.log(isBlurEffect)
-
         return (
             <View style={styles.messageModalStyle}>
                 <MessageModal
@@ -95,7 +93,6 @@ const ForumPage = () => {
             style={[styles.blurOverlay, { display: isBlurEffect ? 'flex' : 'none' }]}
             onPress={() => {
                 setIsBlurEffect(false);
-                console.log(isBlurEffect)
             }}
             activeOpacity={1}
         />

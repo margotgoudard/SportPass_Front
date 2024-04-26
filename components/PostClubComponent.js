@@ -17,14 +17,14 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
     }
 
     const getUserId = async () => {
-        const idUser = await AsyncStorage.getItem('idUser');
+        const idUser = await AsyncStorage.getItem('userId');
         return idUser;
     };
 
     const checkIfLikedByCurrentUser = async (postId) => {
         const idUser = await getUserId();
         try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationPartenaire/${postId}/${idUser}`);
+          const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationClub/${postId}/${idUser}`);
           setIsLikedByCurrentUser(response.data.exists); 
           return response.data.exists;
         } catch (error) {
@@ -39,14 +39,14 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
         try {
             let newLikesCount = {...postLikesCount}; 
             if (isLikedByCurrentUser) {
-                await axios.delete(`http://10.0.2.2:4000/api/likePublicationPartenaire/${postId}/${idUser}`);
+                await axios.delete(`http://10.0.2.2:4000/api/likePublicationClub/${postId}/${idUser}`);
                 newLikesCount[postId] = (newLikesCount[postId] || 1) - 1;
             } else {
                 const likeData = {
                     idPublication: postId,
                     idUser
                 };
-                await axios.post(`http://10.0.2.2:4000/api/likePublicationPartenaire`, likeData);
+                await axios.post(`http://10.0.2.2:4000/api/likePublicationClub`, likeData);
                 newLikesCount[postId] = (newLikesCount[postId] || 0) + 1;
             }
             setIsLikedByCurrentUser(!isLikedByCurrentUser); 
@@ -62,11 +62,10 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
             if (!post) return;
             const commentsCount = {};
             const likesCount = {};
-            const idUser = await getUserId();
 
             try {
-                const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentairePartenaire/publication/${post.idPublication}`);
-                const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationPartenaire/publication/${post.idPublication}`);
+                const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireClub/publication/${post.idPublication}`);
+                const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationClub/publication/${post.idPublication}`);
                 commentsCount[post.idPublication] = commentsResponse.data.length;
                 likesCount[post.idPublication] = likesResponse.data.length;
                 await checkIfLikedByCurrentUser(post.idPublication);
@@ -85,6 +84,7 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
 
     return (
         <ImageBackground source={{ uri: post.image }} style={styles.postItem} imageStyle={{ borderRadius: 5 }}>
+            <TouchableOpacity onPress={() => navigation.navigate('PostClubDetails', { post })}>
             <View style={styles.container}>
             <View style={styles.postHeader}>
                 <Text style={styles.postContent}>{post.contenu}</Text>
@@ -100,7 +100,7 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
                     <View style={styles.postDetails}>
                         <View style={styles.detailItem}>
                             <Text style={styles.detailText}>{postCommentsCount[post.idPublication] || 0}</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { post, showModal: true })}>
+                            <TouchableOpacity onPress={() => navigation.navigate('PostClubDetails', { post, showModal: true })}>
                                 <FontAwesome name="comments" size={22} color="white" />
                             </TouchableOpacity>
                         </View>
@@ -118,6 +118,7 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
                 )}
             </View>
             </View>
+            </TouchableOpacity>
         </ImageBackground>
     );
 };
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 16,
+        marginTop: "8%",
         marginRight: "20%",
         shadowColor: '#000',  
         shadowOffset: { width: 4, height: 2 },  

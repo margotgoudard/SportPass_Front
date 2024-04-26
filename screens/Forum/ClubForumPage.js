@@ -71,14 +71,12 @@ const ClubForumPage = ({searchTerm}) => {
 
   const isPostPartenaire = (post) => {
     if (post) {
-      console
         return post.hasOwnProperty('idPartenaire'); 
     }
   };
 
   const filteredPosts = posts.filter(post => {
     if (post) {
-        console.log(post);
         const contentMatch = post.contenu ? post.contenu.toLowerCase().includes(searchTerm.toLowerCase()) : false;
         const titre = isPostPartenaire(post) ? post.Partenaire && post.Partenaire.titre ? post.Partenaire.titre.toLowerCase().includes(searchTerm.toLowerCase()) : false : false;
         return contentMatch || titre;
