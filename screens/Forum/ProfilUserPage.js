@@ -60,15 +60,17 @@ const ProfileUserPage = ({ route }) => {
   const fetchUserPosts = async () => { 
     try {
       const response = await axios.get(`http://10.0.2.2:4000/api/publicationUser/user/${userData.idUser}`);
-      const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
-      setPosts(sortedPosts);
+      if (response.data.length > 0) {
+        const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
+        setPosts(sortedPosts);
+      } else {
+        setPosts(response.data);
+      }
     } catch (error) {
       console.error(error);
-      Alert.alert("Erreur de chargement", "Les posts n'ont pas pu être chargées.");
+      Alert.alert("Erreur de chargement", "Les posts n'ont pas pu être chargés.");
     }
   };
-
-
 
   const toggleSubscription = async () => {
     if (isSubscribed) {
@@ -92,14 +94,12 @@ const ProfileUserPage = ({ route }) => {
     }
   };
   const checkSubscription = async () => {
-    console.log(currentUserId)
     try {
         const response = await axios.get(`http://10.0.2.2:4000/api/abonnes/isFollower/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(response.data);
     } catch (error) {
         console.error("Error checking subscription status:", error);
         if (error.response) {
-            // The request was made and the server responded with a status code
             console.error("Server responded with status:", error.response.status);
             console.error("Response data:", error.response.data);
             console.error("Response headers:", error.response.headers);
@@ -121,8 +121,6 @@ const ProfileUserPage = ({ route }) => {
               const followersResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/followers/${userData.idUser}`);
               const followingsResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/following/${userData.idUser}`);
               setFollowersCount(followersResponse.data.length);
-              console.log(followingsResponse.data)
-              console.log(followersResponse.data)
               setFollowingsCount(followingsResponse.data.length);
             } catch (error) {
               console.error(error);
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollview: {
-    marginTop: "-10%"
+    marginTop: "-15%"
   },
   headerContainer: {
     alignItems: 'center',
@@ -234,7 +232,6 @@ const styles = StyleSheet.create({
   },
   center: {
     fontSize: 16,
-    marginBottom: "5%",
     textAlign: 'center',
     color: '#333333'  
   },
@@ -250,6 +247,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+    fontWeight: 'bold'
   },
   subscriptionContainer: {
     flexDirection: 'row',
@@ -272,16 +270,18 @@ const styles = StyleSheet.create({
   subscribeButton: {
     flex: 1,
     backgroundColor: 'green',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
     borderRadius: 15,
     marginLeft: "10%"
   },
   unsubscribeButton: {
     flex: 1,
-    backgroundColor: 'purple',
-    padding: 10,
+    backgroundColor: '#5D2E46',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
     borderRadius: 15,
-    marginLeft: "8%"
+    marginLeft: "8%",
   },
 });
 

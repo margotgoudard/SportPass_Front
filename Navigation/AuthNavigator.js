@@ -8,6 +8,8 @@ import ModificationProfilPage from '../screens/Profil/ModificationProfilPage.js'
 import PassPage from '../screens/Profil/PassPage.js'
 import BilletPage from '../screens/Profil/BilletsPage.js'
 import CommercantFavoris from '../screens/Profil/CommercantFavorisPage.js'
+import AbonnesListPage from '../screens/Profil/AbonnesListPage.js';
+import ProfileUserPage from '../screens/Forum/ProfilUserPage.js';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,16 @@ export default function AuthNavigator() {
         <Stack.Screen name="Pass" component={PassPage}  options={{ headerShown: false }}  />
         <Stack.Screen name="Billet" component={BilletPage}  options={{ headerShown: false }}  />
         <Stack.Screen name="CommercantFavoris" component={CommercantFavoris}  options={{ headerShown: false }}  />
+        <Stack.Screen 
+        name="AbonnesList" 
+        component={AbonnesListPage}  
+        options={{ headerShown: false }}  
+      />
+      <Stack.Screen
+        name="ProfilUser"
+        component={ProfileUserPage}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

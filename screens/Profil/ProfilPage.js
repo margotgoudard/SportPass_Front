@@ -37,7 +37,8 @@ const ProfilePage = ({ route }) => {
   const [messageModalVisible, setMessageModalVisible] = useState(false);
   const [blurEffect, setBlurEffect] = useState(false);
   const [postComponentVisible, setPostComponentVisible] = useState(false);
-
+  const [followers, setFollowers] = useState([]);
+  const [followings, setFollowings] = useState([]);
 
   const adjustInputHeight = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
@@ -206,6 +207,8 @@ const ProfilePage = ({ route }) => {
           const followingsResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/following/${userData.idUser}`);
           setFollowersCount(followersResponse.data.length);
           setFollowingsCount(followingsResponse.data.length);
+          setFollowers(followersResponse.data);
+          setFollowings(followingsResponse.data)
         } catch (error) {
           console.error(error);
           Alert.alert("Erreur de chargement", "Les données d'abonnés n'ont pas pu être chargées.");
@@ -256,9 +259,28 @@ const ProfilePage = ({ route }) => {
             <Text style={styles.bold}>{user.pseudo}</Text>
             <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
             <Text style={styles.center}>{user.biographie || "Veuillez saisir votre biographie..."}</Text>
-            <Text style={styles.center}>
-              <Text style={styles.boldNumbers}>{followersCount}</Text> abonnés <Text style={styles.boldNumbers}>{followingsCount}</Text> abonnements
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center',  justifyContent: 'center', marginBottom: 10 }}>
+              <TouchableOpacity onPress={() => navigation.navigate('AbonnesList', { 
+                userId: userData.idUser, 
+                followers: followers, 
+                followings: followings, 
+                type: 'followers' 
+              })}>
+                <Text>
+                  <Text style={styles.boldNumbers}>{followersCount}</Text> abonnés
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('AbonnesList', { 
+                userId: userData.idUser, 
+                followers: followers, 
+                followings: followings, 
+                type: 'followings' 
+              })}>
+                <Text style={styles.text}>
+                  <Text style={styles.boldNumbers}>{followingsCount}</Text> abonnements
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.details}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="mail" size={22} color="black" />
@@ -297,7 +319,6 @@ const ProfilePage = ({ route }) => {
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
-  
               <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
                 screen: 'Profil', 
                 params: { screen: 'Billet', params: { userId: userData.idUser } }
@@ -307,7 +328,6 @@ const ProfilePage = ({ route }) => {
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
-  
               <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
                 screen: 'Profil', 
                 params: { screen: 'CommercantFavoris', params: { userId: userData.idUser } }
@@ -317,7 +337,6 @@ const ProfilePage = ({ route }) => {
                   <Text style={styles.listItemArrow}>›</Text>
                 </View>
               </TouchableOpacity>
-  
               <View style={styles.postItemList}>
                 {posts.map((post, index) => (
                   <PostComponent
@@ -334,7 +353,7 @@ const ProfilePage = ({ route }) => {
         </View>
       </ScrollView>
     </ImageBackground>
- );
+  );
 };
 
 const styles = StyleSheet.create({
@@ -379,9 +398,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15
   },
+  text: {
+    marginLeft: "10%"
+  },
   details: {
     fontSize: 16,
-    marginBottom: "4%",
   },
   teamName: {
     fontSize: 16,
@@ -392,12 +413,10 @@ const styles = StyleSheet.create({
   },
   center: {
     fontSize: 16,
-    marginBottom: "5%",
     textAlign: 'center'
   },
   bold: {
     fontSize: 16,
-    marginBottom: 5,
     textAlign: 'center',
     fontWeight: 'bold'
   },
@@ -443,7 +462,8 @@ const styles = StyleSheet.create({
     marginLeft: 5, 
   },
   boldNumbers: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
+    fontSize: 16, 
   },
   postItemList: {
     width: '100%'

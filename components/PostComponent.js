@@ -8,6 +8,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true, openModal }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -81,8 +82,18 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         }, [post?.idPublication, updateTrigger]) 
     );
 
-    const navigateToProfile = () => {
-        navigation.navigate('ProfilUser', { userData: post.User });
+    const getUserId = async () => {
+        const idUser = await AsyncStorage.getItem('userId');
+        return idUser;
+    };
+
+    const navigateToProfile = async () => {
+        const userId = await getUserId();        
+        if (post.User.idUser == userId) {
+            navigation.navigate('ProfilPage', { userData: post.User });
+        } else {        
+            navigation.navigate('ProfilUser', { userData: post.User });
+        }
     };
 
     return (
