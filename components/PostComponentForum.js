@@ -8,7 +8,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -20,9 +20,18 @@ const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, sho
         return null;
     }
 
-    const navigateToProfile = () => {
-        console.log(post.User)
-        navigation.navigate('ProfilUser', { userData: post.User });
+    const getUserId = async () => {
+        const idUser = await AsyncStorage.getItem('userId');
+        return idUser;
+    };
+
+    const navigateToProfile = async () => {
+        const userId = await getUserId();        
+        if (post.User.idUser == userId) {
+            navigation.navigate('ProfilPage', { userData: post.User });
+        } else {        
+            navigation.navigate('ProfilUser', { userData: post.User });
+        }
     };
 
     const checkIfLikedByCurrentUser = async (postId, idUser) => {
