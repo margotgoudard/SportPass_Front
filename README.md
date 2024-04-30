@@ -31,3 +31,6 @@ npm install react-native-3d-model-view //pas nécessaire
 npm install react-iframe
 
 npm install react-native-webview
+
+npm install react-native-maps --save-exact
+
