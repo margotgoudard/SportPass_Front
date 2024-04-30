@@ -98,13 +98,13 @@ export default function PlacePage({ route }) {
                    {place.isReserved ? ( 
                       <MaterialIcons 
                         name="chair" 
-                        size={27} 
+                        size={30} 
                         color={selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) ? '#BD4F6C' : '#008900'}
                         />
                     ) : (
                       <MaterialIcons 
                         name="chair" 
-                        size={27} 
+                        size={30} 
                         color='#D9D9D9'
                       />
                     )}
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   place: {
-    margin: 1,
+    margin: 3,
     justifyContent: 'center',
     alignItems: 'center',
   },
