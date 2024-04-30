@@ -27,20 +27,16 @@ export default function PlacePage({ route }) {
   
         const placesByRowData = {};
         
-        // Fetch tickets for all places
         const ticketResponse = await Promise.all(
           placesData.map((place) => axios.get(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`))
         );
         const ticketData = ticketResponse.map((response) => response.data).flat();
-        console.log('réponse2',ticketData);
   
-        // Map tickets to placeId for quick lookup
         const ticketMap = {};
         ticketData.forEach((ticket) => {
           ticketMap[ticket.idPlace] = ticket;
         });
   
-        // Populate placesByRowData with reservation info
         placesData.forEach((place) => {
           const rowId = place.idRangee;
           if (!placesByRowData[rowId]) {
@@ -54,8 +50,6 @@ export default function PlacePage({ route }) {
           
           placesByRowData[rowId].push({ ...place, isReserved });
         });
-        
-        console.log(placesByRowData);
 
         setPlacesByRow(placesByRowData);
         setLoading(false);
@@ -68,13 +62,6 @@ export default function PlacePage({ route }) {
   }, [selectedTribune]);
   
 
-   const getreservee = (billet) => {
-    return billet.reservee == 1 ? 'green' : 'red';
-  };
-
-  const getTicketByPlaceId = (placeId) => {
-    return tickets.find((ticket) => ticket.idPlace = placeId);
-  };
 
   const handlePlaceSelection = (place) => {
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
@@ -102,22 +89,23 @@ export default function PlacePage({ route }) {
                 <TouchableOpacity
                   key={index}
                   style={[
-                    styles.place, 
-                    selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) && styles.selectedPlace
+                    styles.place
                   ]}
                   onPress={() => handlePlaceSelection(place)}
+                  disabled={!place.isReserved}
+
                 >
                    {place.isReserved ? ( 
                       <MaterialIcons 
                         name="chair" 
-                        size={24} 
-                        color='green'
-                      />
+                        size={27} 
+                        color={selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) ? '#BD4F6C' : '#008900'}
+                        />
                     ) : (
                       <MaterialIcons 
                         name="chair" 
-                        size={24} 
-                        color='red'
+                        size={27} 
+                        color='#D9D9D9'
                       />
                     )}
                   
@@ -143,13 +131,6 @@ const styles = StyleSheet.create({
   container:{
     marginBottom:60,
     marginTop:20,
-
-  },
-  rowHeader: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginTop: 10,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -157,13 +138,8 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   place: {
-    margin: 5,
-    backgroundColor: 'lightgrey',
-    borderRadius: 5,
+    margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  selectedPlace: {
-    backgroundColor: 'blue',
   },
 });
