@@ -11,6 +11,8 @@ const { selectedTribune } = route.params;
 const [selectedPlace, setSelectedPlace] = useState(null);
 const [loading, setLoading] = useState(true);
 const [places, setPlaces] = useState([]);
+const [tickets, setTickets] = useState([]);
+
 
 useEffect(() => {
   const fetchData = async () => {
@@ -26,9 +28,17 @@ useEffect(() => {
       //console.log(placesData);
 
       const allPlaces = placesData.flat();
-      console.log(allPlaces);
-
+      //console.log(allPlaces);
       setPlaces(allPlaces);
+
+      const ticketResponse = await Promise.all(
+        allPlaces.map((place)=> axios.get(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`))
+      );
+      const ticketData = ticketResponse.map((response) => response.data);
+      console.log(ticketData);
+
+      setTickets(ticketData);
+
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des places :', error);
