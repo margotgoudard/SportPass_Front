@@ -19,30 +19,45 @@ export default function PlacePage({ route }) {
       try {
         const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/tribune/${selectedTribune.idTribune}`);
         const rangees = rangeeResponse.data;
-
+  
         const placesResponse = await Promise.all(
           rangees.map((rangee) => axios.get(`http://10.0.2.2:4000/api/place/rangee/${rangee.idRangee}`))
         );
         const placesData = placesResponse.map((response) => response.data).flat();
-
+  
         const placesByRowData = {};
-        placesData.forEach((place) => {
-          if (!placesByRowData[place.idRangee]) {
-            placesByRowData[place.idRangee] = [];
-          }
-          placesByRowData[place.idRangee].push(place);
+        
+        // Fetch tickets for all places
+        const ticketResponse = await Promise.all(
+          placesData.map((place) => axios.get(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`))
+        );
+        const ticketData = ticketResponse.map((response) => response.data).flat();
+        console.log('réponse2',ticketData);
+  
+        // Map tickets to placeId for quick lookup
+        const ticketMap = {};
+        ticketData.forEach((ticket) => {
+          ticketMap[ticket.idPlace] = ticket;
         });
+  
+        // Populate placesByRowData with reservation info
+        placesData.forEach((place) => {
+          const rowId = place.idRangee;
+          if (!placesByRowData[rowId]) {
+            placesByRowData[rowId] = [];
+          }
+          
+          const ticket = ticketData.find((ticket) => ticket.idPlace == place.idPlace);
+          //console.log('ticket',ticket);
+          const isReserved = ticket && ticket.reservee == 1;
+          //console.log(isReserved);
+          
+          placesByRowData[rowId].push({ ...place, isReserved });
+        });
+        
+        console.log(placesByRowData);
 
         setPlacesByRow(placesByRowData);
-
-        const ticketResponse = await Promise.all(
-          placesData.map((place)=> axios.get(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`))
-        );
-        const ticketData = ticketResponse.map((response) => response.data);
-        console.log(ticketData);
-  
-        setTickets(ticketData);
-
         setLoading(false);
       } catch (error) {
         console.error('Erreur lors de la récupération des places :', error);
@@ -51,13 +66,14 @@ export default function PlacePage({ route }) {
     };
     fetchData();
   }, [selectedTribune]);
+  
 
    const getreservee = (billet) => {
-    return billet.reservee ? 'green' : 'red';
+    return billet.reservee == 1 ? 'green' : 'red';
   };
 
   const getTicketByPlaceId = (placeId) => {
-    return tickets.find((ticket) => ticket.idPlace === placeId);
+    return tickets.find((ticket) => ticket.idPlace = placeId);
   };
 
   const handlePlaceSelection = (place) => {
@@ -89,9 +105,9 @@ export default function PlacePage({ route }) {
                     styles.place, 
                     selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) && styles.selectedPlace
                   ]}
-                    onPress={() => handlePlaceSelection(place)}
+                  onPress={() => handlePlaceSelection(place)}
                 >
-                   {(getTicketByPlaceId(place.idPlace) && getTicketByPlaceId(place.idPlace).reservee) ? (
+                   {place.isReserved ? ( 
                       <MaterialIcons 
                         name="chair" 
                         size={24} 
