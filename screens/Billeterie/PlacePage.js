@@ -1,8 +1,10 @@
 import React, {useState,useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import LottieView from 'lottie-react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
+import ProgressBar from '../../components/ProgressBar';
+
 
 export default function PlacePage({route}){
 const { selectedTribune } = route.params;
@@ -13,15 +15,19 @@ const [places, setPlaces] = useState([]);
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/tribune/${selectedTribune.id}`);
+      const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/tribune/${selectedTribune.idTribune}`);
       const rangees = rangeeResponse.data;
+      //console.log(rangees);
 
       const placesResponse = await Promise.all(
-        rangees.map((rangee) => axios.get(`http://10.0.2.2:4000/api/place/rangee/${rangee.id}`))
+        rangees.map((rangee) => axios.get(`http://10.0.2.2:4000/api/place/rangee/${rangee.idRangee}`))
       );
       const placesData = placesResponse.map((response) => response.data);
+      //console.log(placesData);
 
       const allPlaces = placesData.flat();
+      console.log(allPlaces);
+
       setPlaces(allPlaces);
       setLoading(false);
     } catch (error) {
@@ -40,21 +46,29 @@ useEffect(() => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {places.map((place) => (
+    <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+      <ScrollView>
+        <ProgressBar currentPage={3} />
+      {places.map((place,index) => (
         <TouchableOpacity
-          key={place.id}
-          style={[styles.place, selectedPlace === place.id && styles.selectedPlace]}
-          onPress={() => setSelectedPlace(place.id)}
+          key={index}
+          style={[styles.place, selectedPlace === index && styles.selectedPlace]}
+          onPress={() => setSelectedPlace(place)}
         >
-          <Text>{place.name}</Text>
+          <Text>Rang {place.idRangee} - Siège {place.numero}</Text>
         </TouchableOpacity>
       ))}
     </ScrollView>
+    </ImageBackground>
   );
   };
 
   const styles = StyleSheet.create({
+    background: {
+      flex: 1,
+      resizeMode: 'cover',
+      justifyContent: 'center',
+    },
     container: {
       padding: 20,
     },
