@@ -4,7 +4,14 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CommercantInfo = ({ selectedCommercant, toggleFavorite }) => {
-  if (!selectedCommercant) return null;
+
+    if (!selectedCommercant) {
+        return (
+          <View style={styles.container}>
+            <Text style={styles.infoText}>Veuillez sélectionner un commerçant</Text>
+          </View>
+        );
+      }
 
   return (
     <View style={styles.infoContainer}>
@@ -41,6 +48,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     borderRadius: 10,
     flexDirection: 'row',
+  },
+  container: {
+    padding : 60,
+    margin : 10,
+    borderRadius: 10,
+    backgroundColor: '#D9D9D9'
+  },
+  infoText: {
+    fontSize: 15, 
+    fontStyle: 'italic',
+    color: '#444', 
   },
   commercantDetails: {
     flex: 1,
