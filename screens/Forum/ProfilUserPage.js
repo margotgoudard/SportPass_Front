@@ -1,15 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-  ImageBackground,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ImageBackground, Alert, ActivityIndicator} from 'react-native';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';

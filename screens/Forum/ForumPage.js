@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ClubPage from './ClubForumPage';
 import CommunautePage from './CommunauteForumPage';
-import { Image, ImageBackground, StyleSheet, View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { Image, ImageBackground, StyleSheet, View, TextInput } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';

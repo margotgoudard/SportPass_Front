@@ -1,26 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-  ImageBackground,
-  Alert,
-  ActivityIndicator
-} from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ImageBackground, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
 import PostComponent from '../../components/PostComponent.js';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import ProfileHeader from '../../components/Profil/ProfilHeader.js';
 
 moment.locale('fr');
 
@@ -236,185 +224,102 @@ const ProfilePage = ({ route }) => {
     <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
       {renderBlurOverlay()}
       {renderSelectedPost()}
+  
       <ScrollView>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogOut}>
             <Text style={styles.logoutText}>Se déconnecter</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
-            screen: 'Profil', 
+            screen: 'Profil',
             params: { screen: 'ModificationProfil', params: { user } }
           })}>
             <Text style={styles.editProfileText}>Modifier</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.headerContainer}>
-          <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
-          <View style={styles.userInfoContainer}>
-            <View style={styles.vipStatusContainer}>
-              <Text style={styles.vipStatus}>
-                Palier {user.Palier?.nom}
-              </Text>
-              <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
-            </View>
-            <Text style={styles.bold}>{user.pseudo}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center"}}>
-              {user.Equipe?.logo && (
-                <Image source={{ uri: user.Equipe.logo }} style={{ width: 50, height: 50, marginRight: 10 }} />
-              )}
-              <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
-            </View>
-            <Text style={styles.center}>{user.biographie || "Veuillez saisir votre biographie..."}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center',  justifyContent: 'center', marginBottom: 10 }}>
-              <TouchableOpacity onPress={() => navigation.navigate('AbonnesList', { 
-                userId: userData.idUser, 
-                followers: followers, 
-                followings: followings, 
-                type: 'followers' 
-              })}>
-                <Text>
-                  <Text style={styles.boldNumbers}>{followersCount}</Text> abonnés
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('AbonnesList', { 
-                userId: userData.idUser, 
-                followers: followers, 
-                followings: followings, 
-                type: 'followings' 
-              })}>
-                <Text style={styles.text}>
-                  <Text style={styles.boldNumbers}>{followingsCount}</Text> abonnements
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.details}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="mail" size={22} color="black" />
-                <Text style={{ marginLeft: 15 }}>{user.mail}</Text>
+  
+        <View style={styles.userInfoContainer}>
+          <ProfileHeader
+            user={user}
+            handleNavigation={(type) => navigation.navigate('AbonnesList', {
+              userId: userData.idUser,
+              followers,
+              followings,
+              type
+            })}
+            followersCount={followersCount}
+            followingsCount={followingsCount}
+            followers={followers}
+            followings={followings}
+            calculateProfileCompletion={calculateProfileCompletion}
+          />
+  
+          <View style={styles.listContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+              screen: 'Profil',
+              params: { screen: 'Pass', params: { userId: userData.idUser } }
+            })}>
+              <View style={styles.listItem}>
+                <Text style={styles.listItemText}>Mon abonnement</Text>
+                <Text style={styles.listItemArrow}>›</Text>
               </View>
-            </Text>
-            <Text style={styles.details}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <FontAwesome name="phone" size={24} color="black" />
-                <Text style={{ marginLeft: 16 }}>{user.tel || "Veuillez saisir votre téléphone..."}</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+              screen: 'Profil',
+              params: { screen: 'Billet', params: { userId: userData.idUser } }
+            })}>
+              <View style={styles.listItem}>
+                <Text style={styles.listItemText}>Mes billets</Text>
+                <Text style={styles.listItemArrow}>›</Text>
               </View>
-            </Text>
-            <Text style={styles.details}>
-              <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                <MaterialIcons name="location-pin" size={24} color="black" />
-                <Text style={{ marginLeft: 15 }}>{user.adresse || "Veuillez saisir votre adresse..."}</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+              screen: 'Profil',
+              params: { screen: 'CommercantFavoris', params: { userId: userData.idUser } }
+            })}>
+              <View style={styles.listItem}>
+                <Text style={styles.listItemText}>Mes favoris</Text>
+                <Text style={styles.listItemArrow}>›</Text>
               </View>
-            </Text>
-            {calculateProfileCompletion(user) < 100 && (
-              <>
-                <View style={styles.progressBarContainer}>
-                  <View style={[styles.progressBar, { width: `${calculateProfileCompletion(user)}%` }]} />
-                </View>
-                <Text style={[styles.progressBarText, calculateProfileCompletion(user) === 100 ? styles.profileCompleted : {}]}>
-                  {`${Math.round(calculateProfileCompletion(user))}% de votre profil est complet`}
-                </Text>
-              </>
-            )}
-            <View style={styles.listContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
-                screen: 'Profil', 
-                params: { screen: 'Pass', params: { userId: userData.idUser } }
-              })}>
-                <View style={styles.listItem}>
-                  <Text style={styles.listItemText}>Mon abonnement</Text>
-                  <Text style={styles.listItemArrow}>›</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
-                screen: 'Profil', 
-                params: { screen: 'Billet', params: { userId: userData.idUser } }
-              })}>
-                <View style={styles.listItem}>
-                  <Text style={styles.listItemText}>Mes billets</Text>
-                  <Text style={styles.listItemArrow}>›</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
-                screen: 'Profil', 
-                params: { screen: 'CommercantFavoris', params: { userId: userData.idUser } }
-              })}>
-                <View style={styles.listItem}>
-                  <Text style={styles.listItemText}>Mes favoris</Text>
-                  <Text style={styles.listItemArrow}>›</Text>
-                </View>
-              </TouchableOpacity>
-              <View style={styles.postItemList}>
-                {posts.map((post, index) => (
-                  <PostComponent
-                    key={index}
-                    post={post}
-                    onPostPress={() =>  navigation.navigate('PostDetails', { post })}
-                    onLongPress={() => handleLongPressOnPost(post)}
-                    style={styles.postComponentStyle}
-                  />
-                ))}
-              </View>
+            </TouchableOpacity>
+  
+            <View style={styles.postItemList}>
+              {posts.map((post, index) => (
+                <PostComponent
+                  key={index}
+                  post={post}
+                  onPostPress={() => navigation.navigate('PostDetails', { post })}
+                  onLongPress={() => handleLongPressOnPost(post)}
+                  style={styles.postComponentStyle}
+                />
+              ))}
             </View>
           </View>
         </View>
       </ScrollView>
     </ImageBackground>
   );
-};
+};  
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerContainer: {
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 50, 
-    marginBottom: "15%"
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    position: 'absolute', 
-    top: 70, 
-    alignSelf: 'center', 
-    zIndex: 1, 
-  },
   userInfoContainer: {
-    width: '112%', 
+    width: '100%', 
     backgroundColor: '#D9D9D9',
     borderRadius: 20,
     padding: 20,
-    paddingTop: 60,
-    marginTop: 70,
+    marginTop: 100,
     position: 'relative',
-  },
-  vipStatusContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    flexDirection: 'row',
-  },
-  vipStatus: {
-    color: '#008900',
-    fontWeight: 'bold',
-    fontSize: 15
   },
   text: {
     marginLeft: "10%"
   },
   details: {
     fontSize: 16,
-  },
-  teamName: {
-    fontSize: 16,
-    color: '#008900', 
-    fontWeight: 'bold',
-    textAlign: 'center'
   },
   center: {
     fontSize: 16,
@@ -424,22 +329,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontWeight: 'bold'
-  },
-  progressBarContainer: {
-    height: 10,
-    width: '100%',
-    backgroundColor: 'black',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#008900',
-    borderRadius: 10,
-  },
-  progressBarText: {
-    textAlign: 'center',
-    marginTop: 5,
   },
   listContainer: {
     marginTop: 20,
@@ -460,15 +349,6 @@ const styles = StyleSheet.create({
   listItemArrow: {
     fontSize: 16,
     color: 'grey', 
-  },
-  palierImage: {
-    width: 20, 
-    height: 20, 
-    marginLeft: 5, 
-  },
-  boldNumbers: {
-    fontWeight: 'bold',
-    fontSize: 16, 
   },
   postItemList: {
     width: '100%'
@@ -491,10 +371,6 @@ const styles = StyleSheet.create({
     color: '#008900',
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  profileCompleted: {
-    textDecorationLine: 'underline',
-    color: '#008900',
   },
   loadingContainer: {
     flex: 1,

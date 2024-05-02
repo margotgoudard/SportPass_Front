@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Alert,
-  ImageBackground,
-  Image
-} from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Alert, ImageBackground, Image } from 'react-native';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
