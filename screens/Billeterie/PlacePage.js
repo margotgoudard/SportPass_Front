@@ -17,6 +17,8 @@ export default function PlacePage({ route }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [guestLastName, setGuestLastName] = useState('');
+  const [currentSelectedPlace, setCurrentSelectedPlace] = useState(null);
+
 
 
   useEffect(() => {
@@ -91,15 +93,30 @@ export default function PlacePage({ route }) {
       setSelectedPlaces(filteredPlaces);
     } else {
       if (selectedPlaces.length > 0) {
+        setCurrentSelectedPlace(place); 
+        setSelectedPlaces([...selectedPlaces, { ...place, guestName: '', guestLastName: '' }]);
         setIsModalVisible(true);
       }
-      setSelectedPlaces([...selectedPlaces, place]);
+      else{
+        setSelectedPlaces([...selectedPlaces, place]);
+      }
     }
   };
 
   const handleConfirmGuestInfo = () => {
-    setIsModalVisible(false);
+    if (currentSelectedPlace) {
+      const updatedPlaces = selectedPlaces.map((place) => {
+        if (place.idPlace == currentSelectedPlace.idPlace) {
+          return { ...place, guestName, guestLastName };
+        }
+        return place;
+      });
+      setSelectedPlaces(updatedPlaces);
+      setIsModalVisible(false);
+      setCurrentSelectedPlace(null); 
+    }
   };
+
 
   const handleRemovePlace = (idPlace) => {
     const filteredPlaces = selectedPlaces.filter((place) => place.idPlace !== idPlace);
@@ -165,6 +182,11 @@ export default function PlacePage({ route }) {
                 <View style={styles.detailsContainer}>
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
+                  { (place.guestName !=='' && place.guestLastName!== '') &&(
+                  <Text style={styles.textGuestInfo}>
+                      {place.guestName} {place.guestLastName}
+                    </Text>
+                  )}
                   <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
                     <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
                   </TouchableOpacity>
@@ -236,8 +258,8 @@ const styles = StyleSheet.create({
     padding:10,
   },
   textTribune:{
-    fontSize:20,
-    fontWeight:'bold',
+    fontSize: 20,
+    fontWeight: 'bold',
     marginLeft:15,
   },
   nombreBilletStyle:{
@@ -256,15 +278,18 @@ const styles = StyleSheet.create({
   },
   detailsContainer : {
     backgroundColor:'#D9D9D9',
-    borderRadius:20,
+    borderRadius:15,
     flexDirection: 'row',
     justifyContent: 'center',
-    padding:20,
+    paddingHorizontal:20,
+    paddingVertical:10,
     marginHorizontal:10,
     marginVertical:5,
     flexWrap: 'wrap',
     maxHeight: '100%', 
     maxWidth: '100%', 
+    position: 'relative', 
+
   },
   textPlace:{
     fontSize:17,
@@ -276,10 +301,18 @@ const styles = StyleSheet.create({
     color:'#008900',
     marginLeft:10,
   },
+  textGuestInfo: {
+    fontSize:15,
+    fontStyle:'italic',
+    marginTop: 5,
+  },
   trashIcon:{
     marginLeft:15,
+    position:'absolute',
+    zIndex:2,
+    right:-50,
+    top:-20,
   },
-  
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
