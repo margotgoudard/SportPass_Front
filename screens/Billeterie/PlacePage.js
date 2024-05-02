@@ -6,6 +6,7 @@ import axios from 'axios';
 import ProgressBar from '../../components/ProgressBar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 
 export default function PlacePage({ route }) {
@@ -122,6 +123,15 @@ export default function PlacePage({ route }) {
     }
   };
 
+  const handleCancelSelection = () => {
+    setIsModalVisible(false); 
+    if (currentSelectedPlace) {
+      const filteredPlaces = selectedPlaces.filter((place) => place.idPlace !== currentSelectedPlace.idPlace);
+      setSelectedPlaces(filteredPlaces);
+      setCurrentSelectedPlace(null);
+    }
+  };
+  
 
   const handleRemovePlace = (idPlace) => {
     const filteredPlaces = selectedPlaces.filter((place) => place.idPlace !== idPlace);
@@ -181,20 +191,20 @@ export default function PlacePage({ route }) {
             <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
             <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billets</Text>
             <Text style={styles.totalPriceStyle}>{calculateTotalPrice()}€</Text>
-
             {selectedPlaces.map((place, index) => (
               <View key={index} style={styles.Detcontainer}>
                 <View style={styles.detailsContainer}>
+                  <View style={styles.textContainer} >
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
-                  <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
-                    <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
-                  </TouchableOpacity>
+                  </View>
                   { (place.guestName !=='' && place.guestLastName!== '') &&(
                   <Text style={styles.textGuestInfo}>{place.guestLastName} {place.guestName}</Text>
                   )}
-                  
                 </View>
+                <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
+                    <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
+                  </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -209,7 +219,13 @@ export default function PlacePage({ route }) {
           onRequestClose={() => setIsModalVisible(false)}
         >
           <View style={styles.modalContainer}>
+          
             <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => handleCancelSelection()}>
+            <Entypo name="cross" size={30} color="#BD4F6C" />            
+            </TouchableOpacity> 
+          </View>
               <Text style={styles.modalTitle}>Veuillez saisir les informations du titulaire de la place</Text>
               <TextInput
                 style={styles.input}
@@ -278,6 +294,9 @@ const styles = StyleSheet.create({
   },
   Detcontainer:{
     position: 'relative', 
+    flexDirection: 'row',
+    justifyContent: 'center',
+
   },
   totalPriceStyle: {
     fontSize: 20,
@@ -295,7 +314,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal:20,
     paddingVertical:10,
-    marginHorizontal:10,
+    marginRight:5,
+    marginLeft:15,
     marginVertical:5,
     flexWrap: 'wrap',
     maxHeight: '100%', 
@@ -318,10 +338,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   trashIcon:{
-    position:'absolute',
     zIndex:3,
-    right:-30,
-    top:0,
+    marginTop:25,
+    marginRight:15,
   },
   modalContainer: {
     flex: 1,
@@ -336,11 +355,21 @@ const styles = StyleSheet.create({
     width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative', 
+
+  },
+  modalHeader: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    zIndex: 1,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    marginTop: 10,
+
   },
   input: {
     width: '100%',
@@ -364,4 +393,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize:17,
   },
+  textContainer:{
+    flexDirection: 'row',
+  }
+  
+  
+  
+  
 });
