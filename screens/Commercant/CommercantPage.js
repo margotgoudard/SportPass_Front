@@ -1,11 +1,12 @@
 import React, { useRef , useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Platform } from 'react-native';
 import Map from '../../components/Map';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';  
 import DropDownPicker from 'react-native-dropdown-picker';
 import CheckBox from '../../components/Checkbox';
+import ENV from "../../.env"
 
 
 const CommercantPage = () => {
@@ -21,7 +22,6 @@ const CommercantPage = () => {
     const [typePickerZIndex, setTypePickerZIndex] = useState(5000);
     const [cityPickerZIndex, setCityPickerZIndex] = useState(4000);
     const [showFavorites, setShowFavorites] = useState(false);
-
 
     const getUserId = async () => {
         const idUser = await AsyncStorage.getItem('userId');
@@ -125,8 +125,8 @@ const CommercantPage = () => {
     
 
     const getCoordinates = async (address) => {
-        const apiKey = 'ac4c9067aba1497e97eb4b556b5683f0';
-         try {
+        const apiKey = ENV.OPENCAGE_API_KEY;
+        try {
             if (address) {
                 const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${apiKey}`;
                 const response = await axios.get(url);
@@ -157,10 +157,17 @@ const CommercantPage = () => {
             console.error('Erreur lors de l’initialisation de la carte:', error);
         }
     }, []);
+    
 
+    const resetFilters = () => {
+        setShowFavorites(false);
+        setSelectedTypeCommercant(null);
+        setSelectedCity(null);
+    };
 
     useFocusEffect(
         useCallback(() => {
+            resetFilters();
             initializeMap();
             fetchCommercants();
             return () => {};
@@ -168,6 +175,7 @@ const CommercantPage = () => {
     );
 
     return (
+        <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
         <View style={styles.container}>
             <View style={styles.filtersContainer}>
             <DropDownPicker
@@ -215,6 +223,7 @@ const CommercantPage = () => {
                 )}
             </View>
         </View>
+        </ImageBackground>
     );
 };
 
@@ -224,7 +233,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
     },
     header: {
         fontSize: 22,
@@ -233,12 +241,11 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
-        width: '100%',
-        height: '100%'
     },
     filtersContainer: {
         marginTop: "13%",
         width: '80%',
+        marginBottom: "-45%"
     },
     dropdown: {
         height: 40,

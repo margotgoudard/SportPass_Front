@@ -38,3 +38,6 @@ npm install react-native-dropdown-picker
 
 npm install @react-native-community/checkbox
 
+npm install react-native-dotenv --save-dev
+
+

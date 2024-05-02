@@ -41,7 +41,7 @@ const Map = ({ commercants, region }) => {
         {
             "featureType": "water",
             "elementType": "geometry",
-            "stylers": [{ "color": "#ffffff" }]
+            "stylers": [{ "color": "#BEBEBE" }]
         },
         {
             "featureType": "transit",
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     map: {
-        width: Dimensions.get('window').width - 60,
+        width: Dimensions.get('window').width,
         height: Dimensions.get('window').height - 400,
     },
 });
