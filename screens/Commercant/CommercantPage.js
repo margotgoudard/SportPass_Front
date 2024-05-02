@@ -186,6 +186,7 @@ const CommercantPage = () => {
         setShowFavorites(false);
         setSelectedTypeCommercant(null);
         setSelectedCity(null);
+        setSelectedCommercant(null)
     };
 
     useFocusEffect(
