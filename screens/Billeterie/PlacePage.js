@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput, Button  } from 'react-native';
 import LottieView from 'lottie-react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
@@ -14,6 +14,9 @@ export default function PlacePage({ route }) {
   const [loading, setLoading] = useState(true);
   const [placesByRow, setPlacesByRow] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [guestName, setGuestName] = useState('');
+  const [guestLastName, setGuestLastName] = useState('');
 
 
   useEffect(() => {
@@ -87,8 +90,15 @@ export default function PlacePage({ route }) {
       const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedPlace.idPlace !== place.idPlace);
       setSelectedPlaces(filteredPlaces);
     } else {
+      if (selectedPlaces.length > 0) {
+        setIsModalVisible(true);
+      }
       setSelectedPlaces([...selectedPlaces, place]);
     }
+  };
+
+  const handleConfirmGuestInfo = () => {
+    setIsModalVisible(false);
   };
 
   const handleRemovePlace = (idPlace) => {
@@ -163,9 +173,36 @@ export default function PlacePage({ route }) {
             ))}
           </View>
         )}
+        </View>
+        </View>
 
-        </View>
-        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Veuillez saisir votre nom et prénom :</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nom"
+                value={guestName}
+                onChangeText={(text) => setGuestName(text)}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Prénom"
+                value={guestLastName}
+                onChangeText={(text) => setGuestLastName(text)}
+              />
+              <Button title="Confirmer" onPress={handleConfirmGuestInfo} />
+            </View>
+          </View>
+        </Modal>
+
+
       </ScrollView>
     </ImageBackground>
   );
@@ -243,4 +280,32 @@ const styles = StyleSheet.create({
     marginLeft:15,
   },
   
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
 });
