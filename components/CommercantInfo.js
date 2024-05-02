@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  cashbackContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+    },
   commercantImage: {
     width: 150,
     height: 110,
