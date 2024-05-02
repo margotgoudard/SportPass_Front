@@ -177,7 +177,7 @@ const CommercantPage = () => {
                 setOpen={toggleTypeDropdown}
                 setValue={setSelectedTypeCommercant}
                 setItems={setTypesCommercants}
-                placeholder="Select a type"
+                placeholder="Selectionnez une catégorie"
                 containerStyle={styles.dropdown}
                 style={{ ...styles.drop, zIndex: typePickerZIndex }}
                 disableBorderRadius={true}
@@ -192,7 +192,7 @@ const CommercantPage = () => {
                 setOpen={toggleCityDropdown}
                 setValue={setSelectedCity}
                 setItems={setVilles}
-                placeholder="Select a city"
+                placeholder="Selectionnez une ville"
                 containerStyle={styles.dropdown}
                 style={{ ...styles.drop, zIndex: cityPickerZIndex }}
                 disableBorderRadius={true}
@@ -201,7 +201,7 @@ const CommercantPage = () => {
                 dropDownContainerStyle={styles.list}
             />
             <CheckBox
-                text="Show Only My Favorites"
+                text="Afficher seulement mes favoris"
                 onPress={() => setShowFavorites(!showFavorites)}
                 isChecked={showFavorites}
                 containerStyle={styles.checkboxContainer}
