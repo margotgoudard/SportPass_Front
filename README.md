@@ -34,3 +34,7 @@ npm install react-native-webview
 
 npm install react-native-maps --save-exact
 
+npm install react-native-dropdown-picker
+
+npm install @react-native-community/checkbox
+

@@ -28,6 +28,7 @@
     "react-native-3d-model-view": "^1.2.0",
     "react-native-animatable": "^1.4.0",
     "react-native-config": "^1.5.1",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "^2.16.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.10.0",
