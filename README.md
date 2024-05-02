@@ -31,3 +31,13 @@ npm install react-native-3d-model-view //pas nécessaire
 npm install react-iframe
 
 npm install react-native-webview
+
+npm install react-native-maps --save-exact
+
+npm install react-native-dropdown-picker
+
+npm install @react-native-community/checkbox
+
+npm install react-native-dotenv --save-dev
+
+
