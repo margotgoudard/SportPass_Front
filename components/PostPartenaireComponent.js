@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
         right: 10,
         color: 'white',
         fontStyle: 'italic',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
     },
     contentContainer: {
         flexDirection: 'row',
@@ -87,10 +90,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 5,
         color: 'white', 
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
     },
     postContent: {
         fontSize: 16,
         color: 'white', 
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
     }
 });
 
