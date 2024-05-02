@@ -20,6 +20,7 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 moment.locale('fr');
 
@@ -257,7 +258,12 @@ const ProfilePage = ({ route }) => {
               <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
             </View>
             <Text style={styles.bold}>{user.pseudo}</Text>
-            <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center"}}>
+              {user.Equipe?.logo && (
+                <Image source={{ uri: user.Equipe.logo }} style={{ width: 50, height: 50, marginRight: 10 }} />
+              )}
+              <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
+            </View>
             <Text style={styles.center}>{user.biographie || "Veuillez saisir votre biographie..."}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center',  justifyContent: 'center', marginBottom: 10 }}>
               <TouchableOpacity onPress={() => navigation.navigate('AbonnesList', { 
@@ -284,19 +290,19 @@ const ProfilePage = ({ route }) => {
             <Text style={styles.details}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="mail" size={22} color="black" />
-                <Text style={{ marginLeft: 5 }}>{user.mail}</Text>
+                <Text style={{ marginLeft: 15 }}>{user.mail}</Text>
               </View>
             </Text>
             <Text style={styles.details}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <FontAwesome name="phone" size={24} color="black" />
-                <Text style={{ marginLeft: 5 }}>{user.tel || "Veuillez saisir votre téléphone..."}</Text>
+                <Text style={{ marginLeft: 16 }}>{user.tel || "Veuillez saisir votre téléphone..."}</Text>
               </View>
             </Text>
             <Text style={styles.details}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <FontAwesome name="home" size={24} color="black" />
-                <Text style={{ marginLeft: 5 }}>{user.adresse || "Veuillez saisir votre adresse..."}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                <MaterialIcons name="location-pin" size={24} color="black" />
+                <Text style={{ marginLeft: 15 }}>{user.adresse || "Veuillez saisir votre adresse..."}</Text>
               </View>
             </Text>
             {calculateProfileCompletion(user) < 100 && (
@@ -406,7 +412,6 @@ const styles = StyleSheet.create({
   },
   teamName: {
     fontSize: 16,
-    marginBottom: 5,
     color: '#008900', 
     fontWeight: 'bold',
     textAlign: 'center'
