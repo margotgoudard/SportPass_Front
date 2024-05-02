@@ -104,6 +104,11 @@ export default function PlacePage({ route }) {
   };
 
   const handleConfirmGuestInfo = () => {
+    if (!guestName.trim() || !guestLastName.trim()) {
+      alert('Veuillez saisir le nom et le prénom du titulaire de la place.');
+      return; 
+    }
+  
     if (currentSelectedPlace) {
       const updatedPlaces = selectedPlaces.map((place) => {
         if (place.idPlace == currentSelectedPlace.idPlace) {
@@ -178,18 +183,17 @@ export default function PlacePage({ route }) {
             <Text style={styles.totalPriceStyle}>{calculateTotalPrice()}€</Text>
 
             {selectedPlaces.map((place, index) => (
-              <View key={index}>
+              <View key={index} style={styles.Detcontainer}>
                 <View style={styles.detailsContainer}>
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
-                  { (place.guestName !=='' && place.guestLastName!== '') &&(
-                  <Text style={styles.textGuestInfo}>
-                      {place.guestName} {place.guestLastName}
-                    </Text>
-                  )}
                   <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
                     <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
                   </TouchableOpacity>
+                  { (place.guestName !=='' && place.guestLastName!== '') &&(
+                  <Text style={styles.textGuestInfo}>{place.guestLastName} {place.guestName}</Text>
+                  )}
+                  
                 </View>
               </View>
             ))}
@@ -206,20 +210,25 @@ export default function PlacePage({ route }) {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Veuillez saisir votre nom et prénom :</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Nom"
-                value={guestName}
-                onChangeText={(text) => setGuestName(text)}
-              />
+              <Text style={styles.modalTitle}>Veuillez saisir les informations du titulaire de la place</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Prénom"
                 value={guestLastName}
                 onChangeText={(text) => setGuestLastName(text)}
               />
-              <Button title="Confirmer" onPress={handleConfirmGuestInfo} />
+              <TextInput
+                style={styles.input}
+                placeholder="Nom"
+                value={guestName}
+                onChangeText={(text) => setGuestName(text)}
+              />
+              <TouchableOpacity
+              style={styles.button}
+              onPress={handleConfirmGuestInfo}
+              >
+                <Text style={styles.buttonText}>Confirmer</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -267,6 +276,9 @@ const styles = StyleSheet.create({
     fontStyle:'italic',
     marginBottom:5,
   },
+  Detcontainer:{
+    position: 'relative', 
+  },
   totalPriceStyle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -288,8 +300,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     maxHeight: '100%', 
     maxWidth: '100%', 
-    position: 'relative', 
-
+    zIndex:2,
   },
   textPlace:{
     fontSize:17,
@@ -307,11 +318,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   trashIcon:{
-    marginLeft:15,
     position:'absolute',
-    zIndex:2,
-    right:-50,
-    top:-20,
+    zIndex:3,
+    right:-30,
+    top:0,
   },
   modalContainer: {
     flex: 1,
@@ -340,5 +350,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#BD4F6C',
+    color: 'white',
+    fontSize: 16,
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  buttonText:{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize:17,
   },
 });
