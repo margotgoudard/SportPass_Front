@@ -5,6 +5,8 @@ import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
 import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+
 
 export default function PlacePage({ route }) {
   const { selectedTribune } = route.params;
@@ -37,22 +39,39 @@ export default function PlacePage({ route }) {
           ticketMap[ticket.idPlace] = ticket;
         });
   
-        placesData.forEach((place) => {
+        const placeDetailsPromises = placesData.map(async (place) => {
+        const ticket = ticketData.find((ticket) => ticket.idPlace === place.idPlace);
+        const typePlaceResponse = await axios.get(`http://10.0.2.2:4000/api/typePlace/${place.idType}`);
+        const typePlace = typePlaceResponse.data;
+
+        const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${place.idRangee}`);
+        const rangee = rangeeResponse.data;
+
+        const isReserved = ticket && ticket.reservee == 1;
+        const placeWithDetails = {
+          ...place,
+          isReserved,
+          price: ticket ? ticket.prix : null,
+          type: typePlace ? typePlace.nom : null,
+          numRangee : rangee? rangee.numero : null,
+        };
+
+          return placeWithDetails;
+        });
+
+        const placesWithDetails = await Promise.all(placeDetailsPromises);
+
+        placesWithDetails.forEach((place) => {
           const rowId = place.idRangee;
           if (!placesByRowData[rowId]) {
             placesByRowData[rowId] = [];
           }
-          
-          const ticket = ticketData.find((ticket) => ticket.idPlace == place.idPlace);
-          //console.log('ticket',ticket);
-          const isReserved = ticket && ticket.reservee == 1;
-          //console.log(isReserved);
-          
-          placesByRowData[rowId].push({ ...place, isReserved });
+
+          placesByRowData[rowId].push(place);
         });
 
-        setPlacesByRow(placesByRowData);
-        setLoading(false);
+      setPlacesByRow(placesByRowData);
+      setLoading(false);
       } catch (error) {
         console.error('Erreur lors de la récupération des places :', error);
         setLoading(false);
@@ -62,7 +81,6 @@ export default function PlacePage({ route }) {
   }, [selectedTribune]);
   
 
-
   const handlePlaceSelection = (place) => {
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
     if (isSelected) {
@@ -71,6 +89,11 @@ export default function PlacePage({ route }) {
     } else {
       setSelectedPlaces([...selectedPlaces, place]);
     }
+  };
+
+  const handleRemovePlace = (idPlace) => {
+    const filteredPlaces = selectedPlaces.filter((place) => place.idPlace !== idPlace);
+    setSelectedPlaces(filteredPlaces);
   };
 
   if (loading) {
@@ -108,14 +131,30 @@ export default function PlacePage({ route }) {
                         color='#D9D9D9'
                       />
                     )}
-                  
                 </TouchableOpacity>
               ))}
             </View>
-            
           </View>
-          
         ))}
+        <View>
+        {selectedPlaces.length > 0 && (
+          <View style={styles.selectedPlaceDetails}>
+            <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
+            {selectedPlaces.map((place, index) => (
+              <View key={index}>
+                <View style={styles.detailsContainer}>
+                  <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
+                  <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
+                  <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
+                    <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        </View>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -142,4 +181,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  selectedPlaceDetails:{
+    justifyContent: 'center',
+    backgroundColor:'white',
+    borderRadius:10,
+    margin:10,
+    padding:10,
+  },
+  textTribune:{
+    fontSize:20,
+    fontWeight:'bold',
+    marginLeft:10,
+  },
+  detailsContainer : {
+    backgroundColor:'#D9D9D9',
+    borderRadius:20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding:20,
+    marginHorizontal:10,
+    marginVertical:5,
+    flexWrap: 'wrap',
+  },
+  textPlace:{
+    fontSize:17,
+    fontWeight:'bold'
+  },
+  textPrix:{
+    fontSize:17,
+    fontWeight:'bold',
+    color:'#008900',
+    marginLeft:10,
+  },
+  trashIcon:{
+    marginLeft:15,
+  },
+  
 });
