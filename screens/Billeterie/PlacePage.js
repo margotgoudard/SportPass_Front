@@ -96,6 +96,13 @@ export default function PlacePage({ route }) {
     setSelectedPlaces(filteredPlaces);
   };
 
+  const calculateTotalPrice = () => {
+    const totalPrice = selectedPlaces.reduce((accumulator, place) => {
+      return accumulator + (place.price || 0); 
+    }, 0);
+    return totalPrice;
+  };
+
   if (loading) {
     return <AppLoader />;
   }
@@ -140,6 +147,9 @@ export default function PlacePage({ route }) {
         {selectedPlaces.length > 0 && (
           <View style={styles.selectedPlaceDetails}>
             <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
+            <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billets</Text>
+            <Text style={styles.totalPriceStyle}>{calculateTotalPrice()}€</Text>
+
             {selectedPlaces.map((place, index) => (
               <View key={index}>
                 <View style={styles.detailsContainer}>
@@ -191,7 +201,21 @@ const styles = StyleSheet.create({
   textTribune:{
     fontSize:20,
     fontWeight:'bold',
-    marginLeft:10,
+    marginLeft:15,
+  },
+  nombreBilletStyle:{
+    marginLeft:15,
+    fontStyle:'italic',
+    marginBottom:5,
+  },
+  totalPriceStyle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#BD4F6C', 
+    position:'absolute',
+    zIndex:1,
+    right:20,
+    top:10,
   },
   detailsContainer : {
     backgroundColor:'#D9D9D9',
@@ -202,6 +226,8 @@ const styles = StyleSheet.create({
     marginHorizontal:10,
     marginVertical:5,
     flexWrap: 'wrap',
+    maxHeight: '100%', 
+    maxWidth: '100%', 
   },
   textPlace:{
     fontSize:17,
