@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, Alert, Touc
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CommercantInfo from '../../components/CommercantInfo';
 
 const CommercantFavoris = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -10,22 +11,52 @@ const CommercantFavoris = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
-        setUserInfo(userResponse.data);
-        console.log(userInfo)
-
-        const favoritesResponse = await axios.get(`http://10.0.2.2:4000/api/avoirFavoris/user/${userId}`);
-        setFavorites(favoritesResponse.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        Alert.alert("Erreur", "Impossible de charger les données.");
-      }
-    };
-
     fetchData();
   }, [userId]);
+
+  const fetchData = async () => {
+    try {
+        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+        setUserInfo(userResponse.data);
+
+        const favoritesResponse = await axios.get(`http://10.0.2.2:4000/api/avoirFavoris/user/${userId}`);
+        const commercantsData = favoritesResponse.data;
+
+        const updatedCommercants = await Promise.all(commercantsData.map(async (commercant) => {
+            const cashbackResponse = await axios.get(`http://10.0.2.2:4000/api/cashbackCommercant/${commercant.idCashbackCommercant}`);
+            return {
+                ...commercant,
+                isFavorite: true,
+                cashback: cashbackResponse.data.montant
+            };
+        }));
+
+        setFavorites(updatedCommercants);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        Alert.alert("Erreur", "Impossible de charger les données.");
+    }
+};
+
+
+const toggleFavorite = (commercant) => {
+  try {
+    if (commercant.isFavorite) {
+      axios.delete(`http://10.0.2.2:4000/api/avoirFavoris/${commercant.idCommercant}/${userId}`);
+    } else {
+      axios.post(`http://10.0.2.2:4000/api/avoirFavoris`, {
+        idUser: userId,
+        idCommercant: commercant.idCommercant
+      });
+    }
+    commercant.isFavorite = !commercant.isFavorite; 
+    setFavorites([...favorites]); 
+  } catch (error) {
+    console.error('Error updating favorite status:', error);
+  }
+};
+
+
 
   return (
     <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
@@ -34,18 +65,11 @@ const CommercantFavoris = ({ route, navigation }) => {
           <AntDesign name="arrowleft" size={26} color="#BD4F6C" />
         </TouchableOpacity>
         {favorites.map((favorite, index) => (
-          <View key={index} style={styles.favoriteItem}>
-            <Image source={require('../../assets/boucherie.png')} style={styles.image} />
-            <View style={styles.infoContainer}>
-              <Text style={styles.name}>{favorite.nom}</Text>
-              <Text style={styles.address}>{favorite.adresse}</Text>
-              <Text style={styles.phone}>{favorite.tel}</Text>
-              <View style={styles.cashbackContainer}>
-              <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
-                <Text style={styles.cashbackText}>Cashback : {userInfo.Palier.cashbackPalier}%</Text>
-              </View>
-            </View>
-          </View>
+            <CommercantInfo
+            key={favorite.idCommercant}
+            selectedCommercant={favorite}
+            toggleFavorite={toggleFavorite}
+            />
         ))}
       </ScrollView>
     </ImageBackground>
@@ -56,55 +80,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  favoriteItem: {
-    backgroundColor: '#D9D9D9',
-    borderRadius: 10,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 20,
-  },
-  infoContainer: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  address: {
-    fontSize: 16,
-    marginTop: 5,
-  },
-  phone: {
-    fontSize: 16,
-    marginTop: 5,
-  },
   backButtonContainer: {
     marginLeft: "4%",
     marginTop: "8%",
-  },
-  cashbackContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  palierImage: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  cashbackText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#008900"
-  },
+  }
 });
 
 export default CommercantFavoris;

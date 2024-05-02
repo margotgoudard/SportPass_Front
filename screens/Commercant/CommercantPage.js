@@ -1,13 +1,12 @@
 import React, { useRef , useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Map from '../../components/Map';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';  
 import DropDownPicker from 'react-native-dropdown-picker';
 import CheckBox from '../../components/Checkbox';
-import ENV from "../../.env"
-
+import CommercantInfo from '../../components/CommercantInfo';
 
 const CommercantPage = () => {
     const [allCommercants, setAllCommercants] = useState([]);
@@ -22,11 +21,35 @@ const CommercantPage = () => {
     const [typePickerZIndex, setTypePickerZIndex] = useState(5000);
     const [cityPickerZIndex, setCityPickerZIndex] = useState(4000);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [selectedCommercant, setSelectedCommercant] = useState(null);
 
     const getUserId = async () => {
         const idUser = await AsyncStorage.getItem('userId');
         return idUser;
     };
+
+    const toggleFavorite = async (commercant) => {
+        try {
+            const userId = await getUserId();
+            if (commercant.isFavorite) {
+                await axios.delete(`http://10.0.2.2:4000/api/avoirFavoris/${commercant.idCommercant}/${userId}`);
+            } else {
+                await axios.post(`http://10.0.2.2:4000/api/avoirFavoris`, {
+                    idUser: userId,
+                    idCommercant: commercant.idCommercant
+                });
+            }
+            fetchCommercants(); 
+        } catch (error) {
+            console.error('Error updating favorite status:', error);
+        }
+        commercant.isFavorite = !commercant.isFavorite;
+    };
+
+    const handleMarkerPress = (commercant) => {
+        setSelectedCommercant(commercant);
+    };
+    
 
     const toggleTypeDropdown = (isOpen) => {
         setOpenType(isOpen);
@@ -56,15 +79,16 @@ const CommercantPage = () => {
         try {
             const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
             const data = await axios.get(`http://10.0.2.2:4000/api/commercant/${response.data.idEquipe}`);
-            const commercantsWithCoords = await Promise.all(data.data.map(async (commercant) => {
+            const commercantsWithCoordsAndCashback = await Promise.all(data.data.map(async (commercant) => {
                 const coords = await getCoordinates(commercant.adresse);
-                return { ...commercant, ...coords };
+                const cashbackResponse = await axios.get(`http://10.0.2.2:4000/api/cashbackCommercant/${commercant.idCashbackCommercant}`);
+                return { ...commercant, ...coords, cashback: cashbackResponse.data.montant };
             }));
     
             const favoritesResponse = await axios.get(`http://10.0.2.2:4000/api/avoirFavoris/user/${userId}`);
             const favorisIds = favoritesResponse.data.map(favori => favori.idCommercant);
     
-            const updatedCommercants = commercantsWithCoords.map(commercant => ({
+            const updatedCommercants = commercantsWithCoordsAndCashback.map(commercant => ({
                 ...commercant,
                 isFavorite: favorisIds.includes(commercant.idCommercant) 
             }));
@@ -125,10 +149,9 @@ const CommercantPage = () => {
     
 
     const getCoordinates = async (address) => {
-        const apiKey = ENV.OPENCAGE_API_KEY;
         try {
             if (address) {
-                const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${apiKey}`;
+                const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${'ac4c9067aba1497e97eb4b556b5683f0'}`;
                 const response = await axios.get(url);
                 const { lat, lng } = response.data.results[0].geometry;
                 return { latitude: lat, longitude: lng };
@@ -175,7 +198,6 @@ const CommercantPage = () => {
     );
 
     return (
-        <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
         <View style={styles.container}>
             <View style={styles.filtersContainer}>
             <DropDownPicker
@@ -219,11 +241,16 @@ const CommercantPage = () => {
             </View>
             <View style={styles.map}>
                 {region && (
-                    <Map region={region} commercants={displayedCommercants} />
+                    <Map region={region} commercants={displayedCommercants} onMarkerPress={handleMarkerPress} />
                 )}
             </View>
+            <View style={styles.info}>
+                <CommercantInfo
+                    selectedCommercant={selectedCommercant}
+                    toggleFavorite={toggleFavorite}
+                    />
+            </View>
         </View>
-        </ImageBackground>
     );
 };
 
@@ -234,22 +261,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    info: {
+        width: "100%",
+        marginBottom: "20%"
+    },
     header: {
         fontSize: 22,
         fontWeight: 'bold',
         margin: 10,
+    },
+    checkboxContainer: {
+        zIndex: 2
     },
     map: {
         flex: 1,
     },
     filtersContainer: {
         marginTop: "13%",
-        width: '80%',
-        marginBottom: "-45%"
+        width: '80%'
     },
     dropdown: {
-        height: 40,
         marginBottom: 20,
+        height: 40
     },
     list: {
         backgroundColor: "#D9D9D9",
