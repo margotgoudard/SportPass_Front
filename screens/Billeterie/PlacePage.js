@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, 
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome6 } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Checkbox from '../../components/Checkbox';
+//icons
+import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 
 export default function PlacePage({ route, navigation }) {
@@ -286,12 +288,15 @@ export default function PlacePage({ route, navigation }) {
         </Modal>
       </ScrollView>
       {selectedPlaces.length > 0 && (
+        <View style={styles.PanierButtonContainer}>
             <TouchableOpacity
               style={styles.PanierButton}
               onPress={handlePanierButton}
             >
-            <Text style={styles.PanierButtonText}>Ajouter au panier</Text>
+            <FontAwesome name="shopping-cart" size={24} color="white" />
+            <Text style={styles.PanierButtonText}>Ajouter à mon panier</Text>
             </TouchableOpacity>
+          </View>
         )}
     </ImageBackground>
   );
@@ -323,6 +328,7 @@ const styles = StyleSheet.create({
     borderRadius:10,
     margin:10,
     padding:10,
+    marginBottom:70,
   },
   textTribune:{
     fontSize: 20,
@@ -445,13 +451,20 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     marginLeft:5,
   },
+  PanierButtonContainer:{
+    width: '100%', 
+    justifyContent:'center',
+    alignItems:'center',
+  },
   PanierButton: {
     position: 'absolute',
+    flexDirection: 'row',
+    justifyContent:'center',
+    alignItems:'center',
     bottom: 80,
-    right: 15,
     backgroundColor: '#BD4F6C',
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 25,
+    paddingRight: 25,
     paddingTop: 5,
     paddingBottom: 5,
     borderRadius: 10,
@@ -459,7 +472,8 @@ const styles = StyleSheet.create({
   },
   PanierButtonText: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize:20,
+    fontSize: 24,
+    marginLeft: 10,
   },
+  
 });
