@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput, Button  } from 'react-native';
-import LottieView from 'lottie-react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function PlacePage({ route }) {
@@ -16,11 +16,9 @@ export default function PlacePage({ route }) {
   const [placesByRow, setPlacesByRow] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [guestName, setGuestName] = useState('');
-  const [guestLastName, setGuestLastName] = useState('');
+  const [guestNom, setGuestNom] = useState('');
+  const [guestPrenom, setGuestPrenom] = useState('');
   const [currentSelectedPlace, setCurrentSelectedPlace] = useState(null);
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,25 +85,28 @@ export default function PlacePage({ route }) {
   }, [selectedTribune]);
   
 
-  const handlePlaceSelection = (place) => {
+  const handlePlaceSelection = async (place) => {
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
     if (isSelected) {
       const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedPlace.idPlace !== place.idPlace);
       setSelectedPlaces(filteredPlaces);
     } else {
-      if (selectedPlaces.length > 0) {
-        setCurrentSelectedPlace(place); 
-        setSelectedPlaces([...selectedPlaces, { ...place, guestName: '', guestLastName: '' }]);
+      if (selectedPlaces.length === 0) {
+        const userId = await AsyncStorage.getItem('userId');
+        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+        const user = userResponse.data;
+
+        setSelectedPlaces([{ ...place, guestNom: user.nom, guestPrenom: user.prenom }]);
+      } else {
+        setCurrentSelectedPlace(place);
+        setSelectedPlaces([...selectedPlaces, { ...place, guestNom: '', guestPrenom: '' }]);
         setIsModalVisible(true);
-      }
-      else{
-        setSelectedPlaces([...selectedPlaces, place]);
       }
     }
   };
 
   const handleConfirmGuestInfo = () => {
-    if (!guestName.trim() || !guestLastName.trim()) {
+    if (!guestNom.trim() || !guestPrenom.trim()) {
       alert('Veuillez saisir le nom et le prénom du titulaire de la place.');
       return; 
     }
@@ -113,7 +114,7 @@ export default function PlacePage({ route }) {
     if (currentSelectedPlace) {
       const updatedPlaces = selectedPlaces.map((place) => {
         if (place.idPlace == currentSelectedPlace.idPlace) {
-          return { ...place, guestName, guestLastName };
+          return { ...place, guestNom, guestPrenom };
         }
         return place;
       });
@@ -198,9 +199,7 @@ export default function PlacePage({ route }) {
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
                   </View>
-                  { (place.guestName !=='' && place.guestLastName!== '') &&(
-                  <Text style={styles.textGuestInfo}>{place.guestLastName} {place.guestName}</Text>
-                  )}
+                  <Text style={styles.textGuestInfo}>{place.guestPrenom} {place.guestNom}</Text>
                 </View>
                 <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
                     <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
@@ -230,14 +229,14 @@ export default function PlacePage({ route }) {
               <TextInput
                 style={styles.input}
                 placeholder="Prénom"
-                value={guestLastName}
-                onChangeText={(text) => setGuestLastName(text)}
+                value={guestPrenom}
+                onChangeText={(text) => setGuestPrenom(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Nom"
-                value={guestName}
-                onChangeText={(text) => setGuestName(text)}
+                value={guestNom}
+                onChangeText={(text) => setGuestNom(text)}
               />
               <TouchableOpacity
               style={styles.button}
@@ -395,9 +394,5 @@ const styles = StyleSheet.create({
   },
   textContainer:{
     flexDirection: 'row',
-  }
-  
-  
-  
-  
+  }  
 });

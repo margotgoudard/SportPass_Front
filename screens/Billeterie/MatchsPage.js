@@ -62,7 +62,6 @@
                 const matchResponse = await axios.get('http://10.0.2.2:4000/api/matchs');
                 const allMatchs = matchResponse.data;
                 setMatchs(allMatchs);
-                console.log(allMatchs);
 
                 const filteredMatchs = allMatchs.filter(match => showAllMatches || match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe);
                 setMatchsUserId(allMatchs.filter(match => match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe));
