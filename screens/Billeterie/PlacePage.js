@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput, Button  } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput  } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Checkbox from '../../components/Checkbox';
 
 
-export default function PlacePage({ route }) {
+export default function PlacePage({ route, navigation }) {
   const { selectedTribune } = route.params;
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -166,6 +166,10 @@ export default function PlacePage({ route }) {
     setSelectedPlaces(updatedPlaces);
   };
 
+  const handlePanierButton = () => {
+    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces });
+  }
+
   if (loading) {
     return <AppLoader />;
   }
@@ -280,9 +284,15 @@ export default function PlacePage({ route }) {
             </View>
           </View>
         </Modal>
-
-
       </ScrollView>
+      {selectedPlaces.length > 0 && (
+            <TouchableOpacity
+              style={styles.PanierButton}
+              onPress={handlePanierButton}
+            >
+            <Text style={styles.PanierButtonText}>Ajouter au panier</Text>
+            </TouchableOpacity>
+        )}
     </ImageBackground>
   );
 }
@@ -348,9 +358,8 @@ const styles = StyleSheet.create({
   detailsContainer : {
     borderRadius:15,
     flexDirection: 'row',
-    justifyContent: 'center',
     marginRight:5,
-    marginLeft:15,
+    marginLeft:5,
     marginVertical:5,
     flexWrap: 'wrap',
     maxHeight: '100%', 
@@ -434,6 +443,23 @@ const styles = StyleSheet.create({
   },
   checkboxContainer:{
     justifyContent:'center',
-    alignItems:'center',
+    marginLeft:5,
+  },
+  PanierButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 15,
+    backgroundColor: '#BD4F6C',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 10,
+    zIndex:4,
+  },
+  PanierButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize:20,
   },
 });
