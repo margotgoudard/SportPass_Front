@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput, Button  } from 'react-native';
-import LottieView from 'lottie-react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput  } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Checkbox from '../../components/Checkbox';
+//icons
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-export default function PlacePage({ route }) {
+export default function PlacePage({ route, navigation }) {
   const { selectedTribune } = route.params;
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [placesByRow, setPlacesByRow] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [guestName, setGuestName] = useState('');
-  const [guestLastName, setGuestLastName] = useState('');
+  const [guestNom, setGuestNom] = useState('');
+  const [guestPrenom, setGuestPrenom] = useState('');
   const [currentSelectedPlace, setCurrentSelectedPlace] = useState(null);
-
+  const [optionBuvette, setOptionBuvette] = useState(false); 
 
 
   useEffect(() => {
@@ -54,12 +57,14 @@ export default function PlacePage({ route }) {
         const rangee = rangeeResponse.data;
 
         const isReserved = ticket && ticket.reservee == 1;
+        const optionBuvette = ticket && ticket.buvette == 1;
         const placeWithDetails = {
           ...place,
           isReserved,
           price: ticket ? ticket.prix : null,
           type: typePlace ? typePlace.nom : null,
           numRangee : rangee? rangee.numero : null,
+          optionBuvette,
         };
 
           return placeWithDetails;
@@ -85,27 +90,35 @@ export default function PlacePage({ route }) {
     };
     fetchData();
   }, [selectedTribune]);
+
+  useEffect(() => {
+    const allBuvettesSelected = selectedPlaces.every((place) => place.optionBuvette == 1);
+    setOptionBuvette(allBuvettesSelected);
+  }, [selectedPlaces]);
   
 
-  const handlePlaceSelection = (place) => {
+  const handlePlaceSelection = async (place) => {
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
     if (isSelected) {
       const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedPlace.idPlace !== place.idPlace);
       setSelectedPlaces(filteredPlaces);
     } else {
-      if (selectedPlaces.length > 0) {
-        setCurrentSelectedPlace(place); 
-        setSelectedPlaces([...selectedPlaces, { ...place, guestName: '', guestLastName: '' }]);
+      if (selectedPlaces.length === 0) {
+        const userId = await AsyncStorage.getItem('userId');
+        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+        const user = userResponse.data;
+
+        setSelectedPlaces([{ ...place, guestNom: user.nom, guestPrenom: user.prenom }]);
+      } else {
+        setCurrentSelectedPlace(place);
+        setSelectedPlaces([...selectedPlaces, { ...place, guestNom: '', guestPrenom: '' }]);
         setIsModalVisible(true);
-      }
-      else{
-        setSelectedPlaces([...selectedPlaces, place]);
       }
     }
   };
 
   const handleConfirmGuestInfo = () => {
-    if (!guestName.trim() || !guestLastName.trim()) {
+    if (!guestNom.trim() || !guestPrenom.trim()) {
       alert('Veuillez saisir le nom et le prénom du titulaire de la place.');
       return; 
     }
@@ -113,7 +126,7 @@ export default function PlacePage({ route }) {
     if (currentSelectedPlace) {
       const updatedPlaces = selectedPlaces.map((place) => {
         if (place.idPlace == currentSelectedPlace.idPlace) {
-          return { ...place, guestName, guestLastName };
+          return { ...place, guestNom, guestPrenom };
         }
         return place;
       });
@@ -144,6 +157,20 @@ export default function PlacePage({ route }) {
     }, 0);
     return totalPrice;
   };
+
+  const handleToggleBuvette = (place) => {
+    const updatedPlaces = selectedPlaces.map((selectedPlace) => {
+      if (selectedPlace.idPlace === place.idPlace) {
+        return { ...selectedPlace, optionBuvette: !selectedPlace.optionBuvette };
+      }
+      return selectedPlace;
+    });
+    setSelectedPlaces(updatedPlaces);
+  };
+
+  const handlePanierButton = () => {
+    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces });
+  }
 
   if (loading) {
     return <AppLoader />;
@@ -192,21 +219,32 @@ export default function PlacePage({ route }) {
             <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billets</Text>
             <Text style={styles.totalPriceStyle}>{calculateTotalPrice()}€</Text>
             {selectedPlaces.map((place, index) => (
-              <View key={index} style={styles.Detcontainer}>
+              <View key={index} style={styles.containerPlace}>
+              <View style={styles.Detcontainer}>
                 <View style={styles.detailsContainer}>
                   <View style={styles.textContainer} >
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
                   </View>
-                  { (place.guestName !=='' && place.guestLastName!== '') &&(
-                  <Text style={styles.textGuestInfo}>{place.guestLastName} {place.guestName}</Text>
-                  )}
+                  <Text style={styles.textGuestInfo}>Titulaire - {place.guestPrenom} {place.guestNom}</Text>
+                  
+                </View>
+                
+              </View>
+                <View style={styles.checkboxContainer}>
+                  <Checkbox
+                    text="Option buvette"
+                    isChecked={place.optionBuvette == 1}
+                    onPress={() => handleToggleBuvette(place)} 
+                    container={styles.checkbox}
+                  />
                 </View>
                 <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
                     <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
                   </TouchableOpacity>
               </View>
             ))}
+             
           </View>
         )}
         </View>
@@ -230,14 +268,14 @@ export default function PlacePage({ route }) {
               <TextInput
                 style={styles.input}
                 placeholder="Prénom"
-                value={guestLastName}
-                onChangeText={(text) => setGuestLastName(text)}
+                value={guestPrenom}
+                onChangeText={(text) => setGuestPrenom(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Nom"
-                value={guestName}
-                onChangeText={(text) => setGuestName(text)}
+                value={guestNom}
+                onChangeText={(text) => setGuestNom(text)}
               />
               <TouchableOpacity
               style={styles.button}
@@ -248,9 +286,18 @@ export default function PlacePage({ route }) {
             </View>
           </View>
         </Modal>
-
-
       </ScrollView>
+      {selectedPlaces.length > 0 && (
+        <View style={styles.PanierButtonContainer}>
+            <TouchableOpacity
+              style={styles.PanierButton}
+              onPress={handlePanierButton}
+            >
+            <FontAwesome name="shopping-cart" size={24} color="white" />
+            <Text style={styles.PanierButtonText}>Ajouter à mon panier</Text>
+            </TouchableOpacity>
+          </View>
+        )}
     </ImageBackground>
   );
 }
@@ -263,7 +310,7 @@ const styles = StyleSheet.create({
   },
   container:{
     marginBottom:60,
-    marginTop:20,
+    marginTop:10,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -281,6 +328,7 @@ const styles = StyleSheet.create({
     borderRadius:10,
     margin:10,
     padding:10,
+    marginBottom:70,
   },
   textTribune:{
     fontSize: 20,
@@ -292,11 +340,17 @@ const styles = StyleSheet.create({
     fontStyle:'italic',
     marginBottom:5,
   },
+  containerPlace:{
+    backgroundColor:'#D9D9D9',
+    borderRadius:20,
+    paddingVertical:10,
+    paddingHorizontal:20,
+    marginBottom : 5,
+  },
   Detcontainer:{
     position: 'relative', 
     flexDirection: 'row',
     justifyContent: 'center',
-
   },
   totalPriceStyle: {
     fontSize: 20,
@@ -308,14 +362,10 @@ const styles = StyleSheet.create({
     top:10,
   },
   detailsContainer : {
-    backgroundColor:'#D9D9D9',
     borderRadius:15,
     flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal:20,
-    paddingVertical:10,
     marginRight:5,
-    marginLeft:15,
+    marginLeft:5,
     marginVertical:5,
     flexWrap: 'wrap',
     maxHeight: '100%', 
@@ -339,8 +389,9 @@ const styles = StyleSheet.create({
   },
   trashIcon:{
     zIndex:3,
-    marginTop:25,
-    marginRight:15,
+    top:-20,
+    right:-5,
+    position:'absolute'
   },
   modalContainer: {
     flex: 1,
@@ -395,9 +446,34 @@ const styles = StyleSheet.create({
   },
   textContainer:{
     flexDirection: 'row',
-  }
-  
-  
-  
+  },
+  checkboxContainer:{
+    justifyContent:'center',
+    marginLeft:5,
+  },
+  PanierButtonContainer:{
+    width: '100%', 
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  PanierButton: {
+    position: 'absolute',
+    flexDirection: 'row',
+    justifyContent:'center',
+    alignItems:'center',
+    bottom: 80,
+    backgroundColor: '#BD4F6C',
+    paddingLeft: 25,
+    paddingRight: 25,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 10,
+    zIndex:4,
+  },
+  PanierButtonText: {
+    color: 'white',
+    fontSize: 24,
+    marginLeft: 10,
+  },
   
 });

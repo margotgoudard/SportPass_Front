@@ -62,7 +62,6 @@
                 const matchResponse = await axios.get('http://10.0.2.2:4000/api/matchs');
                 const allMatchs = matchResponse.data;
                 setMatchs(allMatchs);
-                console.log(allMatchs);
 
                 const filteredMatchs = allMatchs.filter(match => showAllMatches || match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe);
                 setMatchsUserId(allMatchs.filter(match => match.idEquipeDomicile === userData.Equipe.idEquipe || match.idEquipeExterieure === userData.Equipe.idEquipe));
@@ -95,13 +94,14 @@
             <ScrollView>
                 <View style={styles.matchs}>
             <ProgressBar currentPage={1} />
+            <View style={styles.checkboxcontainer}>
                 <Checkbox 
                 text="Voir tous les matchs" 
                 isChecked={showAllMatches} 
                 onPress={()=> setShowAllMatches(!showAllMatches)}
                 container = {styles.checkbox}
                 />
-            
+            </View>
             {matchsUser
             .sort((a, b) => {
                 //trie des matchs par ordre chronologique
@@ -199,7 +199,11 @@
         },
         checkbox:{
             marginHorizontal:10,
-            margin:35,
+            marginLeft: 20, 
+        },
+        checkboxcontainer:{
+            marginLeft: 15,
+            marginVertical:10, 
         },
         matchs:{
             marginBottom: 60,

@@ -27,7 +27,7 @@ const Checkbox = ({
                 }}  
                 style= {[styles.checkbox, isChecked && styles.checkboxSelected, checkboxStyle,]}>
                 <Animated.View style ={{width:animatedWidth}}> 
-                <Ionicons name="checkmark" size={25} color="white" />                
+                <Ionicons name="checkmark" size={17} color="white" />                
                 </Animated.View>
             </TouchableOpacity>
         </View>
@@ -39,23 +39,21 @@ const styles = StyleSheet.create({
     container: {
         flexDirection:'row',
         alignItems:'center',
-        marginTop:10,
-        marginBottom:10,
     },
     checkbox:{
         borderColor: '#008900',
         borderWidth :1,
-        borderRadius: 5,
-        height: 25,
-        width:25,
+        borderRadius: 6,
+        height: 18,
+        width:18,
+        marginTop:1.5,
     },
     checkboxSelected : {
         backgroundColor:'#008900',
     },
     checkboxText:{
         fontSize:16,
-        marginRight:10,
-        marginLeft:20,
+        marginRight:7,
         color:'#008900',
         fontWeight:'bold',
     },
