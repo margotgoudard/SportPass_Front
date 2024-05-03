@@ -114,7 +114,6 @@ const PostClubDetailsPage = ({ route, navigation }) => {
     };
 
     const handleCommentLongPress = (comment) => {
-        console.log("coucou")
         setSelectedComment(comment);
         setIsEditModalVisible(true);
         setIsBlurEffect(true);

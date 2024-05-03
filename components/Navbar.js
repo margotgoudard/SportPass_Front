@@ -6,17 +6,17 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 
 import Accueil from'../screens/Accueil/AccueilPage.js';
-import Billeterie from'../screens/Billeterie/MatchsPage.js';
-import Commercant from'../screens/Commercant/CommercantPage.js';
 import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
+import BilleterieNavigation from '../Navigation/BilleterieNavigator.js';
+import CommercantNavigator from '../Navigation/CommercantNavigator.js';
 
 //icons
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import BilleterieNavigation from '../Navigation/BilleterieNavigator.js';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +44,6 @@ export default function Navbar() {
     const checkUserToken = async () => {
       try {
         const token = await AsyncStorage.getItem('userToken');
-        console.log('token : ',token)
         setIsLoggedIn(!!token);
       } catch (error) {
         console.error('Erreur lors de la récupération du token:', error);
@@ -80,7 +79,7 @@ export default function Navbar() {
 
       <Tab.Screen
         name="Commercant"
-        component={Commercant}
+        component={CommercantNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>

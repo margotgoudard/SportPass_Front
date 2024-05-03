@@ -28,7 +28,6 @@ const ModificationProfilPage = ({ route }) => {
       [
         {
           text: "Non",
-          onPress: () => console.log("Annulation"),
           style: "cancel"
         },
         { 

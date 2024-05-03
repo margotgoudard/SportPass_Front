@@ -9,7 +9,7 @@ import PassPage from '../screens/Profil/PassPage.js'
 import BilletPage from '../screens/Profil/BilletsPage.js'
 import CommercantFavoris from '../screens/Profil/CommercantFavorisPage.js'
 import AbonnesListPage from '../screens/Profil/AbonnesListPage.js';
-import ProfileUserPage from '../screens/Forum/ProfilUserPage.js';
+import ProfileUserPage from '../screens/Profil/ProfilUserPage.js';
 
 const Stack = createStackNavigator();
 

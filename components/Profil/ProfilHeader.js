@@ -1,8 +1,7 @@
-import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
-const ProfileHeader = ({ user, handleNavigation, followersCount, followingsCount, followers, followings, calculateProfileCompletion }) => {
+const ProfileHeader = ({ user, handleNavigation, followersCount, followingsCount, calculateProfileCompletion }) => {
   return (
     <View style={styles.headerContainer}>
       <Image source={require('../../assets/avatar.png')} style={styles.avatar} />

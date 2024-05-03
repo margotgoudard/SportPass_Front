@@ -17,7 +17,6 @@ const RegisterPage = () => {
     const fetchEquipes = async () => {
       try {
         const response = await axios.get('http://10.0.2.2:4000/api/equipe');
-        console.log(response.data);
         setEquipes(response.data);
       } catch (error) {
         console.error(error);
@@ -31,7 +30,6 @@ const RegisterPage = () => {
     const apiUrl = 'http://10.0.2.2:4000/api/registration';
     axios.post(apiUrl, { prenom, nom, mail, password, idEquipe })
       .then(response => {
-        console.log(response.data);
         Alert.alert("Inscription réussie", "Votre compte a été créé avec succès.");
       })
       .catch(error => {
