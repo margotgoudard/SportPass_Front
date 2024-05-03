@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 100,
     position: 'relative',
+    marginBottom: "11%"
   },
   text: {
     marginLeft: "10%"

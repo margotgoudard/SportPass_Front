@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   commercantCashback: {
-    color: 'green',
+    color: '#008900',
     fontSize: 16,
     fontWeight: "bold"
   },

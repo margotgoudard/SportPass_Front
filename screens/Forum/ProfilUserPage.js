@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   subscribeButton: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: '#008900',
     paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 15,
