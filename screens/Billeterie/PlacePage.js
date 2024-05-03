@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Checkbox from '../../components/Checkbox';
 
 
 export default function PlacePage({ route }) {
@@ -19,6 +20,8 @@ export default function PlacePage({ route }) {
   const [guestNom, setGuestNom] = useState('');
   const [guestPrenom, setGuestPrenom] = useState('');
   const [currentSelectedPlace, setCurrentSelectedPlace] = useState(null);
+  const [optionBuvette, setOptionBuvette] = useState(false); 
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,12 +55,14 @@ export default function PlacePage({ route }) {
         const rangee = rangeeResponse.data;
 
         const isReserved = ticket && ticket.reservee == 1;
+        const optionBuvette = ticket && ticket.buvette == 1;
         const placeWithDetails = {
           ...place,
           isReserved,
           price: ticket ? ticket.prix : null,
           type: typePlace ? typePlace.nom : null,
           numRangee : rangee? rangee.numero : null,
+          optionBuvette,
         };
 
           return placeWithDetails;
@@ -83,6 +88,11 @@ export default function PlacePage({ route }) {
     };
     fetchData();
   }, [selectedTribune]);
+
+  useEffect(() => {
+    const allBuvettesSelected = selectedPlaces.every((place) => place.optionBuvette == 1);
+    setOptionBuvette(allBuvettesSelected);
+  }, [selectedPlaces]);
   
 
   const handlePlaceSelection = async (place) => {
@@ -146,6 +156,16 @@ export default function PlacePage({ route }) {
     return totalPrice;
   };
 
+  const handleToggleBuvette = (place) => {
+    const updatedPlaces = selectedPlaces.map((selectedPlace) => {
+      if (selectedPlace.idPlace === place.idPlace) {
+        return { ...selectedPlace, optionBuvette: !selectedPlace.optionBuvette };
+      }
+      return selectedPlace;
+    });
+    setSelectedPlaces(updatedPlaces);
+  };
+
   if (loading) {
     return <AppLoader />;
   }
@@ -193,19 +213,32 @@ export default function PlacePage({ route }) {
             <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billets</Text>
             <Text style={styles.totalPriceStyle}>{calculateTotalPrice()}€</Text>
             {selectedPlaces.map((place, index) => (
-              <View key={index} style={styles.Detcontainer}>
+              <View key={index} style={styles.containerPlace}>
+              <View style={styles.Detcontainer}>
                 <View style={styles.detailsContainer}>
                   <View style={styles.textContainer} >
                   <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
                   <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
                   </View>
-                  <Text style={styles.textGuestInfo}>{place.guestPrenom} {place.guestNom}</Text>
+                  <Text style={styles.textGuestInfo}>Titulaire - {place.guestPrenom} {place.guestNom}</Text>
+                  
+                </View>
+                
+              </View>
+                <View style={styles.checkboxContainer}>
+                  <Checkbox
+                    text="Option buvette"
+                    isChecked={place.optionBuvette == 1}
+                    onPress={() => handleToggleBuvette(place)} 
+                    container={styles.checkbox}
+                  />
                 </View>
                 <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
                     <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
                   </TouchableOpacity>
               </View>
             ))}
+             
           </View>
         )}
         </View>
@@ -262,7 +295,7 @@ const styles = StyleSheet.create({
   },
   container:{
     marginBottom:60,
-    marginTop:20,
+    marginTop:10,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -291,11 +324,17 @@ const styles = StyleSheet.create({
     fontStyle:'italic',
     marginBottom:5,
   },
+  containerPlace:{
+    backgroundColor:'#D9D9D9',
+    borderRadius:20,
+    paddingVertical:10,
+    paddingHorizontal:20,
+    marginBottom : 5,
+  },
   Detcontainer:{
     position: 'relative', 
     flexDirection: 'row',
     justifyContent: 'center',
-
   },
   totalPriceStyle: {
     fontSize: 20,
@@ -307,12 +346,9 @@ const styles = StyleSheet.create({
     top:10,
   },
   detailsContainer : {
-    backgroundColor:'#D9D9D9',
     borderRadius:15,
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal:20,
-    paddingVertical:10,
     marginRight:5,
     marginLeft:15,
     marginVertical:5,
@@ -338,8 +374,9 @@ const styles = StyleSheet.create({
   },
   trashIcon:{
     zIndex:3,
-    marginTop:25,
-    marginRight:15,
+    top:-20,
+    right:-5,
+    position:'absolute'
   },
   modalContainer: {
     flex: 1,
@@ -394,5 +431,9 @@ const styles = StyleSheet.create({
   },
   textContainer:{
     flexDirection: 'row',
-  }  
+  },
+  checkboxContainer:{
+    justifyContent:'center',
+    alignItems:'center',
+  },
 });
