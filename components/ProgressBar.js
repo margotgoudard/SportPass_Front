@@ -6,7 +6,8 @@ const ProgressBar = ({ currentPage }) => {
     const stepWidth = 100 / steps.length; 
     const completedWidth = stepWidth * currentPage; 
     const iconPosition = completedWidth ? `${completedWidth-18}%` : '0%';
-    const text = ['Sélectionner un match','Sélectionner une tribune', 'Selectionner une place','Paiement'];
+    const text = ['Sélectionner un match','Sélectionner une tribune', 'Sélectionner une place','Paiement'];
+
 
     return (
         <View>
@@ -18,6 +19,7 @@ const ProgressBar = ({ currentPage }) => {
                 </View>
             ))}
             <View style={[styles.progress, { width: `${completedWidth}%` }]} />
+
             <Image source={require('../assets/soccer-ball.png')} style={[styles.icon, { left: iconPosition }]}/>
             </View>
             <View><Text style={styles.text}>{text[currentPage - 1]}</Text></View>
@@ -37,8 +39,8 @@ const styles = StyleSheet.create({
         borderRadius: 30, 
         backgroundColor: '#D9D9D9',
         justifyContent: 'center',
-        position:'relative',
-        padding: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
     },
     stepContainer: {
         alignItems: 'center',
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         top: -7,  
         width: '100%',
-        zIndex: 3,
+        zIndex: 5,
     },
     icon: {
         position: 'absolute',
@@ -73,12 +75,13 @@ const styles = StyleSheet.create({
         zIndex: 2,
         width:48,
         height:48,
+        zIndex: 4, 
     },
     text:{
         color:'#FFFFFF',
         fontWeight:'bold',
         textAlign: 'center',
-        fontSize: 22, 
+        fontSize: 22,
     }
 });
 
