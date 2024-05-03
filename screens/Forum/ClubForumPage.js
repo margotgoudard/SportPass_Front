@@ -6,16 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PostClubComponent from '../../components/PostClubComponent'; 
 import PostPartenaireComponent from '../../components/PostPartenaireComponent'; 
 
-const ClubForumPage = ({searchTerm}) => {
+const ClubForumPage = ({searchTerm, refreshTrigger}) => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchPosts(); 
-    }, [])
-  );
+  useEffect(() => {
+    fetchPosts();
+  }, [refreshTrigger]);
 
   const fetchPosts = async () => {
     try {

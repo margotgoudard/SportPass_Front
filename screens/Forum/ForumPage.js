@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ClubPage from './ClubForumPage';
 import CommunautePage from './CommunauteForumPage';
 import { Image, ImageBackground, StyleSheet, View, TextInput } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessageModal from '../../components/MessageModal.js';
@@ -21,6 +21,17 @@ const ForumPage = () => {
     const [postComponentHeight, setPostComponentHeight] = useState(0); 
     const [reloadKey, setReloadKey] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
+    const [refreshPage, setRefreshPage] = useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setRefreshPage(true);
+        setTimeout(() => {
+          setRefreshing(false);
+          setRefreshPage(false);
+        }, 1000);
+      }, []);
 
     const openModal = (content) => {
         setMessageText(content);
@@ -119,7 +130,18 @@ const ForumPage = () => {
                         />
                     </View>
                     </View>
-                <ScrollView style={styles.tabsContainer}>
+                <ScrollView 
+                style={styles.tabsContainer} 
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={['#BD4F6C', 'green']}  
+                        progressBackgroundColor="#B1B1B1"  
+                        tintColor="#4A90E2" 
+                     />
+                  }
+                >
                     <Tab.Navigator
                         screenOptions={{
                             tabBarStyle: {
@@ -144,10 +166,10 @@ const ForumPage = () => {
                         }}
                     >
                         <Tab.Screen name="Club">
-                            {() => <ClubPage searchTerm={searchTerm} key={reloadKey} />}
+                            {() => <ClubPage refreshTrigger={refreshPage} searchTerm={searchTerm} key={reloadKey} />}
                         </Tab.Screen>
                         <Tab.Screen name="Communaute">
-                            {() => <CommunautePage searchTerm={searchTerm} key={reloadKey} />}
+                            {() => <CommunautePage refreshTrigger={refreshPage} searchTerm={searchTerm} key={reloadKey} />}
                         </Tab.Screen>
                     </Tab.Navigator>
                 </ScrollView>
