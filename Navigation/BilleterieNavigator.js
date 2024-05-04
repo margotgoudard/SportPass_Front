@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 export default function BilleterieNavigation() {
   return (
-    <Stack.Navigator initialRouteName="Matchs">
+    <Stack.Navigator>
       <Stack.Screen 
         name="Matchs" 
         component={MatchsPage} 

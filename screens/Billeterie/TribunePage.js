@@ -13,19 +13,16 @@ export default function Tribune({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const [tribunes, setTribunes] = useState([]);
   const [selectedTribune, setSelectedTribune] = useState(null);
-  const [imageLoading, setImageLoading] = useState(false); 
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch stade data
         const idStade = selectedMatch.idStade
         const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${idStade}`);
         const stadeData = stadeResponse.data;
         setStade(stadeData);
 
-        // Fetch tribunes data
         const tribunesResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/stade/${idStade}`);
         const tribunesData = tribunesResponse.data;
         setTribunes(tribunesData);
@@ -52,11 +49,6 @@ export default function Tribune({ route, navigation }) {
     navigation.navigate('Place', { selectedTribune: selectedTribune });
   }
 
-  const handle3DButton = () => {
-    navigation.navigate('Visualisation3D');
-  }
-
-  //images des stades
   const images = {
     stade_globale: require('../../assets/stade/stade_globale.png'),
     corbiere: require('../../assets/stade/corbiere.png'),

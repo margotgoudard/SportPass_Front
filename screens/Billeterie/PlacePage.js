@@ -5,7 +5,6 @@ import axios from 'axios';
 import ProgressBar from '../../components/ProgressBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Checkbox from '../../components/Checkbox';
-//icons
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
