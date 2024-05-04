@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  Image, 
-  TextInput, 
-  ImageBackground, 
-  Alert, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ScrollView 
-} from 'react-native';
+import { View, Text, Image, TextInput, ImageBackground, Alert, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -38,7 +28,6 @@ const ModificationProfilPage = ({ route }) => {
       [
         {
           text: "Non",
-          onPress: () => console.log("Annulation"),
           style: "cancel"
         },
         { 

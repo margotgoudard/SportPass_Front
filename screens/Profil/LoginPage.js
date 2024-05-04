@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  TextInput, 
-  Alert, 
-  Text, 
-  TouchableOpacity, 
-  ImageBackground, 
-  Image, 
-  StyleSheet 
-} from 'react-native';
+import { View, TextInput, Alert, Text, TouchableOpacity, ImageBackground, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +16,6 @@ const LoginPage = () => {
       const token = response.data.token;
       await AsyncStorage.setItem('userToken', token); 
       await AsyncStorage.setItem('userId', String(response.data.idUser));
-      const UserId = await AsyncStorage.getItem('userId');
       navigation.navigate('ProfilPage', { userData: response.data });
     } catch (error) {
       console.error(error);

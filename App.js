@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Navbar from './components/Navbar.js';
 import AuthNavigator from './Navigation/AuthNavigator.js';
 import ForumNavigator from './Navigation/ForumNavigator.js';
+import CommercantNavigator from './Navigation/CommercantNavigator.js';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ export default function App() {
         <Stack.Screen
           name="Forum"
           component={ForumNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Commercant"
+          component={CommercantNavigator}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

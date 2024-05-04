@@ -1,25 +1,19 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import PostClubComponent from '../../components/PostClubComponent'; 
 import PostPartenaireComponent from '../../components/PostPartenaireComponent'; 
 
-const ClubForumPage = ({searchTerm}) => {
+const ClubForumPage = ({searchTerm, refreshTrigger}) => {
   const [posts, setPosts] = useState([]);
-  const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
 
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchPosts(); 
-    }, [])
-  );
+  useEffect(() => {
+    fetchPosts();
+  }, [refreshTrigger]);
 
   const fetchPosts = async () => {
     try {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +9,7 @@ import PostCommercantComponent from '../../components/PostCommercantComponent';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 
-const CommunauteForumPage = ({searchTerm}) => {
+const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
   const [selectedPost, setSelectedPost] = useState(null);
@@ -26,6 +25,10 @@ const CommunauteForumPage = ({searchTerm}) => {
   const adjustInputHeight = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [refreshTrigger]);
 
   const handleLongPressOnPost = (post) => {
     setSelectedPost(post);

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, ScrollView, ImageBackground, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CommercantInfo from '../../components/CommercantInfo';
 
 const CommercantFavoris = ({ route, navigation }) => {

@@ -4,33 +4,20 @@ import axios from 'axios';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const PostCommercantComponent = ({ post, showDetails = true }) => {
-    const [commercantName, setCommercantName] = useState('');
-
-    useEffect(() => {
-        const fetchCommercantName = async () => {
-            try {
-                const response = await axios.get(`http://10.0.2.2:4000/api/commercant/${post.idCommercant}`);
-                setCommercantName(response.data.nom); 
-            } catch (error) {
-                console.error('Error fetching commercant name:', error);
-            }
-        };
-
-        fetchCommercantName();
-    }, [post.idCommercant]);
 
     return (
         <View style={styles.postItem}>
             <View style={styles.postHeader}>
                 <Image
-                    source={require('../assets/pubCommercant.png')} 
+                    source={{ uri: post.Commercant.image }}
                     style={styles.postProfileImage}
                 />
                 <View style={styles.textContent}>
+                    <Text style={styles.titre}>OFFRE FLASH</Text>
                     <Text style={styles.postItemText}>{post.contenu}</Text>
                     <View style={styles.locationInfo}>
-                        <FontAwesome5 name="map-marker-alt" size={24} color="black" />
-                        <Text style={styles.commercantName}>{commercantName}</Text>
+                        <FontAwesome5 name="map-marker-alt" size={20} color="black" />
+                        <Text style={styles.commercantName}>{post.Commercant.nom}</Text>
                     </View>
                 </View>
             </View>
@@ -49,8 +36,8 @@ const styles = StyleSheet.create({
         borderWidth: 2
     },
     postProfileImage: {
-        width: 80, 
-        height: 80,
+        width: 100, 
+        height: 100,
         marginRight: 10
     },
     postHeader: {
@@ -60,6 +47,12 @@ const styles = StyleSheet.create({
     textContent: {
         flex: 1,
         flexDirection: 'column',
+        marginHorizontal: "2%"
+    },
+    titre: {
+        fontSize: 16,
+        color: "#008900",
+        fontWeight: "bold"
     },
     postItemText: {
         fontSize: 16,

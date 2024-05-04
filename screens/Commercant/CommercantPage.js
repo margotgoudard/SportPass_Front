@@ -1,5 +1,5 @@
-import React, { useRef , useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import Map from '../../components/Map';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';

@@ -9,13 +9,13 @@ import PassPage from '../screens/Profil/PassPage.js'
 import BilletPage from '../screens/Profil/BilletsPage.js'
 import CommercantFavoris from '../screens/Profil/CommercantFavorisPage.js'
 import AbonnesListPage from '../screens/Profil/AbonnesListPage.js';
-import ProfileUserPage from '../screens/Forum/ProfilUserPage.js';
+import ProfileUserPage from '../screens/Profil/ProfilUserPage.js';
 
 const Stack = createStackNavigator();
 
 export default function AuthNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator>
       <Stack.Screen 
         name="Login" 
         component={LoginPage} 

@@ -7,13 +7,10 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
 const AbonnesListPage = ({ route }) => {
-  const { userId, followers, followings, type } = route.params;
+  const { followers, followings, type } = route.params;
   const [selectedTab, setSelectedTab] = useState(type);
-  const [displayedUsers, setDisplayedUsers] = useState([]);
   const navigation = useNavigation();
   const [currentUserId, setCurrentUserId] = useState(0);
-
-  // State to store subscription status for each user
   const [subscriptionStatus, setSubscriptionStatus] = useState({});
 
   const navigateToProfile = async (follower) => {

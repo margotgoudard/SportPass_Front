@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Modal, Alert, TextInput, SafeAreaView, Text, StyleSheet, Button, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Alert, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
 import PostClubComponent from '../../components/PostClubComponent.js';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { AntDesign, } from '@expo/vector-icons';
 import CommentComponent from '../../components/CommentComponent.js';
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModalClub from '../../components/MessageModalClub.js';
@@ -114,7 +114,6 @@ const PostClubDetailsPage = ({ route, navigation }) => {
     };
 
     const handleCommentLongPress = (comment) => {
-        console.log("coucou")
         setSelectedComment(comment);
         setIsEditModalVisible(true);
         setIsBlurEffect(true);
