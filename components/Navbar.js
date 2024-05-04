@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
+import axios from 'axios';
 
 import Accueil from'../screens/Accueil/AccueilPage.js';
 import ForumNavigation from'../Navigation/ForumNavigator.js';
@@ -63,6 +63,29 @@ export default function Navbar() {
     }
   }, [navigation]);
 
+  const checkTokenAndNavigateCommercant = useCallback(async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
+      navigation.navigate('Navbar', {screen:'Commercant',params: { screen: 'CommercantPage' }});
+    } else {
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+    }
+  }, [navigation]);
+
+  const checkTokenAndNavigateProfil = useCallback(async () => {
+
+    const token = await AsyncStorage.getItem('userToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (token) {
+      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const user = response.data;
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'ProfilPage', params: {userData : user} }});
+    } else {
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+    }
+  }, [navigation]);
+
   return (
     <Tab.Navigator screenOptions={screenOptions} >
       <Tab.Screen
@@ -80,6 +103,12 @@ export default function Navbar() {
       <Tab.Screen
         name="Commercant"
         component={CommercantNavigator}
+        listeners={({ navigation }) => ({
+          tabPress: async (e) => {
+            e.preventDefault();
+            checkTokenAndNavigateCommercant(navigation);
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -120,6 +149,12 @@ export default function Navbar() {
       <Tab.Screen
         name="Profil"
         component={AuthNavigator}
+        listeners={({ navigation }) => ({
+          tabPress: async (e) => {
+            e.preventDefault();
+            checkTokenAndNavigateProfil(navigation);
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>

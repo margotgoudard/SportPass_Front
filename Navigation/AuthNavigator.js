@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 export default function AuthNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator>
       <Stack.Screen 
         name="Login" 
         component={LoginPage} 

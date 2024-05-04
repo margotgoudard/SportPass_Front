@@ -12,7 +12,7 @@ import ProfileHeader from '../../components/Profil/ProfilHeader.js';
 
 moment.locale('fr');
 
-const ProfilePage = ({ route }) => {
+const ProfilPage = ({ route }) => {
   const { userData } = route.params;
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -396,4 +396,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProfilePage;
+export default ProfilPage;

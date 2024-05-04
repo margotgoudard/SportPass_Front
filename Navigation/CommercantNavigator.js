@@ -8,33 +8,11 @@ import CommercantPage from '../screens/Commercant/CommercantPage';
 const Stack = createStackNavigator();
 
 export default function CommercantNavigator() {
-  const [initialRoute, setInitialRoute] = useState('Login');
-
-  useFocusEffect(
-    useCallback(() => {
-      const checkToken = async () => {
-        const token = await AsyncStorage.getItem('userToken');
-        if (token) {
-          setInitialRoute('CommercantPage');
-        } else {
-          setInitialRoute('Login');
-        }
-      };
-
-      checkToken();
-    }, [])
-  );
-
   return (
-    <Stack.Navigator initialRouteName={initialRoute}>
+    <Stack.Navigator>
       <Stack.Screen 
         name="CommercantPage" 
         component={CommercantPage} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="Login" 
-        component={LoginPage} 
         options={{ headerShown: false }} 
       />
     </Stack.Navigator>
