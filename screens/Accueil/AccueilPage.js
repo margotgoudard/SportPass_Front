@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
+    const scrollViewRef = useRef(null);
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -38,6 +40,14 @@ export default function Accueil({ navigation }) {
         fetchAlaUnePublications();
     }, []); 
 
+    const scrollToPublication = (index) => {
+        if (scrollViewRef.current) {
+            const offset = index * (342 + 15); 
+            scrollViewRef.current.scrollTo({ x: offset, animated: true });
+        }
+    };
+    
+
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
             <ScrollView>
@@ -54,7 +64,11 @@ export default function Accueil({ navigation }) {
                         <View style={styles.uneContainer}>
                             <View style={styles.publicationsContainer}>
                                 <Text style={styles.title}>À la Une</Text>
-                                <ScrollView horizontal={true}>
+                                <ScrollView 
+                                    horizontal={true}
+                                    ref={scrollViewRef}
+                                    pagingEnabled={true}
+                                >
                                     {alaUnePublications.map((publication, index) => (
                                         <View key={index} style={styles.imageContainer}>
                                             <Image 
@@ -66,6 +80,16 @@ export default function Accueil({ navigation }) {
                                 </ScrollView>
                             </View>
                             <View style={styles.bandeau}></View>
+                            <View style={styles.pointsContainer}>
+                                {alaUnePublications.map((publication, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.pointNavigation}
+                                        onPress={() => scrollToPublication(index)}
+                                    >
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
                         </View>
                     )}
                 </View>
@@ -92,7 +116,7 @@ const styles = StyleSheet.create({
     bienvenue: {
         fontSize: 20,
         position: 'absolute',
-        marginLeft: 20,
+        marginLeft: 15,
         fontWeight: 'bold',
     },
     publicationsContainer: {
@@ -118,12 +142,27 @@ const styles = StyleSheet.create({
         backgroundColor: '#D9D9D9',
         height: 100, 
         position: 'absolute',
-        bottom: 50, 
+        bottom: 75, 
         left: 0,
         right: 0,
         zIndex: 0, 
     },
     uneContainer: {
         position: 'relative',
+    },
+    pointsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    pointNavigation: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'grey',
+        marginHorizontal: 5,
+        flexDirection:'row',
+        marginHorizontal:2,
     },
 });
