@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
+    const [userPalier, setUserPalier] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const scrollViewRef = useRef(null);
 
@@ -16,6 +18,8 @@ export default function Accueil({ navigation }) {
                 const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
                 const user = response.data;
                 setUserFirstName(user.prenom);
+                setUserPalier(user.Palier?.nom);
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
             }
@@ -46,6 +50,10 @@ export default function Accueil({ navigation }) {
             scrollViewRef.current.scrollTo({ x: offset, animated: true });
         }
     };
+
+    const handleBilletteriePress = () => {
+        navigation.navigate('Navbar', {screen:'Billeterie'});
+    };
     
 
     return (
@@ -56,9 +64,15 @@ export default function Accueil({ navigation }) {
                 </View>
                 <View style={styles.container}>
                     {userFirstName && (
+                        <View>
                         <Text style={styles.bienvenue}>
                             Bonjour, {userFirstName} !
                         </Text>
+                        <View style={styles.vipStatusContainer}>
+                        <Text style={styles.vipStatus}> {userPalier} </Text>
+                        <MaterialCommunityIcons name="flag-checkered" size={30} color="#008900" style={styles.palierImage} />
+                        </View>
+                        </View>
                     )}
                     {alaUnePublications.length > 0 && (
                         <View style={styles.uneContainer}>
@@ -92,6 +106,17 @@ export default function Accueil({ navigation }) {
                             </View>
                         </View>
                     )}
+                    <TouchableOpacity style={styles.rectangleContainer} onPress={handleBilletteriePress}>
+                        <View style={styles.greenRectangle}>
+                            <Text style={styles.greenText}>1 000 €</Text>
+                        </View>
+                        <View style={styles.whiteRectangle}>
+                        <Image source={require('../../assets/logo_carre.png')} style={styles.logoInRectangle} />
+
+                            <Text style={styles.whiteText}> à gagner à chaque mi-temps ! </Text>
+                            <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -164,5 +189,66 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         flexDirection:'row',
         marginHorizontal:2,
+    },
+    vipStatusContainer: {
+        position: 'absolute',
+        top: 0,
+        right: 20,
+        flexDirection: 'row',
+        position:'absolute',
+      },
+      vipStatus: {
+        color: '#008900',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginLeft: 5,
+        marginTop:1, 
+      },
+      rectangleContainer: {
+        alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 5,
+    },
+    greenRectangle: {
+        width: '99%',
+        height: 40,
+        backgroundColor: 'green',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        borderWidth: 5, 
+        borderColor: 'white', 
+        position: 'relative', 
+    },
+    logoInRectangle: {
+        position: 'absolute',
+        top: -34, 
+        left: 5, 
+        width: 71*0.9, 
+        height: 66*0.9, 
+    },
+    whiteRectangle: {
+        width: '99%',
+        height: 50,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
+    },
+    greenText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 25,
+    },
+    whiteText: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 17,
+    },
+    whiteText2: {
+        color: 'black',
+        fontStyle: 'italic',
     },
 });
