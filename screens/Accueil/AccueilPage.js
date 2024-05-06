@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -43,6 +43,8 @@ export default function Accueil({ navigation }) {
 
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+            <ScrollView>
+
             <View style={styles.logoContainer}>
                 <Image source={require('../../assets/logo.png')} style={styles.logo} />
             </View>
@@ -55,14 +57,23 @@ export default function Accueil({ navigation }) {
 
                 {alaUnePublications.length > 0 && (
                     <View style={styles.publicationsContainer}>
-                        <Text style={styles.title}>Publications à la Une</Text>
+                        <Text style={styles.title}>À la Une</Text>
+                        <ScrollView horizontal={true}>
                         {alaUnePublications.map((publication, index) => (
-                            <Text key={index}>{publication.contenu}</Text>
-                        ))}
+                                <View key={index}>
+                                    <Image 
+                                        source={{ uri: publication.image }}
+                                        style={styles.publicationImage} 
+                                    />
+                                </View>
+                        ))} 
+                        </ScrollView>
+
                     </View>
                 )}
 
             </View>
+            </ScrollView>
         </ImageBackground>
     );
 }
@@ -82,13 +93,24 @@ const styles = StyleSheet.create({
    
     container: {
         flex: 1,
-        justifyContent: 'flex-start', 
-        alignItems: 'flex-start',
     },
     bienvenue: {
         fontSize: 20,
         position:'absolute',
         marginLeft:20,
         fontWeight: 'bold',
+    },
+    publicationsContainer: {
+        marginTop: 30,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    publicationImage: {
+        width: 100,
+        height: 100,
+        marginRight : 10,
     },
 });
