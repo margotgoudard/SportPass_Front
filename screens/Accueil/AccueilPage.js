@@ -111,6 +111,8 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.greenText}>1 000 €</Text>
                         </View>
                         <View style={styles.whiteRectangle}>
+                        <Image source={require('../../assets/logo_carre.png')} style={styles.logoInRectangle} />
+
                             <Text style={styles.whiteText}> à gagner à chaque mi-temps ! </Text>
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     },
     greenRectangle: {
         width: '99%',
-        height: 50,
+        height: 40,
         backgroundColor: 'green',
         justifyContent: 'center',
         alignItems: 'center',
@@ -217,6 +219,14 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 5,
         borderWidth: 5, 
         borderColor: 'white', 
+        position: 'relative', 
+    },
+    logoInRectangle: {
+        position: 'absolute',
+        top: -34, 
+        left: 5, 
+        width: 71*0.9, 
+        height: 66*0.9, 
     },
     whiteRectangle: {
         width: '99%',
@@ -230,15 +240,15 @@ const styles = StyleSheet.create({
     greenText: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize:25,
+        fontSize: 25,
     },
     whiteText: {
         color: 'black',
         fontWeight: 'bold',
-        fontSize:17,
+        fontSize: 17,
     },
     whiteText2: {
         color: 'black',
-        fontStyle:'italic',
+        fontStyle: 'italic',
     },
 });
