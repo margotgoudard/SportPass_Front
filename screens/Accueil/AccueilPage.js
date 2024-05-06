@@ -5,6 +5,8 @@ import axios from 'axios';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
+    const [alaUnePublications, setAlaUnePublications] = useState([]);
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -19,7 +21,24 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        const fetchAlaUnePublications = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                
+                const user = response.data;
+                const idEquipe = user.idEquipe; 
+
+                const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/equipe/${idEquipe}/alaUne`);
+                const alaUnePublications = alaUneResponse.data;
+                setAlaUnePublications(alaUnePublications);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des publications à la une :', error);
+            }
+        };
+
         fetchUserData();
+        fetchAlaUnePublications();
     }, []); 
 
     return (
@@ -33,6 +52,16 @@ export default function Accueil({ navigation }) {
                         Bonjour, {userFirstName} !
                     </Text>
                 )}
+
+                {alaUnePublications.length > 0 && (
+                    <View style={styles.publicationsContainer}>
+                        <Text style={styles.title}>Publications à la Une</Text>
+                        {alaUnePublications.map((publication, index) => (
+                            <Text key={index}>{publication.contenu}</Text>
+                        ))}
+                    </View>
+                )}
+
             </View>
         </ImageBackground>
     );
