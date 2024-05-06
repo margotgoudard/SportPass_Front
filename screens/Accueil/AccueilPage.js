@@ -50,6 +50,10 @@ export default function Accueil({ navigation }) {
             scrollViewRef.current.scrollTo({ x: offset, animated: true });
         }
     };
+
+    const handleBilletteriePress = () => {
+        navigation.navigate('Navbar', {screen:'Billeterie'});
+    };
     
 
     return (
@@ -102,7 +106,7 @@ export default function Accueil({ navigation }) {
                             </View>
                         </View>
                     )}
-                    <View style={styles.rectangleContainer}>
+                    <TouchableOpacity style={styles.rectangleContainer} onPress={handleBilletteriePress}>
                         <View style={styles.greenRectangle}>
                             <Text style={styles.greenText}>1 000 €</Text>
                         </View>
@@ -110,7 +114,7 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText}> à gagner à chaque mi-temps ! </Text>
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </ImageBackground>
