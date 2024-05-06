@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Map from '../../components/Map';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -294,6 +294,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#D9D9D9',
         borderRadius: 10,
         borderWidth: 0,
+    },
+    checkboxText: {
+        color: "white"
     }
 });
 
