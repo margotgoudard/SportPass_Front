@@ -7,8 +7,10 @@ import axios from 'axios';
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
+    const [userAmount, setUserAmount] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const [partenaires, setPartenaires] = useState([]);
+    const [paliers, setPaliers] = useState([]);
     const scrollViewRef = useRef(null);
 
 
@@ -20,6 +22,7 @@ export default function Accueil({ navigation }) {
                 const user = response.data;
                 setUserFirstName(user.prenom);
                 setUserPalier(user.Palier?.nom);
+                setUserAmount(user.somme);
 
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
@@ -51,9 +54,20 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        const fetchPaliers = async () => {
+            try {
+                const response = await axios.get('http://10.0.2.2:4000/api/palier');
+                const paliersData = response.data;
+                setPaliers(paliersData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des paliers :', error);
+            }
+        };
+
         fetchUserData();
         fetchAlaUnePublications();
         fetchPartenaires();
+        fetchPaliers();
     }, []); 
 
     const scrollToPublication = (index) => {
@@ -69,6 +83,15 @@ export default function Accueil({ navigation }) {
 
     const handlePartenairePress = (siteUrl) => {
         Linking.openURL(siteUrl);
+    };
+
+    const calculateRemainingAmount = (userAmount) => {
+        const currentPalier = paliers.find((palier) => userAmount < palier.montantMin);
+        if (currentPalier) {
+            return currentPalier.montantMin - userAmount;
+        } else {
+            return 0;
+        }
     };
     
 
@@ -133,6 +156,17 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
                     </TouchableOpacity>
+
+
+                    {userPalier && (
+                        <View style={styles.remainingAmountContainer}>
+                            <Text>Cashback</Text>
+                            <Text style={styles.remainingAmountText}>
+                                Il manque {calculateRemainingAmount(userAmount)} € avant le prochain palier
+                            </Text>
+                        </View>
+                    )}
+
                     
                     <View style={styles.partenairesContainer}>
                         <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
@@ -302,5 +336,13 @@ const styles = StyleSheet.create({
     partenaireNom:{
         fontWeight: 'bold',
         fontSize: 17,
+    },
+    remainingAmountContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    remainingAmountText: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
