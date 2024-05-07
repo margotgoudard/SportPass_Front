@@ -22,12 +22,12 @@ const CustomRemainingAmountBar = ({ userAmount, nextPalierAmount }) => {
 
 const styles = StyleSheet.create({
     progressBarContainer: {
-        width: '80%',
-        height: 10,
+        width: '90%',
+        height: 8,
         backgroundColor: '#D9D9D9',
         borderRadius: 10,
         overflow: 'hidden',
-        marginTop: 10,
+        marginBottom:8,
     },
     progressBar: {
         height: '100%',

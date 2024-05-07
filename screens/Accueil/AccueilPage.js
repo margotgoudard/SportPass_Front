@@ -10,6 +10,7 @@ import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAm
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
+    const [userPalierPourcentage, setUserPalierPourcentage] = useState(null);
     const [userAmount, setUserAmount] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const [partenaires, setPartenaires] = useState([]);
@@ -26,7 +27,7 @@ export default function Accueil({ navigation }) {
                 setUserFirstName(user.prenom);
                 setUserPalier(user.Palier?.nom);
                 setUserAmount(user.somme);
-
+                setUserPalierPourcentage(user.Palier?.cashbackPalier);
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
             }
@@ -101,9 +102,6 @@ export default function Accueil({ navigation }) {
         }
     };
     
-
-    
-    
     
     
 
@@ -172,14 +170,25 @@ export default function Accueil({ navigation }) {
 
                     {userPalier && (
                         <View style={styles.remainingAmountContainer}>
-                            <Text>Cashback</Text>
-                            {alaUnePublications.length > 0 && (
-                                <Text style={styles.remainingAmountText}>
-                                    {calculateRemainingAmount(userAmount).remainingAmount} € avant le palier {calculateRemainingAmount(userAmount).nextPalierName}
-                                </Text>
+                        <View style={styles.cashbackContainer}>
+                            <Text style={styles.cashbackText}>Cashback</Text>
+                            {userAmount !== null && (
+                                <Text style={styles.userAmountText}>{userAmount} €</Text>
                             )}
-                            <CustomRemainingAmountBar userAmount={userAmount} nextPalierAmount={calculateRemainingAmount(userAmount).remainingAmount} />
                         </View>
+                        <View style={styles.vipStatusCashbackContainer}>
+                            <MaterialCommunityIcons name="flag-checkered" size={30} color="black" style={styles.palierImageCashback} /> 
+                            <Text style={styles.vipStatusCashback}>
+                                {userPalier} : {userPalierPourcentage ? `${(userPalierPourcentage * 100).toFixed(0)}%` : ''}
+                            </Text>
+                        </View>
+                        <Text style={styles.remainingAmountText}>
+                            {calculateRemainingAmount(userAmount).remainingAmount} € avant le palier {calculateRemainingAmount(userAmount).nextPalierName}
+                        </Text>
+                        
+                        <CustomRemainingAmountBar userAmount={userAmount} nextPalierAmount={calculateRemainingAmount(userAmount).remainingAmount} />
+                    </View>
+                    
                     )}
 
 
@@ -335,8 +344,8 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     partenairesContainer: {
-        marginTop: 30,
-        marginLeft: 15,
+        marginTop: 10,
+        marginLeft: 5,
     },
     partenaireItem: {
         flexDirection: 'column',
@@ -355,16 +364,52 @@ const styles = StyleSheet.create({
     },
     remainingAmountContainer: {
         alignItems: 'center',
-        marginTop: 20,
-        backgroundColor:'#008900',
+        marginTop: 15,
+        backgroundColor: '#008900',
         borderRadius: 5,
-        justifyContent:'center',
-        position: 'relative', 
+        justifyContent: 'center',
+        padding: 10,
         marginHorizontal:5,
-        padding:10,
+    },
+    cashbackContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+    },
+    cashbackText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        marginLeft:10,
+    },
+    userAmountText: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'white',
+        marginRight:5,
     },
     remainingAmountText: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
+        color: 'white',
+        marginTop: 5,
+        marginBottom:8,
+    },
+    vipStatusCashback: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop:1, 
+    },
+    vipStatusCashbackContainer:{
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'start',
+    },
+    palierImageCashback:{
+        marginLeft:5,
+        marginRight:2,
+        marginBottom:3,
     },
 });
