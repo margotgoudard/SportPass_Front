@@ -11,7 +11,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 export default function PlacePage({ route, navigation }) {
-  const { selectedTribune } = route.params;
+  const { selectedTribune, selectedMatch } = route.params;
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [placesByRow, setPlacesByRow] = useState([]);
@@ -181,7 +181,7 @@ export default function PlacePage({ route, navigation }) {
   };
 
   const handlePanierButton = () => {
-    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces });
+    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces, selectedTribune: selectedTribune, selectedMatch });
   }
 
   if (loading) {

@@ -46,7 +46,7 @@ export default function Tribune({ route, navigation }) {
   
 
   const handleNextButton = () => {
-    navigation.navigate('Place', { selectedTribune: selectedTribune });
+    navigation.navigate('Place', { selectedTribune: selectedTribune, selectedMatch });
   }
 
   const images = {

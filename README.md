@@ -42,4 +42,9 @@ npm install react-native-dotenv --save-dev
 
 npm install @stripe/stripe-react-native
 
+npm install react-native-pdf-lib react-native-qrcode-svg
+
+npm install expo-file-system
+
+npm install react-native-pdf-lib react-native-qrcode-svg
 

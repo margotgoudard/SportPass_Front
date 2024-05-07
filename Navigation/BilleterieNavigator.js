@@ -33,7 +33,7 @@ export default function BilleterieNavigation() {
         options={{ headerShown: false }}  
       />
       <Stack.Screen 
-        name="Résumé" 
+        name="Resume" 
         component={ResumePage}  
         options={{ headerShown: false }}  
       />
