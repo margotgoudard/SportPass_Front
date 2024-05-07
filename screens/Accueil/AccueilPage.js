@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
+import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
+
+
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
@@ -87,12 +90,21 @@ export default function Accueil({ navigation }) {
 
     const calculateRemainingAmount = (userAmount) => {
         const currentPalier = paliers.find((palier) => userAmount < palier.montantMin);
+    
         if (currentPalier) {
-            return currentPalier.montantMin - userAmount;
+            const nextPalierAmount = currentPalier.montantMin;
+            const remainingAmount = nextPalierAmount - userAmount;
+            const nextPalierName = currentPalier.nom;
+            return { remainingAmount, nextPalierName };
         } else {
-            return 0;
+            return { remainingAmount: 0, nextPalierName: '' };
         }
     };
+    
+
+    
+    
+    
     
 
     return (
@@ -161,14 +173,18 @@ export default function Accueil({ navigation }) {
                     {userPalier && (
                         <View style={styles.remainingAmountContainer}>
                             <Text>Cashback</Text>
-                            <Text style={styles.remainingAmountText}>
-                                Il manque {calculateRemainingAmount(userAmount)} € avant le prochain palier
-                            </Text>
+                            {alaUnePublications.length > 0 && (
+                                <Text style={styles.remainingAmountText}>
+                                    {calculateRemainingAmount(userAmount).remainingAmount} € avant le palier {calculateRemainingAmount(userAmount).nextPalierName}
+                                </Text>
+                            )}
+                            <CustomRemainingAmountBar userAmount={userAmount} nextPalierAmount={calculateRemainingAmount(userAmount).remainingAmount} />
                         </View>
                     )}
 
+
                     
-                    <View style={styles.partenairesContainer}>
+                    <View style={styles.partenairesContainer}>  
                         <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
                         <ScrollView horizontal={true}>
                         {partenaires.map((partenaire, index) => (
@@ -340,6 +356,12 @@ const styles = StyleSheet.create({
     remainingAmountContainer: {
         alignItems: 'center',
         marginTop: 20,
+        backgroundColor:'#008900',
+        borderRadius: 5,
+        justifyContent:'center',
+        position: 'relative', 
+        marginHorizontal:5,
+        padding:10,
     },
     remainingAmountText: {
         fontSize: 18,
