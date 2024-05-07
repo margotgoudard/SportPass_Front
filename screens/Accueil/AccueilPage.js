@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
+import AppLoader from '../../components/AppLoader';
 
 
 export default function Accueil({ navigation }) {
@@ -12,6 +13,7 @@ export default function Accueil({ navigation }) {
     const [userPalier, setUserPalier] = useState(null);
     const [userPalierPourcentage, setUserPalierPourcentage] = useState(null);
     const [userAmount, setUserAmount] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const [partenaires, setPartenaires] = useState([]);
     const [paliers, setPaliers] = useState([]);
@@ -68,6 +70,8 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        setLoading(false);
+
         fetchUserData();
         fetchAlaUnePublications();
         fetchPartenaires();
@@ -102,7 +106,11 @@ export default function Accueil({ navigation }) {
         }
     };
     
-    
+    if (loading) {
+        return (
+        <AppLoader/>
+        );
+    }
     
 
     return (
