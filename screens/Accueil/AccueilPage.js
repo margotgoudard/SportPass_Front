@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -66,6 +66,10 @@ export default function Accueil({ navigation }) {
     const handleBilletteriePress = () => {
         navigation.navigate('Navbar', {screen:'Billeterie'});
     };
+
+    const handlePartenairePress = (siteUrl) => {
+        Linking.openURL(siteUrl);
+    };
     
 
     return (
@@ -129,15 +133,21 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
                     </TouchableOpacity>
-
+                    
                     <View style={styles.partenairesContainer}>
-                        <Text style={styles.title}>Partenaires</Text>
+                        <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
+                        <ScrollView horizontal={true}>
                         {partenaires.map((partenaire, index) => (
-                            <TouchableOpacity key={index} style={styles.partenaireItem}>
+                            <TouchableOpacity 
+                            key={index} 
+                            style={styles.partenaireItem}
+                            onPress={() => handlePartenairePress(partenaire.site)}
+                            >
                                 <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
-                                <Text>{partenaire.nom}</Text>
+                                <Text style={styles.partenaireNom}>{partenaire.nom}   </Text>
                             </TouchableOpacity>
                         ))}
+                        </ScrollView>
                     </View>
                 </View>
             </ScrollView>
@@ -174,7 +184,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         marginBottom: 10,
-        marginLeft: 15,
+        marginLeft: 5,
     },
     imageContainer: {
         marginLeft: 15,
@@ -279,14 +289,18 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     },
     partenaireItem: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         marginBottom: 10,
     },
     partenaireLogo: {
-        width: 50,
-        height: 50,
+        width: 110,
+        height: 110,
         marginRight: 10,
-        borderRadius: 25,
+        borderRadius: 20,
+    },
+    partenaireNom:{
+        fontWeight: 'bold',
+        fontSize: 17,
     },
 });
