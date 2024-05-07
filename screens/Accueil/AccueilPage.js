@@ -4,11 +4,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
+import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
+
+
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
+    const [userPalierPourcentage, setUserPalierPourcentage] = useState(null);
+    const [userAmount, setUserAmount] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const [partenaires, setPartenaires] = useState([]);
+    const [paliers, setPaliers] = useState([]);
     const scrollViewRef = useRef(null);
 
 
@@ -20,7 +26,8 @@ export default function Accueil({ navigation }) {
                 const user = response.data;
                 setUserFirstName(user.prenom);
                 setUserPalier(user.Palier?.nom);
-
+                setUserAmount(user.somme);
+                setUserPalierPourcentage(user.Palier?.cashbackPalier);
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
             }
@@ -51,9 +58,20 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        const fetchPaliers = async () => {
+            try {
+                const response = await axios.get('http://10.0.2.2:4000/api/palier');
+                const paliersData = response.data;
+                setPaliers(paliersData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des paliers :', error);
+            }
+        };
+
         fetchUserData();
         fetchAlaUnePublications();
         fetchPartenaires();
+        fetchPaliers();
     }, []); 
 
     const scrollToPublication = (index) => {
@@ -70,6 +88,21 @@ export default function Accueil({ navigation }) {
     const handlePartenairePress = (siteUrl) => {
         Linking.openURL(siteUrl);
     };
+
+    const calculateRemainingAmount = (userAmount) => {
+        const currentPalier = paliers.find((palier) => userAmount < palier.montantMin);
+    
+        if (currentPalier) {
+            const nextPalierAmount = currentPalier.montantMin;
+            const remainingAmount = nextPalierAmount - userAmount;
+            const nextPalierName = currentPalier.nom;
+            return { remainingAmount, nextPalierName };
+        } else {
+            return { remainingAmount: 0, nextPalierName: '' };
+        }
+    };
+    
+    
     
 
     return (
@@ -133,8 +166,34 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
                     </TouchableOpacity>
+
+
+                    {userPalier && (
+                        <View style={styles.remainingAmountContainer}>
+                        <View style={styles.cashbackContainer}>
+                            <Text style={styles.cashbackText}>Cashback</Text>
+                            {userAmount !== null && (
+                                <Text style={styles.userAmountText}>{userAmount} €</Text>
+                            )}
+                        </View>
+                        <View style={styles.vipStatusCashbackContainer}>
+                            <MaterialCommunityIcons name="flag-checkered" size={30} color="black" style={styles.palierImageCashback} /> 
+                            <Text style={styles.vipStatusCashback}>
+                                {userPalier} : {userPalierPourcentage ? `${(userPalierPourcentage * 100).toFixed(0)}%` : ''}
+                            </Text>
+                        </View>
+                        <Text style={styles.remainingAmountText}>
+                            {calculateRemainingAmount(userAmount).remainingAmount} € avant le palier {calculateRemainingAmount(userAmount).nextPalierName}
+                        </Text>
+                        
+                        <CustomRemainingAmountBar userAmount={userAmount} nextPalierAmount={calculateRemainingAmount(userAmount).remainingAmount} />
+                    </View>
                     
-                    <View style={styles.partenairesContainer}>
+                    )}
+
+
+                    
+                    <View style={styles.partenairesContainer}>  
                         <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
                         <ScrollView horizontal={true}>
                         {partenaires.map((partenaire, index) => (
@@ -285,8 +344,8 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     partenairesContainer: {
-        marginTop: 30,
-        marginLeft: 15,
+        marginTop: 10,
+        marginLeft: 5,
     },
     partenaireItem: {
         flexDirection: 'column',
@@ -302,5 +361,55 @@ const styles = StyleSheet.create({
     partenaireNom:{
         fontWeight: 'bold',
         fontSize: 17,
+    },
+    remainingAmountContainer: {
+        alignItems: 'center',
+        marginTop: 15,
+        backgroundColor: '#008900',
+        borderRadius: 5,
+        justifyContent: 'center',
+        padding: 10,
+        marginHorizontal:5,
+    },
+    cashbackContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+    },
+    cashbackText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        marginLeft:10,
+    },
+    userAmountText: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'white',
+        marginRight:5,
+    },
+    remainingAmountText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+        marginTop: 5,
+        marginBottom:8,
+    },
+    vipStatusCashback: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop:1, 
+    },
+    vipStatusCashbackContainer:{
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'start',
+    },
+    palierImageCashback:{
+        marginLeft:5,
+        marginRight:2,
+        marginBottom:3,
     },
 });
