@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
+    const [partenaires, setPartenaires] = useState([]);
     const scrollViewRef = useRef(null);
 
 
@@ -40,8 +41,19 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        const fetchPartenaires = async () => {
+            try {
+                const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                const partenairesData = response.data;
+                setPartenaires(partenairesData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des partenaires :', error);
+            }
+        };
+
         fetchUserData();
         fetchAlaUnePublications();
+        fetchPartenaires();
     }, []); 
 
     const scrollToPublication = (index) => {
@@ -53,6 +65,10 @@ export default function Accueil({ navigation }) {
 
     const handleBilletteriePress = () => {
         navigation.navigate('Navbar', {screen:'Billeterie'});
+    };
+
+    const handlePartenairePress = (siteUrl) => {
+        Linking.openURL(siteUrl);
     };
     
 
@@ -117,6 +133,22 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
                     </TouchableOpacity>
+                    
+                    <View style={styles.partenairesContainer}>
+                        <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
+                        <ScrollView horizontal={true}>
+                        {partenaires.map((partenaire, index) => (
+                            <TouchableOpacity 
+                            key={index} 
+                            style={styles.partenaireItem}
+                            onPress={() => handlePartenairePress(partenaire.site)}
+                            >
+                                <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                <Text style={styles.partenaireNom}>{partenaire.nom}   </Text>
+                            </TouchableOpacity>
+                        ))}
+                        </ScrollView>
+                    </View>
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -137,6 +169,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        marginBottom:60,
     },
     bienvenue: {
         fontSize: 20,
@@ -151,7 +184,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         marginBottom: 10,
-        marginLeft: 15,
+        marginLeft: 5,
     },
     imageContainer: {
         marginLeft: 15,
@@ -250,5 +283,24 @@ const styles = StyleSheet.create({
     whiteText2: {
         color: 'black',
         fontStyle: 'italic',
+    },
+    partenairesContainer: {
+        marginTop: 30,
+        marginLeft: 15,
+    },
+    partenaireItem: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    partenaireLogo: {
+        width: 110,
+        height: 110,
+        marginRight: 10,
+        borderRadius: 20,
+    },
+    partenaireNom:{
+        fontWeight: 'bold',
+        fontSize: 17,
     },
 });
