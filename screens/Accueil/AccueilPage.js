@@ -8,6 +8,7 @@ export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
+    const [partenaires, setPartenaires] = useState([]);
     const scrollViewRef = useRef(null);
 
 
@@ -40,8 +41,19 @@ export default function Accueil({ navigation }) {
             }
         };
 
+        const fetchPartenaires = async () => {
+            try {
+                const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                const partenairesData = response.data;
+                setPartenaires(partenairesData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des partenaires :', error);
+            }
+        };
+
         fetchUserData();
         fetchAlaUnePublications();
+        fetchPartenaires();
     }, []); 
 
     const scrollToPublication = (index) => {
@@ -117,6 +129,16 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
                     </TouchableOpacity>
+
+                    <View style={styles.partenairesContainer}>
+                        <Text style={styles.title}>Partenaires</Text>
+                        {partenaires.map((partenaire, index) => (
+                            <TouchableOpacity key={index} style={styles.partenaireItem}>
+                                <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                <Text>{partenaire.nom}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -137,6 +159,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        marginBottom:60,
     },
     bienvenue: {
         fontSize: 20,
@@ -250,5 +273,20 @@ const styles = StyleSheet.create({
     whiteText2: {
         color: 'black',
         fontStyle: 'italic',
+    },
+    partenairesContainer: {
+        marginTop: 30,
+        marginLeft: 15,
+    },
+    partenaireItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    partenaireLogo: {
+        width: 50,
+        height: 50,
+        marginRight: 10,
+        borderRadius: 25,
     },
 });
