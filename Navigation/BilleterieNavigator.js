@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 export default function BilleterieNavigation() {
   return (
-    <Stack.Navigator initialRouteName="Matchs">
+    <Stack.Navigator>
       <Stack.Screen 
         name="Matchs" 
         component={MatchsPage} 
@@ -33,7 +33,7 @@ export default function BilleterieNavigation() {
         options={{ headerShown: false }}  
       />
       <Stack.Screen 
-        name="Résumé" 
+        name="Resume" 
         component={ResumePage}  
         options={{ headerShown: false }}  
       />

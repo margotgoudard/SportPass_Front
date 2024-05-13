@@ -17,7 +17,7 @@ const Billet = ({ route, navigation }) => {
     const month = (`0${date.getMonth() + 1}`).slice(-2);
     const day = (`0${date.getDate()}`).slice(-2);
   
-    return `${day} ${month} ${year}`;
+    return `${day}/${month}/${year}`;
   };
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const Billet = ({ route, navigation }) => {
           <View key={index} style={styles.matchGroup}>
             <Text style={styles.matchHeaderText}>{group.matchInfo.EquipeDomicile.nom} - {group.matchInfo.EquipeExterieure.nom}</Text>
             <Text style={styles.matchDateStadiumText}>{formatDate(group.matchInfo.date)} à {group.matchInfo.heure_debut} - {group.matchInfo.Stade.nom}</Text>
-            <Text style={styles.totalBilletsText}>{group.billets.length} billets</Text>
+            <Text style={styles.totalBilletsText}>{group.billets.length} billet(s)</Text>
             {group.billets.map((billet, billetIndex) => (
                 <View  key={billetIndex} style={styles.detailItem}>
             <Text style={styles.billetText}>Siège {billet.place.numero}</Text>
@@ -152,6 +152,8 @@ const styles = StyleSheet.create({
     totalBilletsText: {
       fontSize: 14,
       fontStyle: 'italic', 
+      marginLeft: 7,
+      marginTop: 5
     },
     billetDetailText: {
       fontSize: 16,
