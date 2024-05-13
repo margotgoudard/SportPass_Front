@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground,  Modal, TextInput  } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Modal, TextInput } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import axios from 'axios'; 
 import ProgressBar from '../../components/ProgressBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Checkbox from '../../components/Checkbox';
-//icons
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-
 export default function PlacePage({ route, navigation }) {
-  const { selectedTribune } = route.params;
+  const { selectedTribune, selectedMatch } = route.params;
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [placesByRow, setPlacesByRow] = useState([]);
@@ -23,7 +21,7 @@ export default function PlacePage({ route, navigation }) {
   const [guestPrenom, setGuestPrenom] = useState('');
   const [currentSelectedPlace, setCurrentSelectedPlace] = useState(null);
   const [optionBuvette, setOptionBuvette] = useState(false); 
-
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,8 +54,8 @@ export default function PlacePage({ route, navigation }) {
         const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${place.idRangee}`);
         const rangee = rangeeResponse.data;
 
-        const isReserved = ticket && ticket.reservee == 1;
-        const optionBuvette = ticket && ticket.buvette == 1;
+        const isReserved = ticket && ticket.reservee == true;
+        const optionBuvette = ticket && ticket.buvette == true;
         const placeWithDetails = {
           ...place,
           isReserved,
@@ -98,9 +96,13 @@ export default function PlacePage({ route, navigation }) {
   
 
   const handlePlaceSelection = async (place) => {
+    if (place.isReserved) {
+      return; 
+    }
+
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
     if (isSelected) {
-      const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedPlace.idPlace !== place.idPlace);
+      const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedSelected.idPlace !== place.idPlace);
       setSelectedPlaces(filteredPlaces);
     } else {
       if (selectedPlaces.length === 0) {
@@ -119,7 +121,7 @@ export default function PlacePage({ route, navigation }) {
 
   const handleConfirmGuestInfo = () => {
     if (!guestNom.trim() || !guestPrenom.trim()) {
-      alert('Veuillez saisir le nom et le prénom du titulaire de la place.');
+      setErrorMessage('Les champs ne doivent pas être vides.');
       return; 
     }
   
@@ -133,6 +135,7 @@ export default function PlacePage({ route, navigation }) {
       setSelectedPlaces(updatedPlaces);
       setIsModalVisible(false);
       setCurrentSelectedPlace(null); 
+      setErrorMessage(''); 
     }
   };
 
@@ -142,6 +145,7 @@ export default function PlacePage({ route, navigation }) {
       const filteredPlaces = selectedPlaces.filter((place) => place.idPlace !== currentSelectedPlace.idPlace);
       setSelectedPlaces(filteredPlaces);
       setCurrentSelectedPlace(null);
+      setErrorMessage(''); 
     }
   };
   
@@ -154,22 +158,30 @@ export default function PlacePage({ route, navigation }) {
   const calculateTotalPrice = () => {
     const totalPrice = selectedPlaces.reduce((accumulator, place) => {
       return accumulator + (place.price || 0); 
-    }, 0);
+    }, 0).toFixed(2);
+
     return totalPrice;
   };
+  
 
   const handleToggleBuvette = (place) => {
     const updatedPlaces = selectedPlaces.map((selectedPlace) => {
-      if (selectedPlace.idPlace === place.idPlace) {
-        return { ...selectedPlace, optionBuvette: !selectedPlace.optionBuvette };
-      }
-      return selectedPlace;
+        if (selectedPlace.idPlace === place.idPlace) {
+            const newOptionBuvette = !selectedPlace.optionBuvette;
+            const updatedPrice = newOptionBuvette ? (selectedPlace.price + 9.99) : (selectedPlace.price - 9.99);
+            return {
+                ...selectedPlace,
+                optionBuvette: newOptionBuvette,
+                price: updatedPrice,
+            };
+        }
+        return selectedPlace;
     });
     setSelectedPlaces(updatedPlaces);
   };
 
   const handlePanierButton = () => {
-    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces });
+    navigation.navigate('Paiement', { selectedPlaces: selectedPlaces, selectedTribune: selectedTribune, selectedMatch });
   }
 
   if (loading) {
@@ -191,20 +203,19 @@ export default function PlacePage({ route, navigation }) {
                     styles.place
                   ]}
                   onPress={() => handlePlaceSelection(place)}
-                  disabled={!place.isReserved}
-
+                  disabled={place.isReserved}
                 >
                    {place.isReserved ? ( 
                       <MaterialIcons 
                         name="chair" 
                         size={30} 
-                        color={selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) ? '#BD4F6C' : '#008900'}
+                        color='#D9D9D9'
                         />
                     ) : (
                       <MaterialIcons 
                         name="chair" 
                         size={30} 
-                        color='#D9D9D9'
+                        color={selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace) ? '#BD4F6C' : '#008900'}
                       />
                     )}
                 </TouchableOpacity>
@@ -222,26 +233,25 @@ export default function PlacePage({ route, navigation }) {
               <View key={index} style={styles.containerPlace}>
               <View style={styles.Detcontainer}>
                 <View style={styles.detailsContainer}>
-                  <View style={styles.textContainer} >
-                  <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero} </Text>
-                  <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero}</Text>
+                    <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
                   </View>
                   <Text style={styles.textGuestInfo}>Titulaire - {place.guestPrenom} {place.guestNom}</Text>
-                  
                 </View>
-                
               </View>
-                <View style={styles.checkboxContainer}>
-                  <Checkbox
-                    text="Option buvette"
-                    isChecked={place.optionBuvette == 1}
-                    onPress={() => handleToggleBuvette(place)} 
-                    container={styles.checkbox}
-                  />
-                </View>
-                <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
-                    <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
-                  </TouchableOpacity>
+              <View style={styles.checkboxContainer}>
+                <Checkbox
+                  text="Option buvette"
+                  isChecked={place.optionBuvette == 1}
+                  onPress={() => handleToggleBuvette(place)} 
+                  container={styles.checkbox}
+                />
+                <Text style={{fontStyle: 'italic'}}>*sandwich + boisson </Text>
+              </View>
+              <TouchableOpacity onPress={() => handleRemovePlace(place.idPlace)}>
+                <FontAwesome6 style={styles.trashIcon} name="trash" size={20} color='#5D2E46' />
+              </TouchableOpacity>
               </View>
             ))}
              
@@ -277,6 +287,9 @@ export default function PlacePage({ route, navigation }) {
                 value={guestNom}
                 onChangeText={(text) => setGuestNom(text)}
               />
+              {errorMessage && !guestNom && (
+                <Text style={styles.errorText}>{errorMessage}</Text>
+              )}
               <TouchableOpacity
               style={styles.button}
               onPress={handleConfirmGuestInfo}
@@ -294,7 +307,7 @@ export default function PlacePage({ route, navigation }) {
               onPress={handlePanierButton}
             >
             <FontAwesome name="shopping-cart" size={24} color="white" />
-            <Text style={styles.PanierButtonText}>Ajouter à mon panier</Text>
+            <Text style={styles.PanierButtonText}>Paiement</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -348,7 +361,6 @@ const styles = StyleSheet.create({
     marginBottom : 5,
   },
   Detcontainer:{
-    position: 'relative', 
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -380,7 +392,7 @@ const styles = StyleSheet.create({
     fontSize:17,
     fontWeight:'bold',
     color:'#008900',
-    marginLeft:10,
+    marginLeft: 10
   },
   textGuestInfo: {
     fontSize:15,
@@ -419,7 +431,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 13,
 
   },
   input: {
@@ -449,7 +461,13 @@ const styles = StyleSheet.create({
   },
   checkboxContainer:{
     justifyContent:'center',
+    flexDirection: "column",
     marginLeft:5,
+  },
+  errorText: {
+    color: '#5D2E46',
+    marginBottom: 10,
+    alignSelf: 'flex-start',
   },
   PanierButtonContainer:{
     width: '100%', 

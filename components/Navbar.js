@@ -83,7 +83,6 @@ export default function Navbar() {
   }, [navigation]);
 
   const checkTokenAndNavigateProfil = useCallback(async () => {
-
     const token = await AsyncStorage.getItem('userToken');
     const userId = await AsyncStorage.getItem('userId');
 
@@ -91,6 +90,18 @@ export default function Navbar() {
       const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
       const user = response.data;
       navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'ProfilPage', params: {userData : user} }});
+    } else {
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+    }
+  }, [navigation]);
+
+  const checkTokenAndNavigateBilleterie = useCallback(async () => {
+
+    const token = await AsyncStorage.getItem('userToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (token) {
+      navigation.navigate('Navbar', {screen:'Billeterie',params: { screen: 'Matchs' }});
     } else {
       navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
     }
@@ -137,6 +148,12 @@ export default function Navbar() {
       <Tab.Screen
         name="Billeterie"
         component={BilleterieNavigation}
+        listeners={({ navigation }) => ({
+          tabPress: async (e) => {
+            e.preventDefault();
+            checkTokenAndNavigateBilleterie(navigation);
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
