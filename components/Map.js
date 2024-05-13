@@ -28,8 +28,12 @@ const Map = ({ commercants, region, onMarkerPress }) => {
 
     const mapStyle = [
         {
-            "elementType": "labels",
-            "stylers": [{ "visibility": "off" }]
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#000000" }]
+        },
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [{ "color": "#FFFFFF" }, { "visibility": "off" }]
         },
         {
             "featureType": "road",
@@ -42,7 +46,7 @@ const Map = ({ commercants, region, onMarkerPress }) => {
         {
             "featureType": "water",
             "elementType": "geometry",
-            "stylers": [{ "color": "#BEBEBE" }]
+            "stylers": [{ "color": "#B8CBDC" }]
         },
         {
             "featureType": "transit",
@@ -50,17 +54,16 @@ const Map = ({ commercants, region, onMarkerPress }) => {
         },
         {
             "featureType": "landscape",
-            "stylers": [{ "color": "#3D4049" }]
+            "stylers": [{ "color": "#A2A2A2" }]
         },
         {
             "featureType": "administrative.country",
             "elementType": "geometry",
             "stylers": [
                 { "visibility": "on" },
-                { "color": "#ffffff" }
+                { "color": "#9BE1F2" }
             ],
         }
-        
     ];
 
 const styles = StyleSheet.create({
