@@ -40,6 +40,10 @@ npm install @react-native-community/checkbox
 
 npm install react-native-dotenv --save-dev
 
+npm install --save react-native-video
+
+npm install --save expo-av
+
 npm install @stripe/stripe-react-native
 
 npm install react-native-pdf-lib react-native-qrcode-svg

@@ -20,8 +20,9 @@
     "@stripe/stripe-react-native": "^0.37.3",
     "axios": "^1.6.8",
     "expo": "~50.0.14",
+    "expo-av": "^14.0.4",
     "expo-status-bar": "~1.11.1",
-    "html2canvas": "^1.4.1",
+    "expo-video": "^1.1.8",
     "lottie-react-native": "^6.7.2",
     "moment": "^2.30.1",
     "react": "18.2.0",
@@ -40,8 +41,8 @@
     "react-native-qrcode-svg": "^6.3.1",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.0.3",
-    "react-native-view-shot": "^3.8.0",
-    "react-native-webview": "13.6.4"
+    "react-native-video": "^5.2.1",
+    "react-native-webview": "^13.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
-
+import Video2 from '../Accueil/Video.js';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
@@ -217,6 +217,10 @@ export default function Accueil({ navigation }) {
                         </ScrollView>
                     </View>
                 </View>
+
+                <View style={styles.videoContainer}>
+                    <Video2/>
+                </View>
             </ScrollView>
         </ImageBackground>
     );
@@ -236,7 +240,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginBottom:60,
     },
     bienvenue: {
         fontSize: 20,
@@ -419,5 +422,8 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight:2,
         marginBottom:3,
+    },
+    videoContainer:{
+        marginTop:10,
     },
 });
