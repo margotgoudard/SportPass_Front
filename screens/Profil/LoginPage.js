@@ -10,7 +10,7 @@ const LoginPage = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    const apiUrl = 'http://10.0.2.2:4000/api/login';
+    const apiUrl = 'http://sp.cluster-ig4.igpolytech.fr/api/login';
     try {
       const response = await axios.post(apiUrl, { mail, password });
       const token = response.data.token;

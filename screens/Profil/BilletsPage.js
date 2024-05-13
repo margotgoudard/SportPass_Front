@@ -24,24 +24,24 @@ const Billet = ({ route, navigation }) => {
     const fetchBillets = async () => {
       try {
         setLoading(true);
-        const responseBillets = await axios.get(`http://10.0.2.2:4000/api/billet/user/${userId}`);
+        const responseBillets = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/billet/user/${userId}`);
         const billets = responseBillets.data;
         
         const detailedBilletsPromises = billets.map(async (billet) => {
 
-          const matchResponse = await axios.get(`http://10.0.2.2:4000/api/matchs/${billet.Match.idMatch}`);
+          const matchResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/matchs/${billet.Match.idMatch}`);
           const match = matchResponse.data;
 
-          const placeResponse = await axios.get(`http://10.0.2.2:4000/api/place/${billet.Place.idPlace}`);
+          const placeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/place/${billet.Place.idPlace}`);
           const place = placeResponse.data;
 
-          const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${billet.Place.idRangee}`);
+          const rangeeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/rangee/${billet.Place.idRangee}`);
           const rangee = rangeeResponse.data;
 
-          const tribuneResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/${rangee.idTribune}`);
+          const tribuneResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/tribune/${rangee.idTribune}`);
           const tribune = tribuneResponse.data;
 
-          const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${tribune.idStade}`);
+          const stadeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/stade/${tribune.idStade}`);
           const stade = stadeResponse.data;
 
           return {

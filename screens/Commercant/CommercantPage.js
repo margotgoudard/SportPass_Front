@@ -32,9 +32,9 @@ const CommercantPage = () => {
         try {
             const userId = await getUserId();
             if (commercant.isFavorite) {
-                await axios.delete(`http://10.0.2.2:4000/api/avoirFavoris/${commercant.idCommercant}/${userId}`);
+                await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/avoirFavoris/${commercant.idCommercant}/${userId}`);
             } else {
-                await axios.post(`http://10.0.2.2:4000/api/avoirFavoris`, {
+                await axios.post(`http://sp.cluster-ig4.igpolytech.fr/api/avoirFavoris`, {
                     idUser: userId,
                     idCommercant: commercant.idCommercant
                 });
@@ -77,15 +77,15 @@ const CommercantPage = () => {
     const fetchCommercants = useCallback(async () => {
         const userId = await getUserId();
         try {
-            const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
-            const data = await axios.get(`http://10.0.2.2:4000/api/commercant/${response.data.idEquipe}`);
+            const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
+            const data = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/commercant/${response.data.idEquipe}`);
             const commercantsWithCoordsAndCashback = await Promise.all(data.data.map(async (commercant) => {
                 const coords = await getCoordinates(commercant.adresse);
-                const cashbackResponse = await axios.get(`http://10.0.2.2:4000/api/cashbackCommercant/${commercant.idCashbackCommercant}`);
+                const cashbackResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/cashbackCommercant/${commercant.idCashbackCommercant}`);
                 return { ...commercant, ...coords, cashback: cashbackResponse.data.montant };
             }));
     
-            const favoritesResponse = await axios.get(`http://10.0.2.2:4000/api/avoirFavoris/user/${userId}`);
+            const favoritesResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/avoirFavoris/user/${userId}`);
             const favorisIds = favoritesResponse.data.map(favori => favori.idCommercant);
     
             const updatedCommercants = commercantsWithCoordsAndCashback.map(commercant => ({
@@ -124,7 +124,7 @@ const CommercantPage = () => {
 
     const fetchTypes = async () => {
         try {
-            const response = await axios.get('http://10.0.2.2:4000/api/typeCommercant');
+            const response = await axios.get('http://sp.cluster-ig4.igpolytech.fr/api/typeCommercant');
             const typesWithData = [{ idTypeCommercant: 'all', nom: 'Tout sélectionner' }, ...response.data];
             setTypesCommercants(typesWithData);
         } catch (error) {
@@ -165,7 +165,7 @@ const CommercantPage = () => {
     const initializeMap = useCallback(async () => {
         try {
             const userId = await getUserId();
-            const responseUser = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+            const responseUser = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
             const villeEquipe = responseUser.data.Equipe.ville;
             if (villeEquipe) {
                 const coords = await getCoordinates(villeEquipe);

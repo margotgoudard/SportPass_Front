@@ -26,18 +26,18 @@ export default function PlacePage({ route, navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/tribune/${selectedTribune.idTribune}`);
+        const rangeeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/rangee/tribune/${selectedTribune.idTribune}`);
         const rangees = rangeeResponse.data;
   
         const placesResponse = await Promise.all(
-          rangees.map((rangee) => axios.get(`http://10.0.2.2:4000/api/place/rangee/${rangee.idRangee}`))
+          rangees.map((rangee) => axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/place/rangee/${rangee.idRangee}`))
         );
         const placesData = placesResponse.map((response) => response.data).flat();
   
         const placesByRowData = {};
         
         const ticketResponse = await Promise.all(
-          placesData.map((place) => axios.get(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`))
+          placesData.map((place) => axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/billet/place/${place.idPlace}`))
         );
         const ticketData = ticketResponse.map((response) => response.data).flat();
   
@@ -48,10 +48,10 @@ export default function PlacePage({ route, navigation }) {
   
         const placeDetailsPromises = placesData.map(async (place) => {
         const ticket = ticketData.find((ticket) => ticket.idPlace === place.idPlace);
-        const typePlaceResponse = await axios.get(`http://10.0.2.2:4000/api/typePlace/${place.idType}`);
+        const typePlaceResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/typePlace/${place.idType}`);
         const typePlace = typePlaceResponse.data;
 
-        const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${place.idRangee}`);
+        const rangeeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/rangee/${place.idRangee}`);
         const rangee = rangeeResponse.data;
 
         const isReserved = ticket && ticket.reservee == true;
@@ -107,7 +107,7 @@ export default function PlacePage({ route, navigation }) {
     } else {
       if (selectedPlaces.length === 0) {
         const userId = await AsyncStorage.getItem('userId');
-        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+        const userResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
         const user = userResponse.data;
 
         setSelectedPlaces([{ ...place, guestNom: user.nom, guestPrenom: user.prenom }]);

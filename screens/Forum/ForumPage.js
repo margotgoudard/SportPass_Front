@@ -88,7 +88,7 @@ const ForumPage = () => {
             idUser: await AsyncStorage.getItem('userId')
         };
             try {
-                const response = await axios.post('http://10.0.2.2:4000/api/publicationUser', messageData);
+                const response = await axios.post('http://sp.cluster-ig4.igpolytech.fr/api/publicationUser', messageData);
                 setMessageText('');
                 closeModal();
                 setReloadKey(prevKey => prevKey + 1);

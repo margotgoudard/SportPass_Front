@@ -11,7 +11,7 @@ const PostPartnerComponent = ({ post }) => {
 
     const fetchPartner = async () => {
         try {
-            const response = await axios.get(`http://10.0.2.2:4000/api/partenaire/${post.idPartenaire}`);
+            const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/partenaire/${post.idPartenaire}`);
             setPartner(response.data);
         } catch (error) {
             console.error('Error fetching partner details', error);

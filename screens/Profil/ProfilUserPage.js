@@ -39,7 +39,7 @@ const ProfileUserPage = ({ route }) => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userData.idUser}`);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userData.idUser}`);
       setUser(response.data);
     } catch (error) {
       console.error(error);
@@ -49,7 +49,7 @@ const ProfileUserPage = ({ route }) => {
 
   const fetchUserPosts = async () => { 
     try {
-      const response = await axios.get(`http://10.0.2.2:4000/api/publicationUser/user/${userData.idUser}`);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/user/${userData.idUser}`);
       if (response.data.length > 0) {
         const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
         setPosts(sortedPosts);
@@ -65,7 +65,7 @@ const ProfileUserPage = ({ route }) => {
   const toggleSubscription = async () => {
     if (isSubscribed) {
       try {
-        await axios.delete(`http://10.0.2.2:4000/api/abonnes/${currentUserId}/${userData.idUser}`);
+        await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(false);
         setFollowersCount(followersCount - 1); 
       } catch (error) {
@@ -74,7 +74,7 @@ const ProfileUserPage = ({ route }) => {
       }
     } else {
       try {
-        await axios.post(`http://10.0.2.2:4000/api/abonnes/${currentUserId}/${userData.idUser}`);
+        await axios.post(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(true);
         setFollowersCount(followersCount + 1); 
       } catch (error) {
@@ -85,7 +85,7 @@ const ProfileUserPage = ({ route }) => {
   };
   const checkSubscription = async () => {
     try {
-        const response = await axios.get(`http://10.0.2.2:4000/api/abonnes/isFollower/${currentUserId}/${userData.idUser}`);
+        const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/isFollower/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(response.data);
     } catch (error) {
         console.error("Error checking subscription status:", error);
@@ -108,8 +108,8 @@ const ProfileUserPage = ({ route }) => {
 
         const fetchUserFollowersAndFollowings = async () => {
             try {
-              const followersResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/followers/${userData.idUser}`);
-              const followingsResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/following/${userData.idUser}`);
+              const followersResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/followers/${userData.idUser}`);
+              const followingsResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/following/${userData.idUser}`);
               setFollowersCount(followersResponse.data.length);
               setFollowingsCount(followingsResponse.data.length);
             } catch (error) {

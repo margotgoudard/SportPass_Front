@@ -19,11 +19,11 @@ const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentU
     const navigateToProfile = async () => {
         const userId = await getUserId();        
         if (comment.idUser == userId) {
-            const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+            const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
             const userData = response.data;
             navigation.navigate('ProfilPage', { userData: userData });
         } else {        
-            const response = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
+            const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${comment.idUser}`);
             const userData = response.data;
             navigation.navigate('ProfilUser', { userData: userData });
         }

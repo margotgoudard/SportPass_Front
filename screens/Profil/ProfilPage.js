@@ -55,7 +55,7 @@ const ProfilPage = ({ route }) => {
     };
   
     try {
-      await axios.put(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`, updatedPost);
+      await axios.put(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/${idPublication}`, updatedPost);
       fetchUserPosts();
     } catch (error) {
       console.error('Error updating post:', error);
@@ -65,7 +65,7 @@ const ProfilPage = ({ route }) => {
 
   const deletePost = async (idPublication) => {
     try {
-      await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
+      await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/${idPublication}`);
       fetchUserPosts();
       setBlurEffect(false); 
     } catch (error) {
@@ -169,7 +169,7 @@ const ProfilPage = ({ route }) => {
 
   const fetchUserPosts = async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:4000/api/publicationUser/user/${userData.idUser}`);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/user/${userData.idUser}`);
       const sortedPosts = response.data.sort((a, b) => moment(a.date).diff(moment(b.date)));
       setPosts(sortedPosts);
     } catch (error) {
@@ -180,7 +180,7 @@ const ProfilPage = ({ route }) => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userData.idUser}`);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userData.idUser}`);
       setUser(response.data);
     } catch (error) {
       console.error(error);
@@ -192,8 +192,8 @@ const ProfilPage = ({ route }) => {
     useCallback(() => {      
       const fetchUserFollowersAndFollowings = async () => {
         try {
-          const followersResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/followers/${userData.idUser}`);
-          const followingsResponse = await axios.get(`http://10.0.2.2:4000/api/abonnes/following/${userData.idUser}`);
+          const followersResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/followers/${userData.idUser}`);
+          const followingsResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/following/${userData.idUser}`);
           setFollowersCount(followersResponse.data.length);
           setFollowingsCount(followingsResponse.data.length);
           setFollowers(followersResponse.data);

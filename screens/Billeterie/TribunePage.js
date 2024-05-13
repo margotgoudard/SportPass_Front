@@ -19,11 +19,11 @@ export default function Tribune({ route, navigation }) {
     const fetchData = async () => {
       try {
         const idStade = selectedMatch.idStade
-        const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${idStade}`);
+        const stadeResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/stade/${idStade}`);
         const stadeData = stadeResponse.data;
         setStade(stadeData);
 
-        const tribunesResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/stade/${idStade}`);
+        const tribunesResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/tribune/stade/${idStade}`);
         const tribunesData = tribunesResponse.data;
         setTribunes(tribunesData);
         setLoading(false);

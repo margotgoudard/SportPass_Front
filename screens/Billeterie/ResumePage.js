@@ -37,7 +37,7 @@ export default function ResumePage({ route }) {
 const getUserById = async () => {
   const idUser = await AsyncStorage.getItem('userId');
   try {
-    const response = await axios.get(`http://10.0.2.2:4000/api/user/${idUser}`);
+    const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${idUser}`);
     return response.data;
   } catch (error) {
     console.error('Error getting user', error);

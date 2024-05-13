@@ -32,9 +32,9 @@ const AbonnesListPage = ({ route }) => {
     const isUserSubscribed = subscriptionStatus[user.idUser];
     try {
       if (isUserSubscribed) {
-        await axios.delete(`http://10.0.2.2:4000/api/abonnes/${currentUserId}/${user.idUser}`);
+        await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/${currentUserId}/${user.idUser}`);
       } else {
-        await axios.post(`http://10.0.2.2:4000/api/abonnes/${currentUserId}/${user.idUser}`);
+        await axios.post(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/${currentUserId}/${user.idUser}`);
       }
       setSubscriptionStatus(prevStatus => ({
         ...prevStatus,
@@ -65,7 +65,7 @@ const AbonnesListPage = ({ route }) => {
     try {
       const responses = await Promise.all(
         followers.map(async follower => {
-          const response = await axios.get(`http://10.0.2.2:4000/api/abonnes/isFollower/${currentUserId}/${follower.idUser}`);
+          const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/abonnes/isFollower/${currentUserId}/${follower.idUser}`);
           newSubscriptionStatus[follower.idUser] = response.data;
         })
       );

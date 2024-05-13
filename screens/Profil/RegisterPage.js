@@ -16,7 +16,7 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchEquipes = async () => {
       try {
-        const response = await axios.get('http://10.0.2.2:4000/api/equipe');
+        const response = await axios.get('http://sp.cluster-ig4.igpolytech.fr/api/equipe');
         setEquipes(response.data);
       } catch (error) {
         console.error(error);
@@ -27,7 +27,7 @@ const RegisterPage = () => {
   }, []);
 
   const handleRegister = () => {
-    const apiUrl = 'http://10.0.2.2:4000/api/registration';
+    const apiUrl = 'http://sp.cluster-ig4.igpolytech.fr/api/registration';
     axios.post(apiUrl, { prenom, nom, mail, password, idEquipe })
       .then(response => {
         Alert.alert("Inscription réussie", "Votre compte a été créé avec succès.");

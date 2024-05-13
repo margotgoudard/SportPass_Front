@@ -112,12 +112,12 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
         return;
       }
       
-      const userDataResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const userDataResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
       const userData = userDataResponse.data;
       setUser(userData);
 
-      const postsUserResponse = await axios.get(`http://10.0.2.2:4000/api/publicationUser/equipe/${userData.Equipe.idEquipe}`);
-      const postsCommercantResponse = await axios.get(`http://10.0.2.2:4000/api/publicationCommercant/equipe/${userData.Equipe.idEquipe}`);
+      const postsUserResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/equipe/${userData.Equipe.idEquipe}`);
+      const postsCommercantResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/publicationCommercant/equipe/${userData.Equipe.idEquipe}`);
 
       const postsUser = postsUserResponse.data.sort((a, b) => new Date(b.date) - new Date(a.date));
       const postsCommercant = postsCommercantResponse.data;
@@ -138,7 +138,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
     };
   
     try {
-      await axios.put(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`, updatedPost);
+      await axios.put(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/${idPublication}`, updatedPost);
       fetchPosts();
     } catch (error) {
       console.error('Error updating post:', error);
@@ -148,7 +148,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
 
   const deletePost = async (idPublication) => {
     try {
-      await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
+      await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/publicationUser/${idPublication}`);
       fetchPosts();
     } catch (error) {
       console.error('Error delete post', error);

@@ -55,11 +55,11 @@ export default function Billeterie({ navigation }) {
         const fetchMatchs = async () => {
             try {
                 const userId = await AsyncStorage.getItem('userId');
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
                 const userData = response.data;
                 setUserEquipeId(userData.Equipe.idEquipe);
 
-                const matchResponse = await axios.get('http://10.0.2.2:4000/api/matchs');
+                const matchResponse = await axios.get('http://sp.cluster-ig4.igpolytech.fr/api/matchs');
                 const allMatchs = matchResponse.data;
                 setMatchs(allMatchs);
 

@@ -42,7 +42,7 @@ export default function PaiementPage({ route, navigation }) {
 
   const fetchYourPaymentIntent = async (amount) => {
     try {
-      const response = await axios.post('http://10.0.2.2:4000/api/create-payment-intent', {
+      const response = await axios.post('http://sp.cluster-ig4.igpolytech.fr/api/create-payment-intent', {
         amount: Math.round(amount * 100),
       });
 
@@ -119,7 +119,7 @@ export default function PaiementPage({ route, navigation }) {
 
       await Promise.all(
         selectedPlaces.map(async (place, index) => {
-          await axios.put(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`, {
+          await axios.put(`http://sp.cluster-ig4.igpolytech.fr/api/billet/place/${place.idPlace}`, {
             idUser: userId,
             nom: place.guestNom,
             prenom: place.guestPrenom,

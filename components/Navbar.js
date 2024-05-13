@@ -77,7 +77,7 @@ export default function Navbar() {
     const userId = await AsyncStorage.getItem('userId');
 
     if (token) {
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
       const user = response.data;
       navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'ProfilPage', params: {userData : user} }});
     } else {

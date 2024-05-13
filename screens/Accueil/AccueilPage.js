@@ -24,7 +24,7 @@ export default function Accueil({ navigation }) {
         const fetchUserData = async () => {
             try {
                 const userId = await AsyncStorage.getItem('userId');
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
                 const user = response.data;
                 setUserFirstName(user.prenom);
                 setUserPalier(user.Palier?.nom);
@@ -38,11 +38,11 @@ export default function Accueil({ navigation }) {
         const fetchAlaUnePublications = async () => {
             try {
                 const userId = await AsyncStorage.getItem('userId');
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${userId}`);
                 const user = response.data;
                 const idEquipe = user.idEquipe; 
 
-                const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/equipe/${idEquipe}/alaUne`);
+                const alaUneResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/publicationClub/equipe/${idEquipe}/alaUne`);
                 const alaUnePublications = alaUneResponse.data;
                 setAlaUnePublications(alaUnePublications);
             } catch (error) {
@@ -52,7 +52,7 @@ export default function Accueil({ navigation }) {
 
         const fetchPartenaires = async () => {
             try {
-                const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                const response = await axios.get('http://sp.cluster-ig4.igpolytech.fr/api/partenaire');
                 const partenairesData = response.data;
                 setPartenaires(partenairesData);
             } catch (error) {
@@ -62,7 +62,7 @@ export default function Accueil({ navigation }) {
 
         const fetchPaliers = async () => {
             try {
-                const response = await axios.get('http://10.0.2.2:4000/api/palier');
+                const response = await axios.get('http://sp.cluster-ig4.igpolytech.fr/api/palier');
                 const paliersData = response.data;
                 setPaliers(paliersData);
             } catch (error) {

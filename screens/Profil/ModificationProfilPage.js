@@ -12,8 +12,8 @@ const ModificationProfilPage = ({ route }) => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://10.0.2.2:4000/api/user/${user.idUser}`, updatedUser);
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${user.idUser}`);
+      await axios.put(`http://sp.cluster-ig4.igpolytech.fr/api/user/${user.idUser}`, updatedUser);
+      const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/user/${user.idUser}`);
       const userData = response.data;
       navigation.navigate('ProfilPage', { userData });
     } catch (error) {
@@ -33,7 +33,7 @@ const ModificationProfilPage = ({ route }) => {
         { 
           text: "Oui", onPress: async () => {
             try {
-              await axios.delete(`http://10.0.2.2:4000/api/user/${user.idUser}`);
+              await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/user/${user.idUser}`);
               navigation.navigate('Login');
             }
             catch (error) {

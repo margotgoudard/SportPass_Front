@@ -36,7 +36,7 @@ const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, sho
 
     const checkIfLikedByCurrentUser = async (postId, idUser) => {
         try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/${postId}/${idUser}`);
+          const response = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/likePublicationUser/${postId}/${idUser}`);
           setIsLikedByCurrentUser(response.data.exists); 
           return response.data.exists;
         } catch (error) {
@@ -50,14 +50,14 @@ const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, sho
         try {
             let newLikesCount = {...postLikesCount}; 
             if (isLikedByCurrentUser) {
-                await axios.delete(`http://10.0.2.2:4000/api/likePublicationUser/${postId}/${post.User.idUser}`);
+                await axios.delete(`http://sp.cluster-ig4.igpolytech.fr/api/likePublicationUser/${postId}/${post.User.idUser}`);
                 newLikesCount[postId] = (newLikesCount[postId] || 1) - 1;
             } else {
                 const likeData = {
                     idPublication: postId,
                     idUser: post.User.idUser
                 };
-                await axios.post(`http://10.0.2.2:4000/api/likePublicationUser`, likeData);
+                await axios.post(`http://sp.cluster-ig4.igpolytech.fr/api/likePublicationUser`, likeData);
                 newLikesCount[postId] = (newLikesCount[postId] || 0) + 1;
             }
             setIsLikedByCurrentUser(!isLikedByCurrentUser); 
@@ -76,8 +76,8 @@ const PostComponentForum = ({ post, updateTrigger, onPostPress, onLongPress, sho
 
             try {
                 if(post){
-                const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireUser/publication/${post.idPublication}`);
-                const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/publication/${post.idPublication}`);
+                const commentsResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/commentaireUser/publication/${post.idPublication}`);
+                const likesResponse = await axios.get(`http://sp.cluster-ig4.igpolytech.fr/api/likePublicationUser/publication/${post.idPublication}`);
                 commentsCount[post.idPublication] = commentsResponse.data.length;
                 likesCount[post.idPublication] = likesResponse.data.length;
                 await checkIfLikedByCurrentUser(post.idPublication, post.User.idUser);
