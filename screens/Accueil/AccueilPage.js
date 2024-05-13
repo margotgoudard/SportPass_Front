@@ -218,8 +218,9 @@ export default function Accueil({ navigation }) {
                     </View>
                 </View>
 
-                <Video2/>
-
+                <View style={styles.videoContainer}>
+                    <Video2/>
+                </View>
             </ScrollView>
         </ImageBackground>
     );
@@ -239,7 +240,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginBottom:60,
     },
     bienvenue: {
         fontSize: 20,
@@ -422,5 +422,8 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight:2,
         marginBottom:3,
+    },
+    videoContainer:{
+        marginTop:10,
     },
 });

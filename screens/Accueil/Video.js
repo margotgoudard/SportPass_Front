@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
+import { FontAwesome } from '@expo/vector-icons';
+
 export default class Video2 extends Component {
     constructor(props) {
         super(props);
         this.videoRef = React.createRef();
         this.state = {
-            isPlaying: true,
+            isPlaying: false,
         };
     }
 
@@ -23,6 +25,8 @@ export default class Video2 extends Component {
     };
 
     render() {
+        const { isPlaying } = this.state;
+
         return (
             <View style={styles.container}>
                 <Video
@@ -32,14 +36,17 @@ export default class Video2 extends Component {
                     volume={1.0}
                     isMuted={false}
                     resizeMode="cover"
-                    shouldPlay
                     isLooping
                     style={styles.video}
                 />
 
                 <TouchableOpacity onPress={this.handlePlayPause} style={styles.playPauseButton}>
-                    <Text>{this.state.isPlaying ? 'Pause' : 'Play'}</Text>
-                </TouchableOpacity>
+                    {isPlaying ? (
+                        <FontAwesome name="pause" size={30} color="white" style={styles.iconShadow} />
+                    ) : (
+                        <FontAwesome name="play" size={30} color="white" style={styles.iconShadow} />
+                    )}              
+                    </TouchableOpacity>
             </View>
         );
     }
@@ -53,13 +60,19 @@ const styles = StyleSheet.create({
         marginBottom:60,
     },
     video: {
-        width: '98%',
+        width: '96%',
         aspectRatio: 16 / 9, 
         backgroundColor: 'black', 
     },
     playPauseButton: {
-        padding: 10,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        borderRadius: 5,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: [{ translateX: -12 }, { translateY: -12 }], 
+    },
+    iconShadow: {
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 10,
     },
 });
