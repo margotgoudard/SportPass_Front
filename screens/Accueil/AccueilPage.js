@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Video from 'react-native-video';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
+import Video2 from '../Accueil/Video.js';
 
 
 export default function Accueil({ navigation }) {
@@ -218,6 +218,10 @@ export default function Accueil({ navigation }) {
                         </ScrollView>
                     </View>
                 </View>
+
+                <Video2/>
+
+
             </ScrollView>
         </ImageBackground>
     );
