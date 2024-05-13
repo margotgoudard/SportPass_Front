@@ -16,6 +16,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import AccueilNavigator from '../Navigation/AccueilNavigator.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -72,6 +73,15 @@ export default function Navbar() {
     }
   }, [navigation]);
 
+  const checkTokenAndNavigateAccueil = useCallback(async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
+      navigation.navigate('Navbar', {screen:'Accueil',params: { screen: 'AccueilPage' }});
+    } else {
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+    }
+  }, [navigation]);
+
   const checkTokenAndNavigateProfil = useCallback(async () => {
     const token = await AsyncStorage.getItem('userToken');
     const userId = await AsyncStorage.getItem('userId');
@@ -101,7 +111,13 @@ export default function Navbar() {
     <Tab.Navigator screenOptions={screenOptions} >
       <Tab.Screen
         name="Accueil"
-        component={Accueil}
+        component={AccueilNavigator}
+        listeners={({ navigation }) => ({
+          tabPress: async (e) => {
+            e.preventDefault();
+            checkTokenAndNavigateAccueil(navigation);
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: "center", justifyContent: "center" }}>

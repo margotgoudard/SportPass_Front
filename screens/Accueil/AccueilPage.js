@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
-import Video2 from '../Accueil/Video.js';
+import Video2 from '../../components/Accueil/Video.js';
 
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
