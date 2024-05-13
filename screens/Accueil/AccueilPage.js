@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Video from 'react-native-video';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 

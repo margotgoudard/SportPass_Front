@@ -40,4 +40,6 @@ npm install @react-native-community/checkbox
 
 npm install react-native-dotenv --save-dev
 
+npm install --save react-native-video
+
 
