@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
-
 import { FontAwesome } from '@expo/vector-icons';
 
 export default class Video2 extends Component {
@@ -10,7 +9,9 @@ export default class Video2 extends Component {
         this.videoRef = React.createRef();
         this.state = {
             isPlaying: false,
+            showControls: true,
         };
+        this.hideControlsTimer = null;
     }
 
     handlePlayPause = async () => {
@@ -19,13 +20,40 @@ export default class Video2 extends Component {
                 await this.videoRef.current.pauseAsync();
             } else {
                 await this.videoRef.current.playAsync();
+                this.startHideControlsTimer();
             }
-            this.setState({ isPlaying: !this.state.isPlaying });
+        }
+    };
+
+    startHideControlsTimer = () => {
+        if (this.hideControlsTimer) {
+            clearTimeout(this.hideControlsTimer);
+        }
+        this.hideControlsTimer = setTimeout(() => {
+            this.setState({ showControls: false });
+        }, 3000); 
+    };
+
+    handleVideoTap = () => {
+        if (!this.state.showControls) {
+            this.setState({ showControls: true });
+            this.startHideControlsTimer();
+        }
+    };
+
+    handlePlaybackStatusUpdate = (playbackStatus) => {
+        const { isPlaying } = playbackStatus;
+        if (isPlaying !== this.state.isPlaying) {
+            this.setState({ isPlaying });
+            if (isPlaying) {
+                this.setState({ showControls: true });
+                this.startHideControlsTimer();
+            }
         }
     };
 
     render() {
-        const { isPlaying } = this.state;
+        const { showControls } = this.state;
 
         return (
             <View style={styles.container}>
@@ -38,15 +66,19 @@ export default class Video2 extends Component {
                     resizeMode="cover"
                     isLooping
                     style={styles.video}
+                    onTouchStart={this.handleVideoTap} 
+                    onPlaybackStatusUpdate={this.handlePlaybackStatusUpdate} 
                 />
 
-                <TouchableOpacity onPress={this.handlePlayPause} style={styles.playPauseButton}>
-                    {isPlaying ? (
-                        <FontAwesome name="pause" size={30} color="white" style={styles.iconShadow} />
-                    ) : (
-                        <FontAwesome name="play" size={30} color="white" style={styles.iconShadow} />
-                    )}              
+                {showControls && (
+                    <TouchableOpacity onPress={this.handlePlayPause} style={styles.playPauseButton}>
+                        {this.state.isPlaying ? (
+                            <FontAwesome name="pause" size={30} color="white" style={styles.iconShadow} />
+                        ) : (
+                            <FontAwesome name="play" size={30} color="white" style={styles.iconShadow} />
+                        )}
                     </TouchableOpacity>
+                )}
             </View>
         );
     }
@@ -57,18 +89,18 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:60,
+        marginBottom: 60,
     },
     video: {
         width: '96%',
-        aspectRatio: 16 / 9, 
-        backgroundColor: 'black', 
+        aspectRatio: 16 / 9,
+        backgroundColor: 'black',
     },
     playPauseButton: {
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: [{ translateX: -12 }, { translateY: -12 }], 
+        transform: [{ translateX: -15 }, { translateY: -15 }],
     },
     iconShadow: {
         textShadowColor: 'rgba(0, 0, 0, 0.5)',
