@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
 import { downloadPdf } from '../../Service/pdf/pdfService';
+import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
 
 export default function ResumePage({ route }) {
   const { selectedMatch, selectedPlaces, selectedTribune, totalPrice } = route.params;
   const homeTeam = selectedMatch.EquipeDomicile;
   const awayTeam = selectedMatch.EquipeExterieure;
+  const navigation = useNavigation(); 
 
   const handleDownload = () => {
     downloadPdf(pdfUrl); 
@@ -26,6 +32,23 @@ export default function ResumePage({ route }) {
     const dateObj = new Date(date);
     return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
   };
+
+  
+const getUserById = async () => {
+  const idUser = await AsyncStorage.getItem('userId');
+  try {
+    const response = await axios.get(`http://10.0.2.2:4000/api/user/${idUser}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting user', error);
+    return false; 
+  }
+};
+
+const navigateToProfile = async () => {
+  const user = await getUserById();        
+  navigation.navigate('ProfilPage', { userData: user });
+};
 
   return (
     <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
@@ -51,10 +74,17 @@ export default function ResumePage({ route }) {
             <View style={styles.totalPriceContainer}>
               <Text>Prix Total <Text style={styles.totalPrice}>{totalPrice}€</Text></Text>
             </View>
-            <TouchableOpacity onPress={handleDownload}>
-              <Text>Télécharger mes billets</Text>
+            <TouchableOpacity style={styles.downloadButton} onPress={handleDownload}>
+              <Feather name="download" size={24} color="#BD4F6C" />
+              <Text style={styles.downloadText}>Télécharger mes billets</Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.centeredText}>
+          <Text style={styles.regularText}>Vos billets seront toujours accessibles sur </Text>
+          <Text style={styles.profileText} onPress={() => navigateToProfile()}>
+            votre profil
+          </Text>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -78,7 +108,7 @@ const styles = StyleSheet.create({
   summaryContainer: {
     backgroundColor: '#fff',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
     width: '100%',
     marginTop: "5%"
   },
@@ -90,7 +120,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     marginBottom: 10,
-    marginLeft: 5
+    marginLeft: 15
   },
   ticketContainer: {
     padding: 10,
@@ -132,5 +162,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'green',
     fontWeight: 'bold',
+    marginLeft: 10
   },
+  downloadButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  downloadText: {
+    color: '#BD4F6C',
+    fontSize: 16,
+    marginLeft: 10,
+    fontWeight: "bold"
+  },
+  centeredText: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 10,
+    flexWrap: "wrap"
+  },
+  profileText: {
+    textDecorationLine: 'underline',
+    color: '#BD4F6C',
+    fontWeight: "bold",
+    fontSize: 16
+  },
+  regularText: {
+    textAlign: 'center',
+    fontWeight: "bold",
+    fontSize: 16
+  }
 });

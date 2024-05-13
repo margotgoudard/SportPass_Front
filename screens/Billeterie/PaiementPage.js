@@ -5,11 +5,8 @@ import ProgressBar from '../../components/ProgressBar';
 import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/stripe-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { savePdf } from '../../Service/pdf/pdfService';
-import { PDFDocument, PDFPage } from 'react-native-pdf-lib';
 import QRCode from 'react-native-qrcode-svg';
 import { captureRef } from 'react-native-view-shot';
-import * as FileSystem from 'expo-file-system';
 
 
 export default function PaiementPage({ route, navigation }) {
@@ -43,18 +40,6 @@ export default function PaiementPage({ route, navigation }) {
     initializePaymentSheet();
   }, []);
 
-  const captureQRCode = async () => {
-    try {
-      const uri = await captureRef(qrCodeRef.current, {
-        format: 'png', 
-        quality: 1, 
-      });
-      setQRCodeImage(uri);
-    } catch (error) {
-      console.error('Erreur lors de la capture du QR code:', error);
-    }
-  };
-
   const fetchYourPaymentIntent = async (amount) => {
     try {
       const response = await axios.post('http://10.0.2.2:4000/api/create-payment-intent', {
@@ -76,53 +61,6 @@ export default function PaiementPage({ route, navigation }) {
   const totalPrice = selectedPlaces
     .reduce((accumulator, place) => accumulator + (place.price || 0), 0)
     .toFixed(2);
-
-    const generatePDFs = async () => {
-      try {
-        const pdfUrls = [];
-    
-        for (let i = 0; i < selectedPlaces.length; i++) {
-          const place = selectedPlaces[i];
-          const qrCodeData = JSON.stringify({
-            ...place,
-            selectedTribune,
-            selectedMatch
-          });
-    
-          const pdfDoc = PDFDocument.create();
-          const page = PDFPage.create();
-    
-          page.drawImage(qrCodeImage, 'png', {
-            x: 100,
-            y: 500,
-            width: 200,
-            height: 200,
-          });
-    
-          pdfDoc.addPage(page);
-
-    
-          const filename = `ticket_${Date.now()}.pdf`;
-          const path = `${FileSystem.documentDirectory}${filename}`;
-          pdfDoc.setPath(path);
-
-          console.log(pdfDoc)
-    
-          await pdfDoc.write();
-
-          console.log(pdfDoc)
-    
-          const pdfUrl = await savePdf(pdfDoc); 
-          console.log(pdfUrl)
-          pdfUrls.push(pdfUrl);
-        }
-    
-        return pdfUrls;
-      } catch (error) {
-        console.error('Erreur lors de la génération des PDFs:', error);
-        throw error;
-      }
-    };
     
   const handlePayment = async () => {
     setLoading(true);
@@ -159,14 +97,12 @@ export default function PaiementPage({ route, navigation }) {
         Alert.alert('Erreur lors du paiement', confirmError.message);
       } else {
         await captureQRCode(); 
-        const pdfUrls = await generatePDFs();
-        await updateTickets(pdfUrls);
+        await updateTickets(selectedPlaces);
         navigation.navigate('Resume', {
           selectedPlaces,
           selectedTribune,
           selectedMatch,
-          totalPrice,
-          pdfUrls
+          totalPrice
         });
       }
     } catch (error) {
@@ -183,18 +119,14 @@ export default function PaiementPage({ route, navigation }) {
 
       await Promise.all(
         selectedPlaces.map(async (place, index) => {
-          const pdfUrl = pdfUrls[index];
           await axios.put(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`, {
             idUser: userId,
             nom: place.guestNom,
             prenom: place.guestPrenom,
             reservee: true,
-            pdfUrl
           });
         })
       );
-
-      console.log('Billets mis à jour avec succès.');
     } catch (error) {
       console.error('Erreur lors de la mise à jour des billets :', error);
       Alert.alert('Erreur lors de la mise à jour des billets', error.message || 'Une erreur inconnue est survenue');
@@ -210,7 +142,7 @@ export default function PaiementPage({ route, navigation }) {
           <View style={styles.container}>
             <View style={styles.selectedPlaceDetails}>
               <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
-              <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billets</Text>
+              <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billet(s)</Text>
               {selectedPlaces.map((place, index) => (
                 <View key={index} style={styles.containerPlace}>
                   <View style={styles.Detcontainer}>
@@ -249,19 +181,8 @@ export default function PaiementPage({ route, navigation }) {
             </TouchableOpacity>
           </View>
         </ScrollView>
-
-        <QRCode
-          value="temp"
-          getRef={(c) => qrCodeRef.current = c}
-          size={200}
-          logoBackgroundColor="transparent"
-          quietZone={10}
-          ecl="H"
-          style={{ display: 'none' }}
-        />
         <View>
     </View>
-
       </ImageBackground>
     </StripeProvider>
   );
