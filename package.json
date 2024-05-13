@@ -21,6 +21,7 @@
     "expo": "~50.0.14",
     "expo-av": "^14.0.4",
     "expo-status-bar": "~1.11.1",
+    "expo-video": "^1.1.8",
     "lottie-react-native": "^6.7.2",
     "moment": "^2.30.1",
     "react": "18.2.0",

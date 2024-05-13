@@ -8,7 +8,6 @@ import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAm
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../Accueil/Video.js';
 
-
 export default function Accueil({ navigation }) {
     const [userFirstName, setUserFirstName] = useState(null);
     const [userPalier, setUserPalier] = useState(null);
@@ -220,7 +219,6 @@ export default function Accueil({ navigation }) {
                 </View>
 
                 <Video2/>
-
 
             </ScrollView>
         </ImageBackground>
