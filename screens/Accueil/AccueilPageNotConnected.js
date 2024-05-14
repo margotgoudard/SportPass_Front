@@ -1,68 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
-import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
 
 export default function Accueil({ navigation }) {
-
-    const [userFirstName, setUserFirstName] = useState(null);
-    const [userPalier, setUserPalier] = useState(null);
-    const [userPalierPourcentage, setUserPalierPourcentage] = useState(null);
-    const [userAmount, setUserAmount] = useState(null);
     const [loading, setLoading] = useState(true);
     const [alaUnePublications, setAlaUnePublications] = useState([]);
     const [partenaires, setPartenaires] = useState([]);
-    const [paliers, setPaliers] = useState([]);
-    const [connected, setConnected] = useState(false);
-
     const scrollViewRef = useRef(null);
 
 
     useEffect(() => {
-
-        const fetchUserData = async () => {
-            try {
-                const userId = await AsyncStorage.getItem('userId');
-                if (!userId) {
-                    setConnected(false);
-                    return;
-                }
-
-                setConnected(true);
-
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
-                const user = response.data;
-                setUserFirstName(user.prenom);
-                setUserPalier(user.Palier?.nom);
-                setUserAmount(user.somme);
-                setUserPalierPourcentage(user.Palier?.cashbackPalier);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
-            }
-        };
-
         const fetchAlaUnePublications = async () => {
             try {
-                const userId = await AsyncStorage.getItem('userId');
-                if (!userId) {
-                    const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/alaUne`);
-                    const alaUnePublications = alaUneResponse.data;
-                    setAlaUnePublications(alaUnePublications);
-                    return;
-                }
-
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
-                const user = response.data;
-                const idEquipe = user.idEquipe; 
-
-                const alaUneResponse = await axios.get(idEquipe ? `http://10.0.2.2:4000/api/publicationClub/equipe/${idEquipe}/alaUne` : `http://10.0.2.2:4000/api/publicationClub/alaUne`);
+                const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/alaUne`);
                 const alaUnePublications = alaUneResponse.data;
                 setAlaUnePublications(alaUnePublications);
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des publications à la une :', error);
             }
@@ -78,28 +34,11 @@ export default function Accueil({ navigation }) {
             }
         };
 
-        const fetchPaliers = async () => {
-            try {
-                const userId = await AsyncStorage.getItem('userId');
-                if (!userId) {
-                    return;
-                }
-
-                const response = await axios.get('http://10.0.2.2:4000/api/palier');
-                const paliersData = response.data;
-                setPaliers(paliersData);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des paliers :', error);
-            }
-        };
-
         setLoading(false);
 
-        fetchUserData();
         fetchAlaUnePublications();
         fetchPartenaires();
-        fetchPaliers();
-    }, [connected]); 
+    }, []); 
 
     const scrollToPublication = (index) => {
         if (scrollViewRef.current) {
@@ -108,26 +47,15 @@ export default function Accueil({ navigation }) {
         }
     };
 
-    const handleBilletteriePress = () => {
-        navigation.navigate('Navbar', {screen:'Billeterie'});
-    };
-
     const handlePartenairePress = (siteUrl) => {
         Linking.openURL(siteUrl);
     };
 
-    const calculateRemainingAmount = (userAmount) => {
-        const currentPalier = paliers.find((palier) => userAmount < palier.montantMin);
-    
-        if (currentPalier) {
-            const nextPalierAmount = currentPalier.montantMin;
-            const remainingAmount = nextPalierAmount - userAmount;
-            const nextPalierName = currentPalier.nom;
-            return { remainingAmount, nextPalierName };
-        } else {
-            return { remainingAmount: 0, nextPalierName: '' };
-        }
+
+    const handleBilletteriePress = () => {
+        navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
     };
+
     
     if (loading) {
         return (
@@ -143,17 +71,6 @@ export default function Accueil({ navigation }) {
                     <Image source={require('../../assets/logo.png')} style={styles.logo} />
                 </View>
                 <View style={styles.container}>
-                    {userFirstName && (
-                        <View>
-                        <Text style={styles.bienvenue}>
-                            Bonjour, {userFirstName} !
-                        </Text>
-                        <View style={styles.vipStatusContainer}>
-                        <Text style={styles.vipStatus}> {userPalier} </Text>
-                        <MaterialCommunityIcons name="flag-checkered" size={30} color="#008900" style={styles.palierImage} />
-                        </View>
-                        </View>
-                    )}
                     {alaUnePublications.length > 0 && (
                         <View style={styles.uneContainer}>
                             <View style={styles.publicationsContainer}>
@@ -198,52 +115,31 @@ export default function Accueil({ navigation }) {
                         </View>
                     </TouchableOpacity>
 
-
-                    {userPalier && (
-                        <View style={styles.remainingAmountContainer}>
-                        <View style={styles.cashbackContainer}>
-                            <Text style={styles.cashbackText}>Cashback</Text>
-                            {userAmount !== null && (
-                                <Text style={styles.userAmountText}>{userAmount} €</Text>
-                            )}
-                        </View>
-                        <View style={styles.vipStatusCashbackContainer}>
-                            <MaterialCommunityIcons name="flag-checkered" size={30} color="black" style={styles.palierImageCashback} /> 
-                            <Text style={styles.vipStatusCashback}>
-                                {userPalier} : {userPalierPourcentage ? `${(userPalierPourcentage * 100).toFixed(0)}%` : ''}
-                            </Text>
-                        </View>
-                        <Text style={styles.remainingAmountText}>
-                            {calculateRemainingAmount(userAmount).remainingAmount} € avant le palier {calculateRemainingAmount(userAmount).nextPalierName}
-                        </Text>
-                        
-                        <CustomRemainingAmountBar userAmount={userAmount} nextPalierAmount={calculateRemainingAmount(userAmount).remainingAmount} />
+                    <View style={styles.videoContainer}>
+                        <Video2/>
                     </View>
-                    
-                    )}
 
-
-                    
                     <View style={styles.partenairesContainer}>  
-                        <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
-                        <ScrollView horizontal={true}>
-                        {partenaires.map((partenaire, index) => (
-                            <TouchableOpacity 
-                            key={index} 
-                            style={styles.partenaireItem}
-                            onPress={() => handlePartenairePress(partenaire.site)}
-                            >
-                                <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
-                                <Text style={styles.partenaireNom}>{partenaire.nom}   </Text>
-                            </TouchableOpacity>
-                        ))}
-                        </ScrollView>
+                        <Text style={styles.title}>Nos partenaires</Text>
+                        {partenaires.length > 0 && (
+                            <ScrollView horizontal={true}>
+                                {partenaires.map((partenaire, index) => (
+                                    <TouchableOpacity 
+                                        key={index} 
+                                        style={styles.partenaireItem}
+                                        onPress={() => handlePartenairePress(partenaire.site)}
+                                    >
+                                        <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                        <Text style={styles.partenaireNom}>{partenaire.nom}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        )}
+
                     </View>
                 </View>
 
-                <View style={styles.videoContainer}>
-                    <Video2/>
-                </View>
+                
             </ScrollView>
         </ImageBackground>
     );

@@ -6,7 +6,6 @@ import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import QRCode from 'react-native-qrcode-svg';
-import { captureRef } from 'react-native-view-shot';
 
 
 export default function PaiementPage({ route, navigation }) {
