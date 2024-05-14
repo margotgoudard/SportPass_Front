@@ -77,7 +77,7 @@ export default function Navbar() {
     if (token) {
       navigation.navigate('Navbar', {screen:'Accueil',params: { screen: 'AccueilPage' }});
     } else {
-      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'AccueilNotConnected' }});
+      navigation.navigate('Navbar', {screen:'Accueil',params: { screen: 'AccueilPageNotConnected' }});
     }
   }, [navigation]);
 
