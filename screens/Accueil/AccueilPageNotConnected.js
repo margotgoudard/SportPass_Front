@@ -121,18 +121,21 @@ export default function Accueil({ navigation }) {
 
                     <View style={styles.partenairesContainer}>  
                         <Text style={styles.title}>Nos partenaires</Text>
-                        <ScrollView horizontal={true}>
-                        {partenaires.map((partenaire, index) => (
-                            <TouchableOpacity 
-                            key={index} 
-                            style={styles.partenaireItem}
-                            onPress={() => handlePartenairePress(partenaire.site)}
-                            >
-                                <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
-                                <Text style={styles.partenaireNom}>{partenaire.nom}   </Text>
-                            </TouchableOpacity>
-                        ))}
-                        </ScrollView>
+                        {partenaires.length > 0 && (
+                            <ScrollView horizontal={true}>
+                                {partenaires.map((partenaire, index) => (
+                                    <TouchableOpacity 
+                                        key={index} 
+                                        style={styles.partenaireItem}
+                                        onPress={() => handlePartenairePress(partenaire.site)}
+                                    >
+                                        <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                        <Text style={styles.partenaireNom}>{partenaire.nom}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        )}
+
                     </View>
                 </View>
 
