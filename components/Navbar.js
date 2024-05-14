@@ -5,18 +5,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 
-import Accueil from'../screens/Accueil/AccueilPage.js';
 import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
 import BilleterieNavigation from '../Navigation/BilleterieNavigator.js';
 import CommercantNavigator from '../Navigation/CommercantNavigator.js';
+import AccueilNavigator from '../Navigation/AccueilNavigator.js';
 
 //icons
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import AccueilNavigator from '../Navigation/AccueilNavigator.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -78,7 +77,7 @@ export default function Navbar() {
     if (token) {
       navigation.navigate('Navbar', {screen:'Accueil',params: { screen: 'AccueilPage' }});
     } else {
-      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'Login' }});
+      navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'AccueilNotConnected' }});
     }
   }, [navigation]);
 
