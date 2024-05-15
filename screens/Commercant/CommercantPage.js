@@ -211,7 +211,7 @@ const CommercantPage = () => {
                 setItems={setTypesCommercants}
                 placeholder="Selectionnez une catégorie"
                 containerStyle={styles.dropdown}
-                style={{ ...styles.drop, zIndex: typePickerZIndex }}
+                style={{ ...styles.drop, zIndex: 3 }}
                 disableBorderRadius={true}
                 autoScroll={true}
                 textStyle={{ fontSize: 16, fontWeight: "bold" }}
@@ -225,8 +225,8 @@ const CommercantPage = () => {
                 setValue={setSelectedCity}
                 setItems={setVilles}
                 placeholder="Selectionnez une ville"
-                containerStyle={styles.dropdown}
-                style={{ ...styles.drop, zIndex: cityPickerZIndex }}
+                containerStyle={styles.dropdown2}
+                style={{ ...styles.drop, zIndex: -1 }}
                 disableBorderRadius={true}
                 autoScroll={true}
                 textStyle={{ fontSize: 16, fontWeight: "bold" }}
@@ -273,16 +273,23 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     checkboxContainer: {
-        zIndex: 2
+        zIndex: 1
     },
     map: {
         flex: 1,
+        zIndex: -1
     },
     filtersContainer: {
         marginTop: "13%",
         width: '80%'
     },
     dropdown: {
+        zIndex: 4,
+        marginBottom: 20,
+        height: 40
+    },
+    dropdown2: {
+        zIndex: 2,
         marginBottom: 20,
         height: 40
     },
@@ -291,7 +298,6 @@ const styles = StyleSheet.create({
         borderWidth: 0,
     },
     drop: {
-        zIndex: 5000,  
         backgroundColor: '#D9D9D9',
         borderRadius: 10,
         borderWidth: 0,

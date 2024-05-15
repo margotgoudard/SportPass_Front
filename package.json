@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.0",
+    "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-native-picker/picker": "^2.7.5",
@@ -19,7 +19,7 @@
     "@react-navigation/stack": "^6.3.29",
     "@stripe/stripe-react-native": "^0.37.3",
     "axios": "^1.6.8",
-    "expo": "~50.0.14",
+    "expo": "^51.0.5",
     "expo-av": "^14.0.4",
     "expo-status-bar": "~1.11.1",
     "expo-video": "^1.1.8",
@@ -40,7 +40,7 @@
     "react-native-pdf-lib": "^1.0.0",
     "react-native-qrcode-svg": "^6.3.1",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vector-icons": "^10.0.3",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-video": "^5.2.1",
     "react-native-webview": "^13.8.6"
   },

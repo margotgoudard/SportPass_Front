@@ -57,16 +57,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        zIndex: 1,
+        zIndex: -4,
     },
     stepNumber: {
         color: '#FFFFFF', 
         fontSize: 32, 
         fontWeight: 'bold', 
         textAlign: 'center',
-        top: -7,  
+        top: -3,  
         width: '100%',
-        zIndex: 5,
+        zIndex: 8,
     },
     icon: {
         position: 'absolute',
@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
         zIndex: 2,
         width:48,
         height:48,
-        zIndex: 4, 
+        zIndex: -1, 
     },
     text:{
         color:'#FFFFFF',
         fontWeight:'bold',
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: 22
     }
 });
 
