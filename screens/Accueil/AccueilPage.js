@@ -173,10 +173,13 @@ export default function Accueil({ navigation }) {
                                                     screen: 'Forum',
                                                     params: { screen: 'PostClubDetails', params: { post } }
                                                     })}>
-                                                <Image 
+                                                <Text style={styles.postContent}>{post.contenu}</Text>
+
+                                                <Image
                                                     source={{ uri: post.image }}
                                                     style={styles.publicationImage} 
                                                 />
+
                                                 </TouchableOpacity>
                                             </View>
                                     ))} 
@@ -465,5 +468,13 @@ const styles = StyleSheet.create({
     videoContainer:{
         marginTop:5,
         marginBottom: 70,
+    },
+    postContent: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        position:'absolute',
+        bottom: 10,  
+        left: 10,
     },
 });
