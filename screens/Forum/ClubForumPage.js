@@ -5,6 +5,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PostClubComponent from '../../components/PostClubComponent'; 
 import PostPartenaireComponent from '../../components/PostPartenaireComponent'; 
+import URLS from '../../urlConfig.js';
 
 const ClubForumPage = ({searchTerm, refreshTrigger}) => {
   const [posts, setPosts] = useState([]);
@@ -23,12 +24,12 @@ const ClubForumPage = ({searchTerm, refreshTrigger}) => {
         return;
       }
       
-      const userDataResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const userDataResponse = await axios.get(`${URLS.url}/user/${userId}`);
       const userData = userDataResponse.data;
       setUser(userData);
 
-      const postsClubResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/equipe/${userData.Equipe.idEquipe}`);
-      const postsPartenaireResponse = await axios.get(`http://10.0.2.2:4000/api/publicationPartenaire`);
+      const postsClubResponse = await axios.get(`${URLS.url}/publicationClub/equipe/${userData.Equipe.idEquipe}`);
+      const postsPartenaireResponse = await axios.get(`${URLS.url}/publicationPartenaire`);
 
       const postsClub = postsClubResponse.data.sort((a, b) => new Date(b.date) - new Date(a.date));
       const postsPartenaire = postsPartenaireResponse.data;

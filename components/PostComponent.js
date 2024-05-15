@@ -9,6 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import URLS from '../../urlConfig.js';
 
 const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDetails = true, openModal }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -23,7 +24,7 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
 
     const checkIfLikedByCurrentUser = async (postId, idUser) => {
         try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/${postId}/${idUser}`);
+          const response = await axios.get(`${URLS.url}/likePublicationUser/${postId}/${idUser}`);
           setIsLikedByCurrentUser(response.data.exists); 
           return response.data.exists;
         } catch (error) {
@@ -37,14 +38,14 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
         try {
             let newLikesCount = {...postLikesCount}; 
             if (isLikedByCurrentUser) {
-                await axios.delete(`http://10.0.2.2:4000/api/likePublicationUser/${postId}/${post.User.idUser}`);
+                await axios.delete(`${URLS.url}/likePublicationUser/${postId}/${post.User.idUser}`);
                 newLikesCount[postId] = (newLikesCount[postId] || 1) - 1;
             } else {
                 const likeData = {
                     idPublication: postId,
                     idUser: post.User.idUser
                 };
-                await axios.post(`http://10.0.2.2:4000/api/likePublicationUser`, likeData);
+                await axios.post(`${URLS.url}/likePublicationUser`, likeData);
                 newLikesCount[postId] = (newLikesCount[postId] || 0) + 1;
             }
             setIsLikedByCurrentUser(!isLikedByCurrentUser); 
@@ -63,8 +64,8 @@ const PostComponent = ({ post, updateTrigger, onPostPress, onLongPress, showDeta
 
             try {
                 if(post){
-                const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireUser/publication/${post.idPublication}`);
-                const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationUser/publication/${post.idPublication}`);
+                const commentsResponse = await axios.get(`${URLS.url}/commentaireUser/publication/${post.idPublication}`);
+                const likesResponse = await axios.get(`${URLS.url}/likePublicationUser/publication/${post.idPublication}`);
                 commentsCount[post.idPublication] = commentsResponse.data.length;
                 likesCount[post.idPublication] = likesResponse.data.length;
                 await checkIfLikedByCurrentUser(post.idPublication, post.User.idUser);

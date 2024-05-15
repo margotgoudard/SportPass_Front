@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOp
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
-
+import URLS from '../../urlConfig.js';
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
@@ -35,7 +35,7 @@ export default function Accueil({ navigation }) {
 
                 setConnected(true);
 
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`${URLS.url}/user/${userId}`);
                 const user = response.data;
                 setUserFirstName(user.prenom);
                 setUserPalier(user.Palier?.nom);
@@ -50,17 +50,17 @@ export default function Accueil({ navigation }) {
             try {
                 const userId = await AsyncStorage.getItem('userId');
                 if (!userId) {
-                    const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/alaUne`);
+                    const alaUneResponse = await axios.get(`${URLS.url}/publicationClub/alaUne`);
                     const alaUnePublications = alaUneResponse.data;
                     setAlaUnePublications(alaUnePublications);
                     return;
                 }
 
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`${URLS.url}/user/${userId}`);
                 const user = response.data;
                 const idEquipe = user.idEquipe; 
 
-                const alaUneResponse = await axios.get(idEquipe ? `http://10.0.2.2:4000/api/publicationClub/equipe/${idEquipe}/alaUne` : `http://10.0.2.2:4000/api/publicationClub/alaUne`);
+                const alaUneResponse = await axios.get(idEquipe ? `${URLS.url}/publicationClub/equipe/${idEquipe}/alaUne` : `${URLS.url}/publicationClub/alaUne`);
                 const alaUnePublications = alaUneResponse.data;
                 setAlaUnePublications(alaUnePublications);
             } catch (error) {
@@ -70,7 +70,7 @@ export default function Accueil({ navigation }) {
 
         const fetchPartenaires = async () => {
             try {
-                const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                const response = await axios.get(`${URLS.url}/partenaire`);
                 const partenairesData = response.data;
                 setPartenaires(partenairesData);
             } catch (error) {
@@ -85,7 +85,7 @@ export default function Accueil({ navigation }) {
                     return;
                 }
 
-                const response = await axios.get('http://10.0.2.2:4000/api/palier');
+                const response = await axios.get(`${URLS.url}/palier`);
                 const paliersData = response.data;
                 setPaliers(paliersData);
             } catch (error) {

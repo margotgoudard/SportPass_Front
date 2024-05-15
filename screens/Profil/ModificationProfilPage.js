@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, ImageBackground, Alert, TouchableOpacity,
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import URLS from '../../urlConfig.js';
 
 const ModificationProfilPage = ({ route }) => {
   const { user } = route.params;
@@ -12,8 +13,8 @@ const ModificationProfilPage = ({ route }) => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://10.0.2.2:4000/api/user/${user.idUser}`, updatedUser);
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${user.idUser}`);
+      await axios.put(`${URLS.url}/user/${user.idUser}`, updatedUser);
+      const response = await axios.get(`${URLS.url}/user/${user.idUser}`);
       const userData = response.data;
       navigation.navigate('ProfilPage', { userData });
     } catch (error) {
@@ -33,7 +34,7 @@ const ModificationProfilPage = ({ route }) => {
         { 
           text: "Oui", onPress: async () => {
             try {
-              await axios.delete(`http://10.0.2.2:4000/api/user/${user.idUser}`);
+              await axios.delete(`${URLS.url}/user/${user.idUser}`);
               navigation.navigate('Login');
             }
             catch (error) {

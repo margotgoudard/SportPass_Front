@@ -6,6 +6,7 @@ import Checkbox from '../../components/Checkbox';
 import ProgressBar from '../../components/ProgressBar';
 import { Ionicons } from '@expo/vector-icons';
 import AppLoader from '../../components/AppLoader';
+import URLS from '../../urlConfig.js';
 
 export default function Billeterie({ navigation }) {
     const [matchs, setMatchs] = useState([]);
@@ -55,11 +56,11 @@ export default function Billeterie({ navigation }) {
         const fetchMatchs = async () => {
             try {
                 const userId = await AsyncStorage.getItem('userId');
-                const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+                const response = await axios.get(`${URLS.url}/user/${userId}`);
                 const userData = response.data;
                 setUserEquipeId(userData.Equipe.idEquipe);
 
-                const matchResponse = await axios.get('http://10.0.2.2:4000/api/matchs');
+                const matchResponse = await axios.get(`${URLS.url}/matchs`);
                 const allMatchs = matchResponse.data;
                 setMatchs(allMatchs);
 

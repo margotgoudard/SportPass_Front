@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import URLS from '../../urlConfig.js';
 
 import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';
@@ -86,7 +87,7 @@ export default function Navbar() {
     const userId = await AsyncStorage.getItem('userId');
 
     if (token) {
-      const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const response = await axios.get(`${URLS.url}/user/${userId}`);
       const user = response.data;
       navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'ProfilPage', params: {userData : user} }});
     } else {

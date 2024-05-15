@@ -10,6 +10,7 @@ import EditActions from '../../components/EditActionsComponent.js';
 import MessageModalClub from '../../components/MessageModalClub.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import URLS from '../../urlConfig.js';
 
 moment.locale('fr');
 
@@ -64,7 +65,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
             closeModal();
         } else {
             try {
-                const response = await axios.post('http://10.0.2.2:4000/api/commentaireClub', messageData);
+                const response = await axios.post(`${URLS.url}/commentaireClub`, messageData);
                 setMessageText('');
                 closeModal();
                 fetchCommentsAndUsers();
@@ -87,11 +88,11 @@ const PostClubDetailsPage = ({ route, navigation }) => {
 
     const fetchCommentsAndUsers = async () => {
         try {
-            const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireClub/publication/${post.idPublication}`);
+            const commentsResponse = await axios.get(`${URLS.url}/commentaireClub/publication/${post.idPublication}`);
             let commentsWithDetails = await Promise.all(commentsResponse.data.map(async (comment) => {
                 try {
-                    const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
-                    const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireClub/commentaire/${comment.idCommentaire}`);
+                    const userResponse = await axios.get(`${URLS.url}/user/${comment.idUser}`);
+                    const likesResponse = await axios.get(`${URLS.url}/likeCommentaireClub/commentaire/${comment.idCommentaire}`);
                     const isLikedByCurrentUser = await checkIfLikedByCurrentUser(comment.idCommentaire, iduser);
                     return {
                         ...comment,
@@ -143,7 +144,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
         };
 
         try {
-            await axios.put(`http://10.0.2.2:4000/api/commentaireClub/${editingCommentId}`, updatedComment);
+            await axios.put(`${URLS.url}/commentaireClub/${editingCommentId}`, updatedComment);
             fetchCommentsAndUsers();
             closeModal();
         } catch (error) {
@@ -208,7 +209,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
         };
 
         try {
-            await axios.put(`http://10.0.2.2:4000/api/commentaireClub/${commentId}`, updatedComment);
+            await axios.put(`${URLS.url}/commentaireClub/${commentId}`, updatedComment);
             fetchCommentsAndUsers();
         } catch (error) {
             console.error('Error updating comment:', error);
@@ -218,7 +219,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
 
     const deleteComment = async (commentId) => {
         try {
-            const response = await axios.delete(`http://10.0.2.2:4000/api/commentaireClub/${commentId}`);
+            const response = await axios.delete(`${URLS.url}/commentaireClub/${commentId}`);
             fetchCommentsAndUsers();
             setUpdateTrigger(updateTrigger + 1);
         } catch (error) {
@@ -234,7 +235,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
 
     const checkIfLikedByCurrentUser = async (commentId, idUser) => {
         try {
-            const response = await axios.get(`http://10.0.2.2:4000/api/likeCommentaireClub/${commentId}/${idUser}`);
+            const response = await axios.get(`${URLS.url}/likeCommentaireClub/${commentId}/${idUser}`);
             return response.data;
         } catch (error) {
             console.error('Error checking like status', error);
@@ -248,7 +249,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
             const commentIndex = updatedComments.findIndex(comment => comment.idCommentaire === commentId);
             if (commentIndex !== -1) {
                 if (isLiked) {
-                    await axios.delete(`http://10.0.2.2:4000/api/likeCommentaireClub/${commentId}/${iduser}`);
+                    await axios.delete(`${URLS.url}/likeCommentaireClub/${commentId}/${iduser}`);
                     updatedComments[commentIndex].isLikedByCurrentUser = false;
                     updatedComments[commentIndex].likes -= 1;
                 } else {
@@ -256,7 +257,7 @@ const PostClubDetailsPage = ({ route, navigation }) => {
                         idCommentaire: commentId,
                         idUser: iduser
                     };
-                    await axios.post(`http://10.0.2.2:4000/api/likeCommentaireClub`, likeData);
+                    await axios.post(`${URLS.url}/likeCommentaireClub`, likeData);
                     updatedComments[commentIndex].isLikedByCurrentUser = true;
                     updatedComments[commentIndex].likes += 1;
                 }

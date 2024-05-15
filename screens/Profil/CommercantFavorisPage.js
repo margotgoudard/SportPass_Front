@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, ImageBackground, Alert, TouchableOpacity } from
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import CommercantInfo from '../../components/CommercantInfo';
+import URLS from '../../urlConfig.js';
 
 const CommercantFavoris = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -15,14 +16,14 @@ const CommercantFavoris = ({ route, navigation }) => {
 
   const fetchData = async () => {
     try {
-        const userResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+        const userResponse = await axios.get(`${URLS.url}/user/${userId}`);
         setUserInfo(userResponse.data);
 
-        const favoritesResponse = await axios.get(`http://10.0.2.2:4000/api/avoirFavoris/user/${userId}`);
+        const favoritesResponse = await axios.get(`${URLS.url}/avoirFavoris/user/${userId}`);
         const commercantsData = favoritesResponse.data;
 
         const updatedCommercants = await Promise.all(commercantsData.map(async (commercant) => {
-            const cashbackResponse = await axios.get(`http://10.0.2.2:4000/api/cashbackCommercant/${commercant.idCashbackCommercant}`);
+            const cashbackResponse = await axios.get(`${URLS.url}/cashbackCommercant/${commercant.idCashbackCommercant}`);
             return {
                 ...commercant,
                 isFavorite: true,
@@ -41,9 +42,9 @@ const CommercantFavoris = ({ route, navigation }) => {
 const toggleFavorite = (commercant) => {
   try {
     if (commercant.isFavorite) {
-      axios.delete(`http://10.0.2.2:4000/api/avoirFavoris/${commercant.idCommercant}/${userId}`);
+      axios.delete(`${URLS.url}/avoirFavoris/${commercant.idCommercant}/${userId}`);
     } else {
-      axios.post(`http://10.0.2.2:4000/api/avoirFavoris`, {
+      axios.post(`${URLS.url}/avoirFavoris`, {
         idUser: userId,
         idCommercant: commercant.idCommercant
       });

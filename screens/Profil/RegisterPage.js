@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, Text, TouchableOpacity, Alert, ImageBackgr
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import URLS from '../../urlConfig.js';
 
 const RegisterPage = () => {
   const [prenom, setPrenom] = useState('');
@@ -16,7 +17,7 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchEquipes = async () => {
       try {
-        const response = await axios.get('http://10.0.2.2:4000/api/equipe');
+        const response = await axios.get(`${URLS.url}/equipe`);
         setEquipes(response.data);
       } catch (error) {
         console.error(error);
@@ -27,7 +28,7 @@ const RegisterPage = () => {
   }, []);
 
   const handleRegister = () => {
-    const apiUrl = 'http://10.0.2.2:4000/api/registration';
+    const apiUrl = `${URLS.url}/registration`;
     axios.post(apiUrl, { prenom, nom, mail, password, idEquipe })
       .then(response => {
         Alert.alert("Inscription réussie", "Votre compte a été créé avec succès.");

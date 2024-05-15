@@ -4,6 +4,7 @@ import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
+import URLS from '../../urlConfig.js';
 
 
 const Billet = ({ route, navigation }) => {
@@ -24,24 +25,24 @@ const Billet = ({ route, navigation }) => {
     const fetchBillets = async () => {
       try {
         setLoading(true);
-        const responseBillets = await axios.get(`http://10.0.2.2:4000/api/billet/user/${userId}`);
+        const responseBillets = await axios.get(`${URLS.url}/billet/user/${userId}`);
         const billets = responseBillets.data;
         
         const detailedBilletsPromises = billets.map(async (billet) => {
 
-          const matchResponse = await axios.get(`http://10.0.2.2:4000/api/matchs/${billet.Match.idMatch}`);
+          const matchResponse = await axios.get(`${URLS.url}/matchs/${billet.Match.idMatch}`);
           const match = matchResponse.data;
 
-          const placeResponse = await axios.get(`http://10.0.2.2:4000/api/place/${billet.Place.idPlace}`);
+          const placeResponse = await axios.get(`${URLS.url}/place/${billet.Place.idPlace}`);
           const place = placeResponse.data;
 
-          const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${billet.Place.idRangee}`);
+          const rangeeResponse = await axios.get(`${URLS.url}/rangee/${billet.Place.idRangee}`);
           const rangee = rangeeResponse.data;
 
-          const tribuneResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/${rangee.idTribune}`);
+          const tribuneResponse = await axios.get(`${URLS.url}/tribune/${rangee.idTribune}`);
           const tribune = tribuneResponse.data;
 
-          const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${tribune.idStade}`);
+          const stadeResponse = await axios.get(`${URLS.url}/stade/${tribune.idStade}`);
           const stade = stadeResponse.data;
 
           return {

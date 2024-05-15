@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import URLS from '../../urlConfig.js';
 
 const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentUser }) => {
 
@@ -19,11 +20,11 @@ const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentU
     const navigateToProfile = async () => {
         const userId = await getUserId();        
         if (comment.idUser == userId) {
-            const response = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+            const response = await axios.get(`${URLS.url}/user/${userId}`);
             const userData = response.data;
             navigation.navigate('ProfilPage', { userData: userData });
         } else {        
-            const response = await axios.get(`http://10.0.2.2:4000/api/user/${comment.idUser}`);
+            const response = await axios.get(`${URLS.url}/user/${comment.idUser}`);
             const userData = response.data;
             navigation.navigate('ProfilUser', { userData: userData });
         }

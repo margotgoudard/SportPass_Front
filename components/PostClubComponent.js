@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import URLS from '../../urlConfig.js';
 
 const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
@@ -24,7 +25,7 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
     const checkIfLikedByCurrentUser = async (postId) => {
         const idUser = await getUserId();
         try {
-          const response = await axios.get(`http://10.0.2.2:4000/api/likePublicationClub/${postId}/${idUser}`);
+          const response = await axios.get(`${URLS.url}/likePublicationClub/${postId}/${idUser}`);
           setIsLikedByCurrentUser(response.data.exists); 
           return response.data.exists;
         } catch (error) {
@@ -39,14 +40,14 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
         try {
             let newLikesCount = {...postLikesCount}; 
             if (isLikedByCurrentUser) {
-                await axios.delete(`http://10.0.2.2:4000/api/likePublicationClub/${postId}/${idUser}`);
+                await axios.delete(`${URLS.url}/likePublicationClub/${postId}/${idUser}`);
                 newLikesCount[postId] = (newLikesCount[postId] || 1) - 1;
             } else {
                 const likeData = {
                     idPublication: postId,
                     idUser
                 };
-                await axios.post(`http://10.0.2.2:4000/api/likePublicationClub`, likeData);
+                await axios.post(`${URLS.url}/likePublicationClub`, likeData);
                 newLikesCount[postId] = (newLikesCount[postId] || 0) + 1;
             }
             setIsLikedByCurrentUser(!isLikedByCurrentUser); 
@@ -64,8 +65,8 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
             const likesCount = {};
 
             try {
-                const commentsResponse = await axios.get(`http://10.0.2.2:4000/api/commentaireClub/publication/${post.idPublication}`);
-                const likesResponse = await axios.get(`http://10.0.2.2:4000/api/likePublicationClub/publication/${post.idPublication}`);
+                const commentsResponse = await axios.get(`${URLS.url}/commentaireClub/publication/${post.idPublication}`);
+                const likesResponse = await axios.get(`${URLS.url}/likePublicationClub/publication/${post.idPublication}`);
                 commentsCount[post.idPublication] = commentsResponse.data.length;
                 likesCount[post.idPublication] = likesResponse.data.length;
                 await checkIfLikedByCurrentUser(post.idPublication);

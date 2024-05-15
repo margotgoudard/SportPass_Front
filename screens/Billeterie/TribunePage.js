@@ -5,6 +5,7 @@ import ProgressBar from '../../components/ProgressBar';
 import AppLoader from '../../components/AppLoader';
 import LottieView from 'lottie-react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import URLS from '../../urlConfig.js';
 
 
 export default function Tribune({ route, navigation }) {
@@ -19,11 +20,11 @@ export default function Tribune({ route, navigation }) {
     const fetchData = async () => {
       try {
         const idStade = selectedMatch.idStade
-        const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${idStade}`);
+        const stadeResponse = await axios.get(`${URLS.url}/stade/${idStade}`);
         const stadeData = stadeResponse.data;
         setStade(stadeData);
 
-        const tribunesResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/stade/${idStade}`);
+        const tribunesResponse = await axios.get(`${URLS.url}/tribune/stade/${idStade}`);
         const tribunesData = tribunesResponse.data;
         setTribunes(tribunesData);
         setLoading(false);

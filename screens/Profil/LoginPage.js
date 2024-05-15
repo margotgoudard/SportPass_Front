@@ -3,6 +3,7 @@ import { View, TextInput, Alert, Text, TouchableOpacity, ImageBackground, Image,
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import URLS from '../../urlConfig.js';
 
 const LoginPage = () => {
   const [mail, setMail] = useState('');
@@ -10,7 +11,7 @@ const LoginPage = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    const apiUrl = 'http://10.0.2.2:4000/api/login';
+    const apiUrl = `${URLS.url}/login`;
     try {
       const response = await axios.post(apiUrl, { mail, password });
       const token = response.data.token;

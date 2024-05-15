@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import URLS from '../../urlConfig.js';
 
 
 const Pass = ({ route, navigation }) => {
@@ -23,29 +24,29 @@ const Pass = ({ route, navigation }) => {
     const fetchAbonnements = async () => {
       try {
         setLoading(true);
-        const responsePasses = await axios.get(`http://10.0.2.2:4000/api/possederPass/user/${userId}`);
+        const responsePasses = await axios.get(`${URLS.url}/possederPass/user/${userId}`);
         const passes = responsePasses.data;
         
         const detailedPassesPromises = passes.map(async (pass) => {
-          const appartientPassResponse = await axios.get(`http://10.0.2.2:4000/api/appartientPass/pass/${pass.idPass}`);
+          const appartientPassResponse = await axios.get(`${URLS.url}/appartientPass/pass/${pass.idPass}`);
           const appartientPass = appartientPassResponse.data[0]; 
   
-          const billetResponse = await axios.get(`http://10.0.2.2:4000/api/billet/${appartientPass.idBillet}`);
+          const billetResponse = await axios.get(`${URLS.url}/billet/${appartientPass.idBillet}`);
           const billet = billetResponse.data;
 
-          const matchResponse = await axios.get(`http://10.0.2.2:4000/api/matchs/${billet.Match.idMatch}`);
+          const matchResponse = await axios.get(`${URLS.url}/matchs/${billet.Match.idMatch}`);
           const match = matchResponse.data;
 
-          const placeResponse = await axios.get(`http://10.0.2.2:4000/api/place/${billet.Place.idPlace}`);
+          const placeResponse = await axios.get(`${URLS.url}/place/${billet.Place.idPlace}`);
           const place = placeResponse.data;
 
-          const rangeeResponse = await axios.get(`http://10.0.2.2:4000/api/rangee/${billet.Place.idRangee}`);
+          const rangeeResponse = await axios.get(`${URLS.url}/rangee/${billet.Place.idRangee}`);
           const rangee = rangeeResponse.data;
 
-          const tribuneResponse = await axios.get(`http://10.0.2.2:4000/api/tribune/${rangee.idTribune}`);
+          const tribuneResponse = await axios.get(`${URLS.url}/tribune/${rangee.idTribune}`);
           const tribune = tribuneResponse.data;
 
-          const stadeResponse = await axios.get(`http://10.0.2.2:4000/api/stade/${tribune.idStade}`);
+          const stadeResponse = await axios.get(`${URLS.url}/stade/${tribune.idStade}`);
           const stade = stadeResponse.data;
 
           return {

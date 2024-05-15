@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessageModal from '../../components/MessageModal.js';
 import axios from 'axios';
 import { FontAwesome } from '@expo/vector-icons';
+import URLS from '../../urlConfig.js';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -88,7 +89,7 @@ const ForumPage = () => {
             idUser: await AsyncStorage.getItem('userId')
         };
             try {
-                const response = await axios.post('http://10.0.2.2:4000/api/publicationUser', messageData);
+                const response = await axios.post(`${URLS.url}/publicationUser`, messageData);
                 setMessageText('');
                 closeModal();
                 setReloadKey(prevKey => prevKey + 1);

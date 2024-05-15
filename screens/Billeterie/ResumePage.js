@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
-import { downloadPdf } from '../../Service/pdf/pdfService';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import URLS from '../../urlConfig.js';
 
 export default function ResumePage({ route }) {
   const { selectedMatch, selectedPlaces, selectedTribune, totalPrice } = route.params;
@@ -13,9 +12,7 @@ export default function ResumePage({ route }) {
   const awayTeam = selectedMatch.EquipeExterieure;
   const navigation = useNavigation(); 
 
-  const handleDownload = () => {
-    downloadPdf(pdfUrl); 
-  };
+  
 
   const formatTeamName = (teamName) => {
     return teamName
@@ -37,7 +34,7 @@ export default function ResumePage({ route }) {
 const getUserById = async () => {
   const idUser = await AsyncStorage.getItem('userId');
   try {
-    const response = await axios.get(`http://10.0.2.2:4000/api/user/${idUser}`);
+    const response = await axios.get(`${URLS.url}/user/${idUser}`);
     return response.data;
   } catch (error) {
     console.error('Error getting user', error);

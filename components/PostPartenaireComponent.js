@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ImageBackground, Linking } from 'react-native';
 import axios from 'axios';
+import URLS from '../../urlConfig.js';
 
 const PostPartnerComponent = ({ post }) => {
     const [partner, setPartner] = useState(null);
@@ -11,7 +12,7 @@ const PostPartnerComponent = ({ post }) => {
 
     const fetchPartner = async () => {
         try {
-            const response = await axios.get(`http://10.0.2.2:4000/api/partenaire/${post.idPartenaire}`);
+            const response = await axios.get(`${URLS.url}/partenaire/${post.idPartenaire}`);
             setPartner(response.data);
         } catch (error) {
             console.error('Error fetching partner details', error);

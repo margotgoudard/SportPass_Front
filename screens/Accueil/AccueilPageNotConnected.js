@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import axios from 'axios';
-
+import URLS from '../../urlConfig.js';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
 
@@ -15,7 +15,7 @@ export default function Accueil({ navigation }) {
     useEffect(() => {
         const fetchAlaUnePublications = async () => {
             try {
-                const alaUneResponse = await axios.get(`http://10.0.2.2:4000/api/publicationClub/alaUne`);
+                const alaUneResponse = await axios.get(`${URLS.url}/publicationClub/alaUne`);
                 const alaUnePublications = alaUneResponse.data;
                 setAlaUnePublications(alaUnePublications);
 
@@ -26,7 +26,7 @@ export default function Accueil({ navigation }) {
 
         const fetchPartenaires = async () => {
             try {
-                const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                const response = await axios.get(`${URLS.url}/partenaire`);
                 const partenairesData = response.data;
                 setPartenaires(partenairesData);
             } catch (error) {

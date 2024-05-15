@@ -8,6 +8,7 @@ import PostComponentForum from '../../components/PostComponentForum';
 import PostCommercantComponent from '../../components/PostCommercantComponent'; 
 import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
+import URLS from '../../urlConfig.js';
 
 const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
   const [posts, setPosts] = useState([]);
@@ -112,12 +113,12 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
         return;
       }
       
-      const userDataResponse = await axios.get(`http://10.0.2.2:4000/api/user/${userId}`);
+      const userDataResponse = await axios.get(`${URLS.url}/user/${userId}`);
       const userData = userDataResponse.data;
       setUser(userData);
 
-      const postsUserResponse = await axios.get(`http://10.0.2.2:4000/api/publicationUser/equipe/${userData.Equipe.idEquipe}`);
-      const postsCommercantResponse = await axios.get(`http://10.0.2.2:4000/api/publicationCommercant/equipe/${userData.Equipe.idEquipe}`);
+      const postsUserResponse = await axios.get(`${URLS.url}/publicationUser/equipe/${userData.Equipe.idEquipe}`);
+      const postsCommercantResponse = await axios.get(`${URLS.url}/publicationCommercant/equipe/${userData.Equipe.idEquipe}`);
 
       const postsUser = postsUserResponse.data.sort((a, b) => new Date(b.date) - new Date(a.date));
       const postsCommercant = postsCommercantResponse.data;
@@ -138,7 +139,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
     };
   
     try {
-      await axios.put(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`, updatedPost);
+      await axios.put(`${URLS.url}/publicationUser/${idPublication}`, updatedPost);
       fetchPosts();
     } catch (error) {
       console.error('Error updating post:', error);
@@ -148,7 +149,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
 
   const deletePost = async (idPublication) => {
     try {
-      await axios.delete(`http://10.0.2.2:4000/api/publicationUser/${idPublication}`);
+      await axios.delete(`${URLS.url}/publicationUser/${idPublication}`);
       fetchPosts();
     } catch (error) {
       console.error('Error delete post', error);

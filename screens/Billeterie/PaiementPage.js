@@ -5,7 +5,7 @@ import ProgressBar from '../../components/ProgressBar';
 import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/stripe-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import QRCode from 'react-native-qrcode-svg';
+import URLS from '../../urlConfig.js';
 
 
 export default function PaiementPage({ route, navigation }) {
@@ -15,9 +15,6 @@ export default function PaiementPage({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [cardDetails, setCardDetails] = useState({});
   const [paymentError, setPaymentError] = useState(null);
-  const [qrCodeImage, setQRCodeImage] = useState(null);
-
-  const qrCodeRef = useRef();
 
   useEffect(() => {
     const initializePaymentSheet = async () => {
@@ -41,7 +38,7 @@ export default function PaiementPage({ route, navigation }) {
 
   const fetchYourPaymentIntent = async (amount) => {
     try {
-      const response = await axios.post('http://10.0.2.2:4000/api/create-payment-intent', {
+      const response = await axios.post(`${URLS.url}/create-payment-intent`, {
         amount: Math.round(amount * 100),
       });
 
@@ -118,7 +115,7 @@ export default function PaiementPage({ route, navigation }) {
 
       await Promise.all(
         selectedPlaces.map(async (place, index) => {
-          await axios.put(`http://10.0.2.2:4000/api/billet/place/${place.idPlace}`, {
+          await axios.put(`${URLS.url}/billet/place/${place.idPlace}`, {
             idUser: userId,
             nom: place.guestNom,
             prenom: place.guestPrenom,
