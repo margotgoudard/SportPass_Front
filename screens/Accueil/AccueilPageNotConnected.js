@@ -115,28 +115,27 @@ export default function Accueil({ navigation }) {
                         </View>
                     </TouchableOpacity>
 
+
+                    <View style={styles.partenairesContainer}>  
+                        <Text style={styles.titlePartenaire}>Nos partenaires</Text>
+                        <ScrollView horizontal={true}>
+                            {partenaires.map((partenaire, index) => (
+                                <TouchableOpacity 
+                                    key={index} 
+                                    style={styles.partenaireItem}
+                                    onPress={() => handlePartenairePress(partenaire.site)}
+                                >
+                                    <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                    <Text style={styles.partenaireNom}>{partenaire.nom}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </View>
+
                     <View style={styles.videoContainer}>
                         <Video2/>
                     </View>
 
-                    <View style={styles.partenairesContainer}>  
-                        <Text style={styles.title}>Nos partenaires</Text>
-                        {partenaires.length > 0 && (
-                            <ScrollView horizontal={true}>
-                                {partenaires.map((partenaire, index) => (
-                                    <TouchableOpacity 
-                                        key={index} 
-                                        style={styles.partenaireItem}
-                                        onPress={() => handlePartenairePress(partenaire.site)}
-                                    >
-                                        <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
-                                        <Text style={styles.partenaireNom}>{partenaire.nom}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </ScrollView>
-                        )}
-
-                    </View>
                 </View>
 
                 
@@ -167,12 +166,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     publicationsContainer: {
-        marginTop: 30,
+        marginTop: 10,
         zIndex: 1, 
     },
     title: {
         fontSize: 18,
-        marginBottom: 10,
+        marginBottom: 5,
+        marginLeft: 15,
+    },
+    titlePartenaire: {
+        fontSize: 18,
+        marginBottom: 5,
         marginLeft: 5,
     },
     imageContainer: {
@@ -343,6 +347,7 @@ const styles = StyleSheet.create({
         marginBottom:3,
     },
     videoContainer:{
-        marginTop:10,
+        marginTop:5,
+        marginBottom: 70,
     },
 });

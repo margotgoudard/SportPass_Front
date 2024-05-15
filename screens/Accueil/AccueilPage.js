@@ -53,6 +53,10 @@ export default function Accueil({ navigation }) {
                     const alaUneResponse = await axios.get(`${URLS.url}/publicationClub/alaUne`);
                     const alaUnePublications = alaUneResponse.data;
                     setAlaUnePublications(alaUnePublications);
+
+                    const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                    const partenairesData = response.data;
+                    setPartenaires(partenairesData);
                     return;
                 }
 
@@ -225,7 +229,7 @@ export default function Accueil({ navigation }) {
 
                     
                     <View style={styles.partenairesContainer}>  
-                        <Text style={styles.title}>Cashback utilisable chez nos partenaires</Text>
+                        <Text style={styles.titlePartenaire}>Cashback utilisable chez nos partenaires</Text>
                         <ScrollView horizontal={true}>
                         {partenaires.map((partenaire, index) => (
                             <TouchableOpacity 
@@ -275,6 +279,11 @@ const styles = StyleSheet.create({
         zIndex: 1, 
     },
     title: {
+        fontSize: 18,
+        marginBottom: 10,
+        marginLeft: 15,
+    },
+    titlePartenaire: {
         fontSize: 18,
         marginBottom: 10,
         marginLeft: 5,
@@ -393,8 +402,10 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     partenaireNom:{
-        fontWeight: 'bold',
         fontSize: 17,
+        fontStyle:'italic',
+        color:'white',
+        fontWeight:'bold',
     },
     remainingAmountContainer: {
         alignItems: 'center',
@@ -447,6 +458,7 @@ const styles = StyleSheet.create({
         marginBottom:3,
     },
     videoContainer:{
-        marginTop:10,
+        marginTop:5,
+        marginBottom: 70,
     },
 });
