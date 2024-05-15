@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import URLS from '../../urlConfig.js';
+import URLS from '../urlConfig.js';
 
 import ForumNavigation from'../Navigation/ForumNavigator.js';
 import AuthNavigator from '../Navigation/AuthNavigator.js';

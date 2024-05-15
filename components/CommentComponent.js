@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import URLS from '../../urlConfig.js';
+import URLS from '../urlConfig.js';
 
 const CommentComponent = ({ comment, onLongPress, onLikePress, isLikedByCurrentUser }) => {
 

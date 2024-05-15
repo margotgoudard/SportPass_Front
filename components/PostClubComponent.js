@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import URLS from '../../urlConfig.js';
+import URLS from '../urlConfig.js';
 
 const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
     const [postCommentsCount, setPostCommentsCount] = useState({});
