@@ -188,7 +188,7 @@ const ForumPage = () => {
 
 const styles = StyleSheet.create({
     background: {
-        flex: 1
+        flex: 1,
     },
     logoContainer: {
         marginLeft: "4%",
@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain' 
     },
     tabsContainer: {
+        zIndex: 1,
         marginTop: "-60%", 
         backgroundColor: 'transparent',
     },
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
         zIndex: 5,
     },
     messageModalStyle: {
-        zIndex: 100,
+        zIndex: 6,
     },
     searchContainer: {
         padding: 10,

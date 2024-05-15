@@ -101,7 +101,7 @@ const ProfilPage = ({ route }) => {
   const renderSelectedPost = () => {
     if (!selectedPost || !blurEffect) return null;
     return (
-      <View>
+      <View style={styles.view}>
         <View style={styles.selectedPostContainer}>
           {postComponentVisible && (
             <PostComponent
@@ -385,15 +385,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1, 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  view: {
+    zIndex: 3
   },
   selectedPostContainer: {
     position: 'absolute',
-    zIndex: 2, 
     width: '90%',
     alignSelf: "center",
-    marginTop: "70%"
+    marginTop: "70%",
+    zIndex: 2
   }
 });
 

@@ -6,6 +6,7 @@ import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import URLS from '../../urlConfig.js';
+import Checkbox from '../../components/Checkbox';
 
 export default function PaiementPage({ route, navigation }) {
   const { selectedPlaces, selectedTribune, selectedMatch } = route.params;
@@ -14,6 +15,8 @@ export default function PaiementPage({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [cardDetails, setCardDetails] = useState({});
   const [paymentError, setPaymentError] = useState(null);
+  const [cashback, setCashback] = useState(0);
+  const [useCashback, setUseCashback] = useState(false);
 
   useEffect(() => {
     const initializePaymentSheet = async () => {
@@ -24,9 +27,13 @@ export default function PaiementPage({ route, navigation }) {
           defaultBillingDetails: {
             name: 'Jane Doe',
           },
-          returnURL: 'yourapp://payment-return'
+          returnURL: 'yourapp://payment-return',
+          paymentMethodTypes: ['Card', 'ApplePay'],
         });
         setLoading(true);
+        const userId = await AsyncStorage.getItem('userId');
+        const response = await axios.get(`${URLS.url}/user/${userId}`);
+        setCashback(response.data.somme);
       } catch (error) {
         console.error('Erreur lors de l\'initialisation du paiement:', error);
         setLoading(false);
@@ -57,6 +64,8 @@ export default function PaiementPage({ route, navigation }) {
   const totalPrice = selectedPlaces
     .reduce((accumulator, place) => accumulator + (place.price || 0), 0)
     .toFixed(2);
+
+  const finalPrice = useCashback ? (totalPrice - cashback).toFixed(2) : totalPrice;
 
   const handlePayment = async () => {
     setLoading(true);
@@ -93,11 +102,16 @@ export default function PaiementPage({ route, navigation }) {
         Alert.alert('Erreur lors du paiement', confirmError.message);
       } else {
         await updateTickets(selectedPlaces);
+        if (useCashback) {
+          setCashback(0);
+          const userId = await AsyncStorage.getItem('userId');
+          await axios.put(`${URLS.url}/user/${userId}`, { somme: 0 });
+        }
         navigation.navigate('Resume', {
           selectedPlaces,
           selectedTribune,
           selectedMatch,
-          totalPrice
+          totalPrice: finalPrice
         });
       }
     } catch (error) {
@@ -133,7 +147,7 @@ export default function PaiementPage({ route, navigation }) {
       <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
         <ScrollView>
           <ProgressBar currentPage={4} />
-          <Text style={styles.totalPriceStyle}>Total à payer : {totalPrice}€</Text>
+          <Text style={styles.totalPriceStyle}>Total à payer : {finalPrice}€</Text>
           <View style={styles.container}>
             <View style={styles.selectedPlaceDetails}>
               <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
@@ -152,6 +166,15 @@ export default function PaiementPage({ route, navigation }) {
                 </View>
               ))}
             </View>
+            <Text style={styles.cashbackText}>Montant du cashback : {cashback.toFixed(2)}€</Text>
+            <Checkbox
+              text="Utiliser le cashback"
+              isChecked={useCashback}
+              onPress={() => setUseCashback(!useCashback)}
+              containerStyle={styles.checkboxContainer}
+              textStyle={styles.checkboxText}
+              checkboxStyle={styles.checkbox}
+            />
             <CardForm
               style={styles.cardForm}
               onFormComplete={(cardDetails) => setCardDetails(cardDetails)}
@@ -257,6 +280,19 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'row',
+  },
+  cashbackText: {
+    fontSize: 16,
+    marginLeft: 20,
+    marginTop: "-14%"
+  },
+  checkboxContainer: {
+    marginLeft: 20,
+    marginBottom: 50,
+  },
+  checkboxText: {
+    fontSize: 16,
+    color: '#008900',
   },
   cardForm: {
     marginTop: "-10%",
