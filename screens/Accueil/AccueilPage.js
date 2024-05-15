@@ -167,13 +167,21 @@ export default function Accueil({ navigation }) {
                                     ref={scrollViewRef}
                                     pagingEnabled={true}
                                 >
-                                    {alaUnePublications.map((publication, index) => (
-                                        <View key={index} style={styles.imageContainer}>
-                                            <Image 
-                                                source={{ uri: publication.image }}
-                                                style={styles.publicationImage} 
-                                            />
-                                        </View>
+                                    {alaUnePublications.map((post, index) => (
+                                            <View key={index} style={styles.imageContainer}>
+                                                <TouchableOpacity onPress={() => navigation.navigate('Navbar', {
+                                                    screen: 'Forum',
+                                                    params: { screen: 'PostClubDetails', params: { post } }
+                                                    })}>
+                                                <Text style={styles.postContent}>{post.contenu}</Text>
+
+                                                <Image
+                                                    source={{ uri: post.image }}
+                                                    style={styles.publicationImage} 
+                                                />
+
+                                                </TouchableOpacity>
+                                            </View>
                                     ))} 
                                 </ScrollView>
                             </View>
@@ -460,5 +468,13 @@ const styles = StyleSheet.create({
     videoContainer:{
         marginTop:5,
         marginBottom: 70,
+    },
+    postContent: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        position:'absolute',
+        bottom: 10,  
+        left: 10,
     },
 });

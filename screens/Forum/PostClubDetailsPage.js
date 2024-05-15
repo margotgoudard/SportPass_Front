@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Alert, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/fr';
@@ -11,6 +11,7 @@ import MessageModalClub from '../../components/MessageModalClub.js';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import URLS from '../../urlConfig.js';
+import ArticleDisplay from '../../components/Forum/ArticleDisplay.js';
 
 moment.locale('fr');
 
@@ -297,6 +298,9 @@ const PostClubDetailsPage = ({ route, navigation }) => {
                             openModal={openModal}  
                             onLongPress={handleCommentLongPress}
                         />
+                        <View style={styles.articleContainer}>
+                            <ArticleDisplay article={post.article} />
+                        </View>                            
                             {comments.map((comment, index) => (
                                 <CommentComponent
                                     key={index}
@@ -367,6 +371,9 @@ const styles = StyleSheet.create({
     },
     messageModalStyle: {
         zIndex: 100,
+    },
+    articleContainer: {
+        padding: 10,
     },
 });
 
