@@ -103,7 +103,7 @@ export default function PlacePage({ route, navigation }) {
 
     const isSelected = selectedPlaces.some((selectedPlace) => selectedPlace.idPlace === place.idPlace);
     if (isSelected) {
-      const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedSelected.idPlace !== place.idPlace);
+      const filteredPlaces = selectedPlaces.filter((selectedPlace) => selectedPlace.idPlace !== place.idPlace);
       setSelectedPlaces(filteredPlaces);
     } else {
       if (selectedPlaces.length === 0) {
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'center',
     alignItems:'center',
-    bottom: 80,
+    bottom: 90,
     backgroundColor: '#BD4F6C',
     paddingLeft: 25,
     paddingRight: 25,

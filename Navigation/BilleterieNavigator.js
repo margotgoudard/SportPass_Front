@@ -42,7 +42,7 @@ export default function BilleterieNavigation() {
         component={Stade3D}  
         options={{ 
           headerShown: true,
-          headerTitle: 'Retour', 
+          headerTitle: '', 
           headerTintColor: '#BD4F6C', 
           headerTitleStyle: {
             fontWeight: 'bold', 

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ImageBackground, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import ProgressBar from '../../components/ProgressBar';
 import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/stripe-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import URLS from '../../urlConfig.js';
-
 
 export default function PaiementPage({ route, navigation }) {
   const { selectedPlaces, selectedTribune, selectedMatch } = route.params;
@@ -24,7 +23,8 @@ export default function PaiementPage({ route, navigation }) {
           allowsDelayedPaymentMethods: true,
           defaultBillingDetails: {
             name: 'Jane Doe',
-          }
+          },
+          returnURL: 'yourapp://payment-return'
         });
         setLoading(true);
       } catch (error) {
@@ -57,7 +57,7 @@ export default function PaiementPage({ route, navigation }) {
   const totalPrice = selectedPlaces
     .reduce((accumulator, place) => accumulator + (place.price || 0), 0)
     .toFixed(2);
-    
+
   const handlePayment = async () => {
     setLoading(true);
     setPaymentError(null);
@@ -92,7 +92,6 @@ export default function PaiementPage({ route, navigation }) {
         setPaymentError(confirmError);
         Alert.alert('Erreur lors du paiement', confirmError.message);
       } else {
-        await captureQRCode(); 
         await updateTickets(selectedPlaces);
         navigation.navigate('Resume', {
           selectedPlaces,
@@ -109,12 +108,12 @@ export default function PaiementPage({ route, navigation }) {
     setLoading(false);
   };
 
-  const updateTickets = async (pdfUrls) => {
+  const updateTickets = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
 
       await Promise.all(
-        selectedPlaces.map(async (place, index) => {
+        selectedPlaces.map(async (place) => {
           await axios.put(`${URLS.url}/billet/place/${place.idPlace}`, {
             idUser: userId,
             nom: place.guestNom,
@@ -177,93 +176,87 @@ export default function PaiementPage({ route, navigation }) {
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <View>
-    </View>
       </ImageBackground>
     </StripeProvider>
   );
 }
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  container:{
-    marginBottom:60,
-    marginTop:"12%",
+  container: {
+    marginBottom: 60,
+    marginTop: "12%",
   },
-  containerPlace:{
-    backgroundColor:'#D9D9D9',
-    borderRadius:20,
-    paddingVertical:10,
-    paddingHorizontal:20,
-    marginBottom : 5,
+  containerPlace: {
+    backgroundColor: '#D9D9D9',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 5,
   },
-  Detcontainer:{
+  Detcontainer: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  nombreBilletStyle:{
-    marginLeft:15,
-    fontStyle:'italic',
-    marginBottom:5,
+  nombreBilletStyle: {
+    marginLeft: 15,
+    fontStyle: 'italic',
+    marginBottom: 5,
   },
   totalPriceStyle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#BD4F6C', 
-    position:'absolute',
-    zIndex:1,
-    right:20,
-    top:150,
+    color: '#BD4F6C',
+    position: 'absolute',
+    zIndex: 1,
+    right: 20,
+    top: 150,
   },
-  detailsContainer : {
-    borderRadius:15,
+  detailsContainer: {
+    borderRadius: 15,
     flexDirection: 'row',
-    marginRight:5,
-    marginLeft:5,
-    marginVertical:5,
+    marginRight: 5,
+    marginLeft: 5,
+    marginVertical: 5,
     flexWrap: 'wrap',
-    maxHeight: '100%', 
-    maxWidth: '100%', 
-    zIndex:2,
+    maxHeight: '100%',
+    maxWidth: '100%',
+    zIndex: 2,
   },
-  selectedPlaceDetails:{
+  selectedPlaceDetails: {
     justifyContent: 'center',
-    backgroundColor:'white',
-    borderRadius:10,
-    margin:10,
-    padding:10,
-    marginBottom:70,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    margin: 10,
+    padding: 10,
+    marginBottom: 70,
   },
-  textTribune:{
+  textTribune: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft:15,
+    marginLeft: 15,
   },
-  textPlace:{
-    fontSize:17,
-    fontWeight:'bold'
+  textPlace: {
+    fontSize: 17,
+    fontWeight: 'bold'
   },
-  textPrix:{
-    fontSize:17,
-    fontWeight:'bold',
-    color:'#008900',
+  textPrix: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#008900',
     marginLeft: 10
   },
   textGuestInfo: {
-    fontSize:15,
-    fontStyle:'italic',
+    fontSize: 15,
+    fontStyle: 'italic',
     marginTop: 5,
   },
-  textContainer:{
+  textContainer: {
     flexDirection: 'row',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
   cardForm: {
     marginTop: "-10%",
@@ -282,9 +275,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
   },
 });

@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     },
     nextButton: {
         position: 'absolute',
-        bottom: 80,
+        bottom: 90,
         right: 15,
         backgroundColor: '#008900',
         paddingLeft: 15,

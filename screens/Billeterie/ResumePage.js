@@ -44,7 +44,7 @@ const getUserById = async () => {
 
 const navigateToProfile = async () => {
   const user = await getUserById();        
-  navigation.navigate('ProfilPage', { userData: user });
+  navigation.navigate('Navbar', {screen:'Profil',params: { screen: 'ProfilPage', params: {userData : user} }});
 };
 
   return (
@@ -71,7 +71,7 @@ const navigateToProfile = async () => {
             <View style={styles.totalPriceContainer}>
               <Text>Prix Total <Text style={styles.totalPrice}>{totalPrice}€</Text></Text>
             </View>
-            <TouchableOpacity style={styles.downloadButton} onPress={handleDownload}>
+            <TouchableOpacity style={styles.downloadButton}>
               <Feather name="download" size={24} color="#BD4F6C" />
               <Text style={styles.downloadText}>Télécharger mes billets</Text>
             </TouchableOpacity>
