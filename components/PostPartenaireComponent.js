@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ImageBackground, Linking } from 'react-native';
 import axios from 'axios';
-import URLS from '../../urlConfig.js';
+import URLS from '../urlConfig.js';
 
 const PostPartnerComponent = ({ post }) => {
     const [partner, setPartner] = useState(null);
