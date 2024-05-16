@@ -4,6 +4,7 @@ import axios from 'axios';
 import URLS from '../../urlConfig.js';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
+import moment from 'moment';
 
 export default function Accueil({ navigation }) {
     const [loading, setLoading] = useState(true);
@@ -82,10 +83,22 @@ export default function Accueil({ navigation }) {
                                 >
                                     {alaUnePublications.map((publication, index) => (
                                         <View key={index} style={styles.imageContainer}>
-                                            <Image 
-                                                source={{ uri: publication.image }}
-                                                style={styles.publicationImage} 
-                                            />
+                                             <ImageBackground
+                                                    source={{ uri: publication.image }}
+                                                    style={styles.publicationImage} 
+                                                >   
+                                                    <View style={styles.postDetails}>
+                                                        <Text style={styles.postContent}>{publication.contenu}</Text>
+                                                        {post.tag !== "" && (
+                                                            <View style={styles.tagContainer}>
+                                                                <Text style={styles.tagText}>{publication.tag}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                    <Text style={styles.postTime}>{moment(publication.date).fromNow()}</Text>
+                                                   
+
+                                                </ImageBackground>
                                         </View>
                                     ))} 
                                 </ScrollView>
@@ -188,6 +201,7 @@ const styles = StyleSheet.create({
     publicationImage: {
         width: 342,
         height: 207,
+        flex:1,
     },
     bandeau: {
         backgroundColor: '#D9D9D9',
@@ -350,4 +364,42 @@ const styles = StyleSheet.create({
         marginTop:5,
         marginBottom: 70,
     },
+    postContent: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
+        
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    postTime: {
+        position: "absolute",
+        top: 8,
+        right : 8,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    tagContainer: {
+        backgroundColor: '#BD4F6C',
+        padding: 5,
+        borderRadius: 5,
+        position:'relative',
+        marginLeft: "62%",
+        marginRight:"2%"
+       
+    },
+    tagText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    postDetails:{
+        position:'absolute',
+        bottom: 10,  
+        left: 10,
+        paddingHorizontal: 10, 
+        paddingBottom: 10,
+    }
 });
