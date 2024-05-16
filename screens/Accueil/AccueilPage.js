@@ -7,6 +7,8 @@ import URLS from '../../urlConfig.js';
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
+import moment from 'moment';
+
 
 export default function Accueil({ navigation }) {
 
@@ -177,8 +179,17 @@ export default function Accueil({ navigation }) {
                                                 <ImageBackground
                                                     source={{ uri: post.image }}
                                                     style={styles.publicationImage} 
-                                                >
-                                                    <Text style={styles.postContent}>{post.contenu}</Text>
+                                                >   
+                                                    <View style={styles.postDetails}>
+                                                        <Text style={styles.postContent}>{post.contenu}</Text>
+                                                        {post.tag !== "" && (
+                                                            <View style={styles.tagContainer}>
+                                                                <Text style={styles.tagText}>{post.tag}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                    <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
+                                                   
 
                                                 </ImageBackground>
 
@@ -475,12 +486,39 @@ const styles = StyleSheet.create({
     postContent: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 18,
+        
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    postTime: {
+        position: "absolute",
+        top: 8,
+        right : 8,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    tagContainer: {
+        backgroundColor: '#BD4F6C',
+        padding: 5,
+        borderRadius: 5,
+        position:'relative',
+        marginLeft: "62%",
+        marginRight:"2%"
+       
+    },
+    tagText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    postDetails:{
         position:'absolute',
         bottom: 10,  
         left: 10,
         paddingHorizontal: 10, 
         paddingBottom: 10,
-    },
-    
+    }
 });
