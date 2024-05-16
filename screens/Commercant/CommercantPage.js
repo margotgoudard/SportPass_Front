@@ -120,8 +120,9 @@ const CommercantPage = () => {
 
     useEffect(() => {
         applyFilters();
+        updateMapRegion(selectedCity);
     }, [selectedTypeCommercant, selectedCity, applyFilters]);
-
+    
 
     const fetchTypes = async () => {
         try {
@@ -148,6 +149,12 @@ const CommercantPage = () => {
         fetchTypes();
     }, [allCommercants]);
     
+    useEffect(() => {
+        if (selectedCity) {
+            updateMapRegion(selectedCity);
+        }
+    }, [selectedCity]);    
+    
 
     const getCoordinates = async (address) => {
         try {
@@ -162,6 +169,20 @@ const CommercantPage = () => {
             return { latitude: 0, longitude: 0 };
         }
     };
+
+    const updateMapRegion = async (city) => {
+        if (city && city !== 'Tout sélectionner') {
+            const coords = await getCoordinates(city);
+            setRegion({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1,
+            });
+        } else {
+            initializeMap();
+        }
+    };    
 
     const initializeMap = useCallback(async () => {
         try {

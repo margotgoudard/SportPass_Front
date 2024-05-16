@@ -8,7 +8,7 @@ const ProfileHeader = ({ user, handleNavigation, followersCount, followingsCount
       <View style={styles.userInfoContainer}>
         <View style={styles.vipStatusContainer}>
           <Text style={styles.vipStatus}>
-            Palier {user.Palier?.nom}
+             {user.Palier?.nom}
           </Text>
           <MaterialCommunityIcons name="flag-checkered" size={24} color="#008900" style={styles.palierImage} />
         </View>
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
       width: 20, 
       height: 20, 
       marginLeft: 5, 
+      marginTop: -2
     },
     boldNumbers: {
       fontWeight: 'bold',
