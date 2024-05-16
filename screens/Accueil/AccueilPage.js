@@ -152,7 +152,6 @@ export default function Accueil({ navigation }) {
                     {alaUnePublications.length > 0 && (
                         <View style={styles.uneContainer}>
                             <View style={styles.publicationsContainerNotConnecter}>
-                                <Text style={styles.title}>À la Une</Text>
                                 <ScrollView 
                                     horizontal={true}
                                     ref={scrollViewRef}
@@ -249,14 +248,13 @@ export default function Accueil({ navigation }) {
                         </Text>
                         <View style={styles.vipStatusContainer}>
                         <Text style={styles.vipStatus}> {userPalier} </Text>
-                        <MaterialCommunityIcons name="flag-checkered" size={30} color="#008900" style={styles.palierImage} />
+                        <MaterialCommunityIcons name="flag-checkered" size={26} color="#008900" style={styles.palierImage} />
                         </View>
                         </View>
                     )}
                     {alaUnePublications.length > 0 && (
                         <View style={styles.uneContainer}>
                             <View style={styles.publicationsContainer}>
-                                <Text style={styles.title}>À la Une</Text>
                                 <ScrollView 
                                     horizontal={true}
                                     ref={scrollViewRef}
@@ -268,25 +266,21 @@ export default function Accueil({ navigation }) {
                                                     screen: 'Forum',
                                                     params: { screen: 'PostClubDetails', params: { post } }
                                                     })}>
-                                                   
-                                                <ImageBackground
-                                                    source={{ uri: post.image }}
-                                                    style={styles.publicationImage} 
-                                                >   
-                                                    <View style={styles.postDetails}>
-                                                        <Text style={styles.postContent}>{post.contenu}</Text>
-                                                        {post.tag !== "" && (
-                                                            <View style={styles.tagContainer}>
-                                                                <Text style={styles.tagText}>{post.tag}</Text>
-                                                            </View>
-                                                        )}
-                                                    </View>
-                                                    <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
-                                                </ImageBackground>
-
+                                                    <ImageBackground
+                                                        source={{ uri: post.image }}
+                                                        style={styles.publicationImage} 
+                                                    >   
+                                                        <View style={styles.postDetails}>
+                                                            <Text style={styles.postContent}>{post.contenu}</Text>
+                                                            {post.tag !== "" && (
+                                                                <View style={styles.tagContainer}>
+                                                                    <Text style={styles.tagText}>{post.tag}</Text>
+                                                                </View>
+                                                            )}
+                                                        </View>
+                                                        <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
+                                                    </ImageBackground>
                                                 </TouchableOpacity>
-
-
                                             </View>
                                     ))} 
                                 </ScrollView>
@@ -373,20 +367,29 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         justifyContent: 'center',
     },
+    logo: {
+        width: "50%",
+        height: "50%", 
+        resizeMode: 'contain' 
+    },
     logoContainer: {
         justifyContent: 'flex-start', 
         alignItems: 'flex-start',
-        marginTop: 30, 
+        marginTop: "-8%", 
         marginLeft: 15,       
     },
     container: {
         flex: 1,
+        marginTop: "-65%"
     },
     bienvenue: {
         fontSize: 20,
         position: 'absolute',
         marginLeft: 15,
         fontWeight: 'bold',
+    },
+    palierImage: {
+        marginTop: "-3%"
     },
     publicationsContainer: {
         marginTop: 30,
@@ -428,6 +431,7 @@ const styles = StyleSheet.create({
     },
     uneContainer: {
         position: 'relative',
+        marginTop: "2%"
     },
     pointsContainer: {
         flexDirection: 'row',
@@ -454,7 +458,7 @@ const styles = StyleSheet.create({
       vipStatus: {
         color: '#008900',
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 16,
         marginLeft: 5,
         marginTop:1, 
       },

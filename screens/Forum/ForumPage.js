@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     tabsContainer: {
         zIndex: 1,
         backgroundColor: 'transparent',
+        marginTop: "-6%"
     },
     newMessageIcon: {
         position: 'absolute',

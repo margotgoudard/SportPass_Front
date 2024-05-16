@@ -75,7 +75,6 @@ export default function Accueil({ navigation }) {
                     {alaUnePublications.length > 0 && (
                         <View style={styles.uneContainer}>
                             <View style={styles.publicationsContainer}>
-                                <Text style={styles.title}>À la Une</Text>
                                 <ScrollView 
                                     horizontal={true}
                                     ref={scrollViewRef}
