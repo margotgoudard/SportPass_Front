@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import ProgressBar from '../../components/ProgressBar';
@@ -147,7 +147,13 @@ export default function PaiementPage({ route, navigation }) {
       <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
         <ScrollView>
           <ProgressBar currentPage={4} />
-          <Text style={styles.totalPriceStyle}>Total à payer : {finalPrice}€</Text>
+          <View style={styles.totalPriceContainer}>
+            <Text style={styles.totalLabel}>Total à payer :  </Text>
+            <Text style={useCashback ? styles.totalPriceBarre : styles.totalPriceStyle}>{totalPrice}€</Text>
+            {useCashback && (
+              <Text style={styles.finalPriceStyle}>{finalPrice}€</Text>
+            )}
+          </View>
           <View style={styles.container}>
             <View style={styles.selectedPlaceDetails}>
               <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
@@ -212,7 +218,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginBottom: 60,
-    marginTop: "12%",
+    marginTop: "2%",
   },
   containerPlace: {
     backgroundColor: '#D9D9D9',
@@ -230,14 +236,33 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginBottom: 5,
   },
+  totalPriceContainer: {
+    position: 'relative',
+    marginTop: "4%",
+    marginLeft: "4%",
+    flexDirection: 'row',
+  },
+  totalLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#BD4F6C',
+  },
   totalPriceStyle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#BD4F6C',
-    position: 'absolute',
-    zIndex: 1,
-    right: 20,
-    top: 150,
+  },
+  totalPriceBarre: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#BD4F6C',
+    textDecorationLine: "line-through",
+  },
+  finalPriceStyle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#BD4F6C',
+    marginLeft: 10,
   },
   detailsContainer: {
     borderRadius: 15,
