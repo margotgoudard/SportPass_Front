@@ -10,6 +10,7 @@ import EditActions from '../../components/EditActionsComponent.js';
 import MessageModal from '../../components/MessageModal.js';
 import ProfileHeader from '../../components/Profil/ProfilHeader.js';
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader';
 
 moment.locale('fr');
 
@@ -29,6 +30,7 @@ const ProfilPage = ({ route }) => {
   const [postComponentVisible, setPostComponentVisible] = useState(false);
   const [followers, setFollowers] = useState([]);
   const [followings, setFollowings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const adjustInputHeight = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
@@ -205,17 +207,20 @@ const ProfilPage = ({ route }) => {
         }
       };
 
+      setLoading(false);
       fetchUserDetails();
       fetchUserPosts();
       fetchUserFollowersAndFollowings();
     }, [userData.idUser])
   );
 
-  if (!user) {
+
+  if (!user || loading) {
     return (
       <ImageBackground source={require('../../assets/background.png')} style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+        <AppLoader/>
+
         </View>
       </ImageBackground>
     );

@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PostClubComponent from '../../components/PostClubComponent'; 
 import PostPartenaireComponent from '../../components/PostPartenaireComponent'; 
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader.js';
 
-const ClubForumPage = ({searchTerm, refreshTrigger}) => {
+const ClubForumPage = ({ searchTerm, refreshTrigger }) => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPosts();
@@ -44,6 +45,7 @@ const ClubForumPage = ({searchTerm, refreshTrigger}) => {
 
   useEffect(() => {
     fetchPosts();
+    setLoading(false);
   }, [reloadKey]);
 
   const interleavePosts = (postsClub, postsPartenaire) => {
@@ -53,48 +55,49 @@ const ClubForumPage = ({searchTerm, refreshTrigger}) => {
       result.push(post);
       if ((index + 1) % 3 === 0 ) {
         result.push(postsPartenaire[partenaireIndex++]);
-      }
-      else if ((index + 1) % 2 === 0 ) {
+      } else if ((index + 1) % 2 === 0 ) {
+        result.push(postsPartenaire[partenaireIndex++]);
+      } else if ((index + 1) % 1 === 0 ) {
         result.push(postsPartenaire[partenaireIndex++]);
       }
-        else  if ((index + 1) % 1 === 0 ) {
-            result.push(postsPartenaire[partenaireIndex++]);
-          }
     });
     return result;
   };
 
   const isPostPartenaire = (post) => {
     if (post) {
-        return post.hasOwnProperty('idPartenaire'); 
+      return post.hasOwnProperty('idPartenaire'); 
     }
   };
 
   const filteredPosts = posts.filter(post => {
     if (post) {
-        const contentMatch = post.contenu ? post.contenu.toLowerCase().includes(searchTerm.toLowerCase()) : false;
-        const titre = isPostPartenaire(post) ? post.Partenaire && post.Partenaire.titre ? post.Partenaire.titre.toLowerCase().includes(searchTerm.toLowerCase()) : false : false;
-        return contentMatch || titre;
+      const contentMatch = post.contenu ? post.contenu.toLowerCase().includes(searchTerm.toLowerCase()) : false;
+      const titre = isPostPartenaire(post) ? post.Partenaire && post.Partenaire.titre ? post.Partenaire.titre.toLowerCase().includes(searchTerm.toLowerCase()) : false : false;
+      return contentMatch || titre;
     }
     return false;
-});
+  });
 
-  
+  if (loading) {
+    return <AppLoader />;
+  }  
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.scrollView}>
         <View style={styles.view}>
           {filteredPosts.map((post, index) => isPostPartenaire(post) ? (
-            <PostPartenaireComponent key={`partenaire-${index}`} post={post} />
+            <PostPartenaireComponent key={`partenaire-${index}`} post={post} style={styles.post} />
           ) : (
             <PostClubComponent
               key={`club-${index}`}
               post={post}
+              style={styles.post}
             />
           ))}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
-    paddingBottom: "20%"
+    paddingBottom: "20%",
   },
   view: {
     margin: "3%"

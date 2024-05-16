@@ -84,6 +84,7 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
     );
 
     return (
+        <View style={styles.firstcontainer}>
         <ImageBackground source={{ uri: post.image }} style={styles.postItem} imageStyle={{ borderRadius: 5 }}>
             <TouchableOpacity onPress={() => navigation.navigate('PostClubDetails', { post })}>
             <View style={styles.container}>
@@ -121,10 +122,14 @@ const PostClubComponent = ({ post, updateTrigger, showDetails = true }) => {
             </View>
             </TouchableOpacity>
         </ImageBackground>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    firstcontainer: {
+        marginTop: 10
+    },
     container: {
         minHeight : 100
     },

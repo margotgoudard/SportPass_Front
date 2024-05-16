@@ -42,7 +42,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
   const renderSelectedPost = () => {
     if (!selectedPost || !blurEffect) return null;
     return (
-      <View>
+      <View style={styles.view}>
         <View style={styles.selectedPostContainer}>
           {PostComponentForumVisible && (
             <PostComponentForum
@@ -218,7 +218,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
     <View style={styles.container}>
          {renderBlurOverlay()}
         {renderSelectedPost()}
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.scrollView}>
         <View style={styles.view}>
           {filteredPosts.map((post, index) => isPostCommercant(post) ? (
             <PostCommercantComponent key={`commercant-${index}`} post={post} />
@@ -232,7 +232,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
             />
           ))}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -247,10 +247,12 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
-    paddingBottom: "20%"
+    paddingBottom: "20%",
+    height: "100%"
   },
   view: {
-    margin: "3%"
+    margin: "3%",
+    zIndex: 3
   },
   blurOverlay: {
     position: 'absolute',

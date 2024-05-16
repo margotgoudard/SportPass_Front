@@ -8,6 +8,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import CheckBox from '../../components/Checkbox';
 import CommercantInfo from '../../components/CommercantInfo';
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader.js';
 
 const CommercantPage = () => {
     const [allCommercants, setAllCommercants] = useState([]);
@@ -23,6 +24,7 @@ const CommercantPage = () => {
     const [cityPickerZIndex, setCityPickerZIndex] = useState(4000);
     const [showFavorites, setShowFavorites] = useState(false);
     const [selectedCommercant, setSelectedCommercant] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getUserId = async () => {
         const idUser = await AsyncStorage.getItem('userId');
@@ -121,6 +123,7 @@ const CommercantPage = () => {
     useEffect(() => {
         applyFilters();
         updateMapRegion(selectedCity);
+        setLoading(false)
     }, [selectedTypeCommercant, selectedCity, applyFilters]);
     
 
@@ -219,6 +222,12 @@ const CommercantPage = () => {
             return () => {};
         }, [initializeMap, fetchCommercants])
     );
+
+    if (loading) {
+        return (
+        <AppLoader/>
+        );
+      }    
 
     return (
         <View style={styles.container}>

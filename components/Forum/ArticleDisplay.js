@@ -7,7 +7,7 @@ const ArticleDisplay = ({ article }) => {
 
     const renderArticle = () => {
         const maxLength = 150; 
-        if (article.length <= maxLength) {
+        if (!article || article == null || article.length <= maxLength) {
             return article;
         } else if (!showFullArticle) {
             return article.slice(0, maxLength) + '...'; 
@@ -19,7 +19,7 @@ const ArticleDisplay = ({ article }) => {
     return (
         <React.Fragment>
             <Text style={styles.articleText}>{renderArticle()}</Text>
-            {article.length > 150 && (
+            {article && article.length > 150 && (
                 <TouchableOpacity style={styles.textContainer} onPress={() => setShowFullArticle(!showFullArticle)}>
                     <MaterialIcons style={styles.logoArrow} name={showFullArticle ? "keyboard-arrow-up" : "keyboard-arrow-down"} size={24} color="#008900" />
                     <Text style={styles.readMoreText}>{showFullArticle ? 'Voir moins' : 'Voir plus'}</Text>

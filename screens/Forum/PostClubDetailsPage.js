@@ -337,6 +337,10 @@ const styles = StyleSheet.create({
         marginBottom: "20%"
 
     },
+    premiercontainer: {
+       marginTop: "-3%"
+
+    },
     backButtonContainer: {
         marginLeft: "4%",
         marginTop: "8%",

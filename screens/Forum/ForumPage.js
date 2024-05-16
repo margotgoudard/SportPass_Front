@@ -1,20 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import ClubPage from './ClubForumPage';
-import CommunautePage from './CommunauteForumPage';
-import { Image, ImageBackground, StyleSheet, View, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, ImageBackground, StyleSheet, View, TextInput, Text, Alert } from 'react-native';
 import { ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MessageModal from '../../components/MessageModal.js';
 import axios from 'axios';
-import { FontAwesome } from '@expo/vector-icons';
+import MessageModal from '../../components/MessageModal.js';
 import URLS from '../../urlConfig.js';
-
-const Tab = createMaterialTopTabNavigator();
+import ClubForumPage from './ClubForumPage.js';
+import CommunauteForumPage from './CommunauteForumPage.js';
 
 const ForumPage = () => {
-
     const [isModalVisible, setModalVisible] = useState(false);
     const [messageText, setMessageText] = useState('');
     const [inputHeight, setInputHeight] = useState(0);
@@ -24,6 +19,7 @@ const ForumPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [refreshing, setRefreshing] = useState(false);
     const [refreshPage, setRefreshPage] = useState(false);
+    const [activePage, setActivePage] = useState('Club'); 
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -40,7 +36,6 @@ const ForumPage = () => {
         setIsBlurEffect(true);
     };
 
-    
     const closeModal = () => {
         setModalVisible(false);
         setIsBlurEffect(false);
@@ -108,83 +103,70 @@ const ForumPage = () => {
             }}
             activeOpacity={1}
         />
-    );
+    );   
+
+    const renderActivePage = () => {
+        if (activePage === 'Club') {
+            return <ClubForumPage searchTerm={searchTerm} refreshTrigger={refreshPage} />;
+        } else {
+            return <CommunauteForumPage searchTerm={searchTerm} refreshTrigger={refreshPage} />;
+        }
+    };
 
     return (
-      
-            <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
-                {renderBlurOverlay()}
-                {renderMessageModal()}
-                <View >
+        <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+            {renderBlurOverlay()}
+            {renderMessageModal()}
                 <View style={styles.logoContainer}>
                     <Image source={require('../../assets/logo.png')} style={styles.logo} />
-
                 </View>
                 <View style={styles.searchContainer}>
-                        <FontAwesome name="search" size={24} color="black" style={styles.searchIcon} />
-                        <TextInput
-                            placeholder="Rechercher ..."
-                            value={searchTerm}
-                            onChangeText={setSearchTerm}
-                            style={styles.searchInput}
-                            placeholderTextColor="gray" 
-                        />
-                    </View>
-                    </View>
-                <ScrollView 
-                style={styles.tabsContainer} 
+                    <FontAwesome name="search" size={24} color="black" style={styles.searchIcon} />
+                    <TextInput
+                        placeholder="Rechercher ..."
+                        value={searchTerm}
+                        onChangeText={setSearchTerm}
+                        style={styles.searchInput}
+                        placeholderTextColor="gray"
+                    />
+                </View>
+                <ScrollView
+                style={styles.tabsContainer}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={onRefresh}
-                        colors={['#BD4F6C', 'green']}  
-                        progressBackgroundColor="#B1B1B1"  
-                        tintColor="#4A90E2" 
-                     />
-                  }
-                >
-                    <Tab.Navigator
-                        screenOptions={{
-                            tabBarStyle: {
-                                elevation: 0, 
-                                shadowOpacity: 0, 
-                                shadowOffset: { height: 0, width: 0 },
-                                shadowRadius: 0,
-                                shadowColor: 'transparent',
-                                height: 40,
-                            },
-                            tabBarLabelStyle: {
-                                fontSize: 13, 
-                                margin: 0, 
-                                paddingBottom: 50,
-                            },
-                            tabBarIndicatorContainerStyle: {
-                                backgroundColor: "#D9D9D9",
-                            },
-                            tabBarActiveTintColor: 'black',
-                            tabBarInactiveTintColor: '#A4A5A2',
-                            tabBarIndicatorStyle: { backgroundColor: '#008900'},
-                        }}
+                        colors={['#BD4F6C', 'green']}
+                        progressBackgroundColor="#B1B1B1"
+                        tintColor="#4A90E2"
+                    />
+                }
+            >
+                <View style={styles.tabButtonsContainer}>
+                    <TouchableOpacity
+                        onPress={() => setActivePage('Club')}
+                        style={[styles.tabButton, activePage === 'Club' && styles.activeTabButton]}
                     >
-                        <Tab.Screen name="Club">
-                            {() => <ClubPage refreshTrigger={refreshPage} searchTerm={searchTerm} key={reloadKey} />}
-                        </Tab.Screen>
-                        <Tab.Screen name="Communaute">
-                            {() => <CommunautePage refreshTrigger={refreshPage} searchTerm={searchTerm} key={reloadKey} />}
-                        </Tab.Screen>
-                    </Tab.Navigator>
-                </ScrollView>
-                <TouchableOpacity
-                        onPress={() => openModal('')}
-                        style={styles.newMessageIcon}
-                    >
-                        <Entypo name="new-message" size={30} color="white" />
+                        <Text style={[styles.tabButtonText, activePage === 'Club' && styles.activeTabButtonText]}>Club</Text>
                     </TouchableOpacity>
-            </ImageBackground>
+                    <TouchableOpacity
+                        onPress={() => setActivePage('Communauté')}
+                        style={[styles.tabButton, activePage === 'Communauté' && styles.activeTabButton]}
+                    >
+                        <Text style={[styles.tabButtonText, activePage === 'Communauté' && styles.activeTabButtonText]}>Communauté</Text>
+                    </TouchableOpacity>
+                </View>
+                {renderActivePage()}
+            </ScrollView>
+            <TouchableOpacity
+                onPress={() => openModal('')}
+                style={styles.newMessageIcon}
+            >
+                <Entypo name="new-message" size={30} color="white" />
+            </TouchableOpacity>
+        </ImageBackground>
     );
-};
-
-
+}    
 
 const styles = StyleSheet.create({
     background: {
@@ -192,7 +174,7 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         marginLeft: "4%",
-        marginTop: "1%",
+        marginTop: "-12%",
     },
     logo: {
         width: "50%",
@@ -201,16 +183,16 @@ const styles = StyleSheet.create({
     },
     tabsContainer: {
         zIndex: 1,
-        marginTop: "-60%", 
         backgroundColor: 'transparent',
     },
     newMessageIcon: {
         position: 'absolute',
-        bottom: 80,
+        bottom: 90,
         right: 20,
         padding: 10,
         borderRadius: 50,
         backgroundColor: "#BD4F6C",
+        zIndex: 7
     },
     blurOverlay: {
         position: 'absolute',
@@ -226,7 +208,7 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         padding: 10,
-        marginTop: "-28%",
+        marginTop: "-76%",
         margin: "4%",
         backgroundColor: "#f0f0f0", 
         marginBottom: "10%",
@@ -246,7 +228,30 @@ const styles = StyleSheet.create({
     },
     searchIcon: {
         marginRight: 10, 
-    }
+    },
+    tabButtonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        zIndex: 6
+    },
+    tabButton: {
+        width: '50%',
+        paddingVertical: 15,
+        backgroundColor: '#D9D9D9',
+        alignItems: 'center',
+        borderBottomWidth: 2, 
+        borderBottomColor: 'transparent', 
+    },
+    activeTabButton: {
+        borderBottomColor: '#008900', 
+    },
+    tabButtonText: {
+        color: 'black', 
+        fontSize: 16,
+    },
+    activeTabButtonText: {
+        color: 'black',
+    },
 });
 
 export default ForumPage;
