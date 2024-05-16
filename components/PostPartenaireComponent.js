@@ -55,11 +55,10 @@ const PostPartnerComponent = ({ post }) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: "3%"
+        marginTop: "2%"
     },
     postItem: {
         padding: 30,
-        marginBottom: 10,
         borderRadius: 8,
     },
     advertisementText: {

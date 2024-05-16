@@ -108,7 +108,7 @@ export default function Navbar() {
   }, [navigation]);
 
   return (
-    <Tab.Navigator screenOptions={screenOptions} >
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="Accueil"
         component={AccueilNavigator}

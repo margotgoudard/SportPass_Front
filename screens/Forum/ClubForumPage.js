@@ -49,20 +49,25 @@ const ClubForumPage = ({ searchTerm, refreshTrigger }) => {
   }, [reloadKey]);
 
   const interleavePosts = (postsClub, postsPartenaire) => {
-    const result = [];
+    let combinedPosts = [];
     let partenaireIndex = 0;
-    postsClub.forEach((post, index) => {
-      result.push(post);
-      if ((index + 1) % 3 === 0 ) {
-        result.push(postsPartenaire[partenaireIndex++]);
-      } else if ((index + 1) % 2 === 0 ) {
-        result.push(postsPartenaire[partenaireIndex++]);
-      } else if ((index + 1) % 1 === 0 ) {
-        result.push(postsPartenaire[partenaireIndex++]);
+  
+    for (let i = 0; i < postsClub.length; i++) {
+      combinedPosts.push(postsClub[i]);
+      if ((i + 1) % 3 === 0 && partenaireIndex < postsPartenaire.length) {
+        combinedPosts.push(postsPartenaire[partenaireIndex]);
+        partenaireIndex++;
       }
-    });
-    return result;
+    }
+  
+    while (partenaireIndex < postsPartenaire.length) {
+      combinedPosts.push(postsPartenaire[partenaireIndex]);
+      partenaireIndex++;
+    }
+  
+    return combinedPosts;
   };
+  
 
   const isPostPartenaire = (post) => {
     if (post) {

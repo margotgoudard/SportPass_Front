@@ -64,7 +64,6 @@ export default function Accueil({ navigation }) {
         );
     }
     
-
     return (
         <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
             <ScrollView>
@@ -88,7 +87,7 @@ export default function Accueil({ navigation }) {
                                                 >   
                                                     <View style={styles.postDetails}>
                                                         <Text style={styles.postContent}>{publication.contenu}</Text>
-                                                        {post.tag !== "" && (
+                                                        {publication.tag !== "" && (
                                                             <View style={styles.tagContainer}>
                                                                 <Text style={styles.tagText}>{publication.tag}</Text>
                                                             </View>
@@ -162,14 +161,20 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         justifyContent: 'center',
     },
+    logo: {
+        width: 150, 
+        height: 150, 
+        resizeMode: 'contain', 
+    },
     logoContainer: {
         justifyContent: 'flex-start', 
         alignItems: 'flex-start',
-        marginTop: 20, 
-        marginLeft: 15,       
+        marginTop: 10, 
+        marginLeft: 15,    
     },
     container: {
         flex: 1,
+        marginTop: "-15%"
     },
     bienvenue: {
         fontSize: 20,

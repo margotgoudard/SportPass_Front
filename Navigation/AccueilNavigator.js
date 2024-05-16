@@ -10,15 +10,15 @@ const Stack = createStackNavigator();
 
 export default function AccueilNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="AccueilPage" 
-        component={Accueil} 
-        options={{ headerShown: false }} 
-      />
+    <Stack.Navigator >
       <Stack.Screen 
         name="AccueilPageNotConnected" 
         component={AccueilPageNotConnected} 
+        options={{ headerShown: false }} 
+      />
+          <Stack.Screen 
+        name="AccueilPage" 
+        component={Accueil} 
         options={{ headerShown: false }} 
       />
     </Stack.Navigator>
