@@ -193,7 +193,7 @@ export default function Accueil({ navigation }) {
                             </View>
                         </View>
                     )}
-                    <TouchableOpacity style={styles.rectangleContainer} onPress={handleBilletteriePress}>
+                    <View style={styles.rectangleContainer}>
                         <View style={styles.greenRectangle}>
                             <Text style={styles.greenText}>1 000 €</Text>
                         </View>
@@ -203,7 +203,7 @@ export default function Accueil({ navigation }) {
                             <Text style={styles.whiteText}> à gagner à chaque mi-temps ! </Text>
                             <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
                         </View>
-                    </TouchableOpacity>
+                    </View>
 
 
                     <View style={styles.partenairesContainer}>  
