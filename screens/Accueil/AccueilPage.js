@@ -173,12 +173,14 @@ export default function Accueil({ navigation }) {
                                                     screen: 'Forum',
                                                     params: { screen: 'PostClubDetails', params: { post } }
                                                     })}>
-                                                <Text style={styles.postContent}>{post.contenu}</Text>
-
-                                                <Image
+                                                    
+                                                <ImageBackground
                                                     source={{ uri: post.image }}
                                                     style={styles.publicationImage} 
-                                                />
+                                                >
+                                                    <Text style={styles.postContent}>{post.contenu}</Text>
+
+                                                </ImageBackground>
 
                                                 </TouchableOpacity>
                                             </View>
@@ -300,11 +302,12 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         borderRadius: 10,
         overflow: 'hidden', 
-        position: 'relative', 
+        position: 'relative',
     },
     publicationImage: {
         width: 342,
         height: 207,
+        flex: 1,
     },
     bandeau: {
         backgroundColor: '#D9D9D9',
@@ -476,5 +479,8 @@ const styles = StyleSheet.create({
         position:'absolute',
         bottom: 10,  
         left: 10,
+        paddingHorizontal: 10, 
+        paddingBottom: 10,
     },
+    
 });
