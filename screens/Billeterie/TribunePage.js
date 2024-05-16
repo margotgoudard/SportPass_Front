@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     position: 'absolute',
-    bottom: 80,
+    bottom: 90,
     right: 15,
     backgroundColor: '#008900',
     paddingLeft: 15,
@@ -197,8 +197,8 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     borderRadius: 10,
-    zIndex:4,
-  },
+    zIndex: 4,
+},
   nextButtonText: {
     color: 'white',
     fontWeight: 'bold',
