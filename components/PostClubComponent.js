@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 5,
         marginTop: "2%",
-        marginRight: "69%"
+        marginRight: "67%"
     },
     tagText: {
         color: 'white',
