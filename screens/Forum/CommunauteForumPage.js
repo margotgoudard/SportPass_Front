@@ -177,22 +177,24 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
   useEffect(() => {
     fetchPosts();
   }, [reloadKey]);
-
+  
   const interleavePosts = (postsUser, postsCommercant) => {
-    const result = [];
+    let result = [];
     let commercantIndex = 0;
-    postsUser.forEach((post, index) => {
-      result.push(post);
-      if ((index + 1) % 3 === 0 ) {
-        result.push(postsCommercant[commercantIndex++]);
+  
+    for (let i = 0; i < postsUser.length; i++) {
+      result.push(postsUser[i]);
+      if ((i + 1) % 3 === 0 && commercantIndex < postsCommercant.length) {
+        result.push(postsCommercant[commercantIndex]);
+        commercantIndex++;
       }
-      else if ((index + 1) % 2 === 0 ) {
-        result.push(postsCommercant[commercantIndex++]);
-      }
-        else  if ((index + 1) % 1 === 0 ) {
-            result.push(postsCommercant[commercantIndex++]);
-          }
-    });
+    }
+  
+    while (commercantIndex < postsCommercant.length) {
+      result.push(postsCommercant[commercantIndex]);
+      commercantIndex++;
+    }
+  
     return result;
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Alert, ImageBackground, Image } from 'react-native';
 import axios from 'axios';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 import URLS from '../../urlConfig.js';
 
@@ -10,15 +10,16 @@ const RegisterPage = () => {
   const [nom, setNom] = useState('');
   const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [idEquipe, setIdEquipe] = useState('');
+  const [idEquipe, setIdEquipe] = useState(null);
   const [equipes, setEquipes] = useState([]);
+  const [open, setOpen] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchEquipes = async () => {
       try {
         const response = await axios.get(`${URLS.url}/equipe`);
-        setEquipes(response.data);
+        setEquipes(response.data.map(equipe => ({ label: equipe.nom, value: equipe.idEquipe })));
       } catch (error) {
         console.error(error);
         Alert.alert("Erreur de chargement", "Les équipes n'ont pas pu être chargées.");
@@ -74,15 +75,17 @@ const RegisterPage = () => {
           secureTextEntry
         />
         <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={idEquipe}
-            onValueChange={(itemValue, itemIndex) => setIdEquipe(itemValue)}
-            style={styles.picker}
-          >
-            {equipes.map((uneEquipe, index) => (
-              <Picker.Item key={index} label={uneEquipe.nom} value={uneEquipe.idEquipe} />
-            ))}
-          </Picker>
+          <DropDownPicker
+            open={open}
+            value={idEquipe}
+            items={equipes}
+            setOpen={setOpen}
+            setValue={setIdEquipe}
+            setItems={setEquipes}
+            placeholder="Sélectionnez une équipe"
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
+          />
         </View>
         <TouchableOpacity onPress={handleRegister} style={styles.buttonContainer}>
           <Text style={styles.buttonText}>S'inscrire</Text>
@@ -102,23 +105,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginBottom: "10%"
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 100
+    marginTop: "20%"
   },
   header: {
     fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 30,
-    marginTop: 50
+    marginTop: "10%"
   },
   input: {
     height: 40,
-    paddingTop:0,
     margin: 10,
+    paddingLeft: 10,
     marginBottom: 12,
-    padding: 10,
     backgroundColor: '#fff',
     borderRadius: 10, 
     borderWidth: 0, 
@@ -143,14 +146,15 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   pickerContainer: {
-    borderRadius: 10, 
-    overflow: 'hidden', 
-    backgroundColor: '#fff',
     margin: 10,
-    height: 40
+    zIndex: 5
   },
-  picker: { 
-    backgroundColor: '#fff', 
+  dropdownContainer: {
+    height: 40,
+  },
+  dropdown: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
   },
 });
 
