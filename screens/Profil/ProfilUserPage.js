@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ImageBackground, Alert, ActivityIndicator} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ImageBackground, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/fr';
 import PostComponent from '../../components/PostComponent.js';
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import URLS from '../../urlConfig.js';
 
@@ -17,6 +17,8 @@ const ProfileUserPage = ({ route }) => {
   const [posts, setPosts] = useState([]);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingsCount, setFollowingsCount] = useState(0);
+  const [followers, setFollowers] = useState([]);
+  const [followings, setFollowings] = useState([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(0);
 
@@ -32,8 +34,7 @@ const ProfileUserPage = ({ route }) => {
       Alert.alert("Erreur", "Impossible de récupérer l'identifiant de l'utilisateur actuel.");
     }
   };
-  
-  
+
   useEffect(() => {
     getCurrentUserId();
   }, []);
@@ -48,7 +49,7 @@ const ProfileUserPage = ({ route }) => {
     }
   };
 
-  const fetchUserPosts = async () => { 
+  const fetchUserPosts = async () => {
     try {
       const response = await axios.get(`${URLS.url}/publicationUser/user/${userData.idUser}`);
       if (response.data.length > 0) {
@@ -68,7 +69,7 @@ const ProfileUserPage = ({ route }) => {
       try {
         await axios.delete(`${URLS.url}/abonnes/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(false);
-        setFollowersCount(followersCount - 1); 
+        setFollowersCount(followersCount - 1);
       } catch (error) {
         console.error(error);
         Alert.alert("Erreur", "Le processus de désabonnement a échoué.");
@@ -77,48 +78,49 @@ const ProfileUserPage = ({ route }) => {
       try {
         await axios.post(`${URLS.url}/abonnes/${currentUserId}/${userData.idUser}`);
         setIsSubscribed(true);
-        setFollowersCount(followersCount + 1); 
+        setFollowersCount(followersCount + 1);
       } catch (error) {
         console.error(error);
         Alert.alert("Erreur", "Le processus d'abonnement a échoué.");
       }
     }
   };
+
   const checkSubscription = async () => {
     try {
-        const response = await axios.get(`${URLS.url}/abonnes/isFollower/${currentUserId}/${userData.idUser}`);
-        setIsSubscribed(response.data);
+      const response = await axios.get(`${URLS.url}/abonnes/isFollower/${currentUserId}/${userData.idUser}`);
+      setIsSubscribed(response.data);
     } catch (error) {
-        console.error("Error checking subscription status:", error);
-        if (error.response) {
-            console.error("Server responded with status:", error.response.status);
-            console.error("Response data:", error.response.data);
-            console.error("Response headers:", error.response.headers);
-        } else if (error.request) {
-            console.error("No response received from the server:", error.request);
-        } else {
-            console.error("Error setting up the request:", error.message);
-        }
-        Alert.alert("Erreur de vérification", "Impossible de vérifier l'état d'abonnement.");
+      console.error("Error checking subscription status:", error);
+      if (error.response) {
+        console.error("Server responded with status:", error.response.status);
+        console.error("Response data:", error.response.data);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+      } else {
+        console.error("Error setting up the request:", error.message);
+      }
+      Alert.alert("Erreur de vérification", "Impossible de vérifier l'état d'abonnement.");
     }
-};
-
+  };
 
   useFocusEffect(
     useCallback(() => {
+      const fetchUserFollowersAndFollowings = async () => {
+        try {
+          const followersResponse = await axios.get(`${URLS.url}/abonnes/followers/${userData.idUser}`);
+          const followingsResponse = await axios.get(`${URLS.url}/abonnes/following/${userData.idUser}`);
+          setFollowersCount(followersResponse.data.length);
+          setFollowingsCount(followingsResponse.data.length);
+          setFollowers(followersResponse.data);
+          setFollowings(followingsResponse.data);
+        } catch (error) {
+          console.error(error);
+          Alert.alert("Erreur de chargement", "Les données d'abonnés n'ont pas pu être chargées.");
+        }
+      };
 
-        const fetchUserFollowersAndFollowings = async () => {
-            try {
-              const followersResponse = await axios.get(`${URLS.url}/abonnes/followers/${userData.idUser}`);
-              const followingsResponse = await axios.get(`${URLS.url}/abonnes/following/${userData.idUser}`);
-              setFollowersCount(followersResponse.data.length);
-              setFollowingsCount(followingsResponse.data.length);
-            } catch (error) {
-              console.error(error);
-              Alert.alert("Erreur de chargement", "Les données d'abonnés n'ont pas pu être chargées.");
-            }
-          };
-      
       getCurrentUserId();
       fetchUserDetails();
       fetchUserPosts();
@@ -142,35 +144,40 @@ const ProfileUserPage = ({ route }) => {
         <AntDesign name="arrowleft" size={26} color="#BD4F6C" />
       </TouchableOpacity>
       <ScrollView style={styles.scrollview}>
-      <View style={styles.headerContainer}>
-            <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
-            <View style={styles.userInfoContainer}>
-                <Text style={styles.bold}>{user.pseudo}</Text>
-                <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
-                <Text style={styles.center}>{user.biographie || "Veuillez saisir votre biographie..."}</Text>
-                <View style={styles.subscriptionContainer}>
-                <View style={styles.followersInfo}>
-                    <Text style={styles.boldNumbers}>{followersCount}</Text>
-                    <Text>abonnés</Text>
-                </View>
-                <View style={styles.followingsInfo}>
-                    <Text style={styles.boldNumbers}>{followingsCount}</Text>
-                    <Text>abonnements</Text>
-                </View>
-                <TouchableOpacity style={isSubscribed ? styles.unsubscribeButton : styles.subscribeButton} onPress={toggleSubscription}>
-                    <Text style={styles.buttonText}>{isSubscribed ? 'Se désabonner' : 'S\'abonner'}</Text>
-                </TouchableOpacity>
-                </View>
-                <View style={styles.postItemList}>
-                    {posts.map((post, index) => (
-                        <PostComponent
-                        key={index}
-                        post={post}
-                        onPostPress={() => navigation.navigate('PostDetails', { post })}
-                        />
-                    ))}
-                </View>
+        <View style={styles.headerContainer}>
+          <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
+          <View style={styles.userInfoContainer}>
+            <Text style={styles.bold}>{user.pseudo}</Text>
+            <View style={styles.teamContainer}>
+              {user.Equipe?.logo && (
+                <Image source={{ uri: user.Equipe.logo }} style={styles.teamLogo} />
+              )}
+              <Text style={styles.teamName}>{user.Equipe?.nom}</Text>
             </View>
+            <Text style={styles.center}>{user.biographie}</Text>
+            <View style={styles.subscriptionContainer}>
+              <TouchableOpacity style={styles.followersInfo} onPress={() =>  navigation.navigate('Navbar', {screen:'Profil', params: { screen: 'AbonnesList', params: { userId: userData.idUser, followers, followings, type: 'followers' }}})}>
+                <Text style={styles.boldNumbers}>{followersCount}</Text>
+                <Text>abonnés</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.followingsInfo} onPress={() => navigation.navigate('Navbar', {screen:'Profil', params: { screen: 'AbonnesList', params: { userId: userData.idUser, followers, followings, type: 'followings' }}})}>
+                <Text style={styles.boldNumbers}>{followingsCount}</Text>
+                <Text>abonnements</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={isSubscribed ? styles.unsubscribeButton : styles.subscribeButton} onPress={toggleSubscription}>
+                <Text style={styles.buttonText}>{isSubscribed ? 'Se désabonner' : 'S\'abonner'}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.postItemList}>
+              {posts.map((post, index) => (
+                <PostComponent
+                  key={index}
+                  post={post}
+                  onPostPress={() => navigation.navigate('PostDetails', { post })}
+                />
+              ))}
+            </View>
+          </View>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -187,20 +194,20 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     padding: 20,
-    paddingTop: 50, 
+    paddingTop: 50,
     marginBottom: "15%"
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    position: 'absolute', 
-    top: 70, 
-    alignSelf: 'center', 
-    zIndex: 1, 
+    position: 'absolute',
+    top: 70,
+    alignSelf: 'center',
+    zIndex: 1,
   },
   userInfoContainer: {
-    width: '112%', 
+    width: '112%',
     backgroundColor: '#D9D9D9',
     borderRadius: 20,
     padding: 20,
@@ -214,31 +221,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
+  teamContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 5
+  },
+  teamLogo: {
+    width: 50,
+    height: 50,
+    marginRight: 10
+  },
   teamName: {
     fontSize: 16,
-    marginBottom: 5,
-    color: '#008900', 
+    color: '#008900',
     fontWeight: 'bold',
-    textAlign: 'center'
   },
   center: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#333333'  
+    color: '#333333'
   },
   boldNumbers: {
     fontWeight: 'bold',
-    marginRight: "5%" 
+    marginRight: "5%"
   },
   backButtonContainer: {
-    marginLeft: "4%",
-    marginTop: "8%",
+    marginLeft: "5%",
+    marginTop: "10%",
     zIndex: 100
   },
   buttonText: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   subscriptionContainer: {
     flexDirection: 'row',
@@ -248,15 +264,15 @@ const styles = StyleSheet.create({
   },
   followersInfo: {
     flex: 1,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   followingsInfo: {
     flex: 1,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   subscribeButton: {
     flex: 1,
@@ -269,10 +285,10 @@ const styles = StyleSheet.create({
   unsubscribeButton: {
     flex: 1,
     backgroundColor: '#5D2E46',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingHorizontal: 22,
+    paddingVertical: 6,
     borderRadius: 15,
-    marginLeft: "8%",
+    marginLeft: "4%",
   },
 });
 

@@ -14,12 +14,12 @@ const AbonnesListPage = ({ route }) => {
   const [currentUserId, setCurrentUserId] = useState(0);
   const [subscriptionStatus, setSubscriptionStatus] = useState({});
 
-  const navigateToProfile = async (follower) => {
+  const navigateToProfile = async (user) => {
     const userId = await getUserId();
-    if (follower.idUser == userId) {
-      navigation.navigate('ProfilPage', { userData: follower });
+    if (user.idUser == userId) {
+      navigation.navigate('ProfilPage', { userData: user });
     } else {
-      navigation.navigate('ProfilUser', { userData: follower });
+      navigation.navigate('ProfilUser', { userData: user });
     }
   };
 
@@ -64,7 +64,7 @@ const AbonnesListPage = ({ route }) => {
     const currentUserId = await AsyncStorage.getItem('userId');
     const newSubscriptionStatus = {};
     try {
-      const responses = await Promise.all(
+      await Promise.all(
         followers.map(async follower => {
           const response = await axios.get(`${URLS.url}/abonnes/isFollower/${currentUserId}/${follower.idUser}`);
           newSubscriptionStatus[follower.idUser] = response.data;
@@ -102,9 +102,11 @@ const AbonnesListPage = ({ route }) => {
               <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
               <Text style={styles.username}>{follower.pseudo}</Text>
             </View>
-            <TouchableOpacity style={subscriptionStatus[follower.idUser] ? styles.unsubscribeButton : styles.subscribeButton} onPress={() => toggleSubscription(follower)}>
-              <Text style={styles.buttonText}>{subscriptionStatus[follower.idUser] ? 'Se désabonner' : 'S\'abonner'}</Text>
-            </TouchableOpacity>
+            {follower.idUser != currentUserId && (
+              <TouchableOpacity style={subscriptionStatus[follower.idUser] ? styles.unsubscribeButton : styles.subscribeButton} onPress={() => toggleSubscription(follower)}>
+                <Text style={styles.buttonText}>{subscriptionStatus[follower.idUser] ? 'Se désabonner' : 'S\'abonner'}</Text>
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         ))}
         {selectedTab === 'followings' && followings.map((following, index) => (
@@ -113,9 +115,11 @@ const AbonnesListPage = ({ route }) => {
               <MaterialCommunityIcons name="account-circle-outline" size={32} color="black" style={styles.postProfileImage} />
               <Text style={styles.username}>{following.pseudo}</Text>
             </View>
-            <TouchableOpacity style={subscriptionStatus[following.idUser] ? styles.unsubscribeButton : styles.subscribeButton} onPress={() => toggleSubscription(following)}>
-              <Text style={styles.buttonText}>{subscriptionStatus[following.idUser] ? 'Se désabonner' : 'S\'abonner'}</Text>
-            </TouchableOpacity>
+            {following.idUser != currentUserId && (
+              <TouchableOpacity style={subscriptionStatus[following.idUser] ? styles.unsubscribeButton : styles.subscribeButton} onPress={() => toggleSubscription(following)}>
+                <Text style={styles.buttonText}>{subscriptionStatus[following.idUser] ? 'Se désabonner' : 'S\'abonner'}</Text>
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         ))}
       </View>
