@@ -7,6 +7,8 @@ import URLS from '../../urlConfig.js';
 import CustomRemainingAmountBar from '../../components/Accueil/CustomRemainingAmountBar';
 import AppLoader from '../../components/AppLoader';
 import Video2 from '../../components/Accueil/Video.js';
+import moment from 'moment';
+
 
 export default function Accueil({ navigation }) {
 
@@ -138,6 +140,99 @@ export default function Accueil({ navigation }) {
         <AppLoader/>
         );
     }
+
+    if(!connected){
+        return(
+            <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
+            <ScrollView>
+                <View style={styles.logoContainer}>
+                    <Image source={require('../../assets/logo.png')} style={styles.logo} />
+                </View>
+                <View style={styles.container}>
+                    {alaUnePublications.length > 0 && (
+                        <View style={styles.uneContainer}>
+                            <View style={styles.publicationsContainerNotConnecter}>
+                                <Text style={styles.title}>À la Une</Text>
+                                <ScrollView 
+                                    horizontal={true}
+                                    ref={scrollViewRef}
+                                    pagingEnabled={true}
+                                >
+                                    {alaUnePublications.map((publication, index) => (
+                                        <View key={index} style={styles.imageContainer}>
+                                             <ImageBackground
+                                                    source={{ uri: publication.image }}
+                                                    style={styles.publicationImage} 
+                                                >   
+                                                    <View style={styles.postDetails}>
+                                                        <Text style={styles.postContent}>{publication.contenu}</Text>
+                                                        {publication.tag !== "" && (
+                                                            <View style={styles.tagContainer}>
+                                                                <Text style={styles.tagText}>{publication.tag}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                    <Text style={styles.postTime}>{moment(publication.date).fromNow()}</Text>
+                                                   
+
+                                                </ImageBackground>
+                                        </View>
+                                    ))} 
+                                </ScrollView>
+                            </View>
+                            <View style={styles.bandeau}></View>
+                            <View style={styles.pointsContainer}>
+                                {alaUnePublications.map((publication, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.pointNavigation}
+                                        onPress={() => scrollToPublication(index)}
+                                    >
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+                    <TouchableOpacity style={styles.rectangleContainer} onPress={handleBilletteriePress}>
+                        <View style={styles.greenRectangle}>
+                            <Text style={styles.greenText}>1 000 €</Text>
+                        </View>
+                        <View style={styles.whiteRectangle}>
+                        <Image source={require('../../assets/logo_carre.png')} style={styles.logoInRectangle} />
+
+                            <Text style={styles.whiteText}> à gagner à chaque mi-temps ! </Text>
+                            <Text style={styles.whiteText2}> Tente ta chance en prenant ton billet sur SportPass </Text>                            
+                        </View>
+                    </TouchableOpacity>
+
+
+                    <View style={styles.partenairesContainer}>  
+                        <Text style={styles.titlePartenaire}>Nos partenaires</Text>
+                        <ScrollView horizontal={true}>
+                            {partenaires.map((partenaire, index) => (
+                                <TouchableOpacity 
+                                    key={index} 
+                                    style={styles.partenaireItem}
+                                    onPress={() => handlePartenairePress(partenaire.site)}
+                                >
+                                    <Image source={{ uri: partenaire.logo }} style={styles.partenaireLogo} />
+                                    <Text style={styles.partenaireNom}>{partenaire.nom}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    <View style={styles.videoContainer}>
+                        <Video2/>
+                    </View>
+
+                </View>
+
+                
+            </ScrollView>
+        </ImageBackground>
+        );
+    }
     
 
     return (
@@ -173,14 +268,25 @@ export default function Accueil({ navigation }) {
                                                     screen: 'Forum',
                                                     params: { screen: 'PostClubDetails', params: { post } }
                                                     })}>
-                                                <Text style={styles.postContent}>{post.contenu}</Text>
-
-                                                <Image
+                                                   
+                                                <ImageBackground
                                                     source={{ uri: post.image }}
                                                     style={styles.publicationImage} 
-                                                />
+                                                >   
+                                                    <View style={styles.postDetails}>
+                                                        <Text style={styles.postContent}>{post.contenu}</Text>
+                                                        {post.tag !== "" && (
+                                                            <View style={styles.tagContainer}>
+                                                                <Text style={styles.tagText}>{post.tag}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                    <Text style={styles.postTime}>{moment(post.date).fromNow()}</Text>
+                                                </ImageBackground>
 
                                                 </TouchableOpacity>
+
+
                                             </View>
                                     ))} 
                                 </ScrollView>
@@ -286,6 +392,10 @@ const styles = StyleSheet.create({
         marginTop: 30,
         zIndex: 1, 
     },
+    publicationsContainerNotConnecter: {
+        marginTop: 10,
+        zIndex: 1, 
+    },
     title: {
         fontSize: 18,
         marginBottom: 10,
@@ -300,11 +410,12 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         borderRadius: 10,
         overflow: 'hidden', 
-        position: 'relative', 
+        position: 'relative',
     },
     publicationImage: {
         width: 342,
         height: 207,
+        flex: 1,
     },
     bandeau: {
         backgroundColor: '#D9D9D9',
@@ -472,9 +583,39 @@ const styles = StyleSheet.create({
     postContent: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 18,
+        
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    postTime: {
+        position: "absolute",
+        top: 8,
+        right : 8,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', 
+        textShadowOffset: { width: 2, height: 2 }, 
+        textShadowRadius: 5, 
+    },
+    tagContainer: {
+        backgroundColor: '#BD4F6C',
+        padding: 5,
+        borderRadius: 5,
+        position:'relative',
+        marginLeft: "62%",
+        marginRight:"2%"
+       
+    },
+    tagText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    postDetails:{
         position:'absolute',
         bottom: 10,  
         left: 10,
-    },
+        paddingHorizontal: 10, 
+        paddingBottom: 10,
+    }
 });
