@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop: "-15%"
+        marginTop: "-15%",
+        paddingBottom: 20
     },
     bienvenue: {
         fontSize: 20,

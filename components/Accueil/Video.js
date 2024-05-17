@@ -59,7 +59,7 @@ export default class Video2 extends Component {
             <View style={styles.container}>
                 <Video
                     ref={this.videoRef}
-                    source={{ uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' }}
+                    source={require('../../assets/pub.mp4')}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}

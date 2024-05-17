@@ -258,7 +258,6 @@ export default function Accueil({ navigation }) {
                         ))}
                         </ScrollView>
                     </View>
-
                 <View style={styles.videoContainer}>
                     <Video2/>
                 </View>
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: "-12%",
-        paddingBottom: 10
+        paddingBottom: 90
     },
     palierImage: {
         marginTop: "-3%"
@@ -489,7 +488,6 @@ const styles = StyleSheet.create({
     },
     videoContainer:{
         marginTop:5,
-        marginBottom: 80,
     },
     postContent: {
         color: 'white',
