@@ -99,6 +99,7 @@ const ClubForumPage = ({ searchTerm, refreshTrigger }) => {
               key={`club-${index}`}
               post={post}
               style={styles.post}
+              updateTrigger={refreshTrigger}
             />
           ))}
         </View>

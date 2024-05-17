@@ -228,6 +228,7 @@ const CommunauteForumPage = ({searchTerm, refreshTrigger}) => {
             <PostComponentForum
               key={`user-${index}`}
               post={post}
+              updateTrigger={refreshTrigger}
               onPostPress={() => navigation.navigate('PostDetails', { post })}
               onLongPress={() => user.idUser === post.idUser ? handleLongPressOnPost(post) : null}
               showDetails={true}
