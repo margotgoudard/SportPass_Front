@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#f0f0f5',
       padding: 20,
+      marginBottom: 80
     },
     center: {
       flex: 1,

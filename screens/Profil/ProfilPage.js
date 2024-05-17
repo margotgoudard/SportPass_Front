@@ -358,7 +358,8 @@ const styles = StyleSheet.create({
     color: 'grey', 
   },
   postItemList: {
-    width: '100%'
+    width: '100%',
+    marginBottom: 20
   },
   topBar: {
     position: 'absolute',
