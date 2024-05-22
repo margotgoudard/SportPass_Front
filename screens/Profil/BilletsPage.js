@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader.js';
 
 
 const Billet = ({ route, navigation }) => {
@@ -83,9 +84,7 @@ const Billet = ({ route, navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
+      <AppLoader/>
     );
   }
 

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader.js';
 
 
 const Pass = ({ route, navigation }) => {
@@ -74,9 +75,7 @@ const Pass = ({ route, navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
+        <AppLoader/>
     );
   }
 

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, ImageBackground, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, ScrollView, ImageBackground, Alert, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
 import CommercantInfo from '../../components/CommercantInfo';
 import URLS from '../../urlConfig.js';
+import AppLoader from '../../components/AppLoader.js';
 
 const CommercantFavoris = ({ route, navigation }) => {
   const { userId } = route.params;
   const [favorites, setFavorites] = useState([]);
   const [userInfo, setUserInfo] = useState();
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     fetchData();
@@ -35,7 +38,9 @@ const CommercantFavoris = ({ route, navigation }) => {
     } catch (error) {
         console.error('Error fetching data:', error);
         Alert.alert("Erreur", "Impossible de charger les données.");
-    }
+  } finally {
+    setLoading(false);
+  }
 };
 
 
@@ -55,7 +60,11 @@ const toggleFavorite = (commercant) => {
     console.error('Error updating favorite status:', error);
   }
 };
-
+  if (loading) {
+    return (
+        <AppLoader/>
+    );
+  }
 
 
   return (
@@ -64,13 +73,17 @@ const toggleFavorite = (commercant) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
           <AntDesign name="arrowleft" size={26} color="#BD4F6C" />
         </TouchableOpacity>
-        {favorites.map((favorite, index) => (
+        {favorites.length > 0 ? (
+        favorites.map((favorite, index) => (
             <CommercantInfo
             key={favorite.idCommercant}
             selectedCommercant={favorite}
             toggleFavorite={toggleFavorite}
             />
-        ))}
+        ))
+      ) : (
+        <Text style={styles.noAbonnementText}>Pas de favoris.</Text>
+      )}
       </ScrollView>
     </ImageBackground>
   );
@@ -82,8 +95,12 @@ const styles = StyleSheet.create({
   },
   backButtonContainer: {
     marginLeft: "4%",
-    marginTop: "8%",
-  }
+    marginTop: "12%",
+  },
+  noAbonnementText: {
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
 
 export default CommercantFavoris;
