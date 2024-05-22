@@ -56,7 +56,7 @@ export default function Accueil({ navigation }) {
                     const alaUnePublications = alaUneResponse.data;
                     setAlaUnePublications(alaUnePublications);
 
-                    const response = await axios.get('http://10.0.2.2:4000/api/partenaire');
+                    const response = await axios.get(`${URLS.url}/partenaire`);
                     const partenairesData = response.data;
                     setPartenaires(partenairesData);
                     return;
@@ -150,7 +150,7 @@ export default function Accueil({ navigation }) {
                     {userFirstName && (
                         <View>
                         <Text style={styles.bienvenue}>
-                            Bonjour, {userFirstName} !
+                            Bonjour, {userFirstName} 
                         </Text>
                         <View style={styles.vipStatusContainer}>
                         <Text style={styles.vipStatus}> {userPalier} </Text>
