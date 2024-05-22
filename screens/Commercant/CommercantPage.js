@@ -262,6 +262,7 @@ const CommercantPage = () => {
                 textStyle={{ fontSize: 16, fontWeight: "bold" }}
                 dropDownContainerStyle={styles.list}
             />
+            <View style={styles.checkboxContainer2}>
             <CheckBox
                 text="Afficher seulement mes favoris"
                 onPress={() => setShowFavorites(!showFavorites)}
@@ -270,6 +271,7 @@ const CommercantPage = () => {
                 textStyle={styles.checkboxText}
                 checkboxStyle={styles.checkbox}
             />
+            </View>
             </View>
             <View style={styles.map}>
                 {region && (
@@ -333,7 +335,14 @@ const styles = StyleSheet.create({
         borderWidth: 0,
     },
     checkboxText: {
-        color: "white"
+        color: "black",
+        marginRight:15,
+    },
+    checkboxContainer2 : {
+        backgroundColor:"#D9D9D9",
+        paddingVertical:5,
+        paddingHorizontal:10,
+        borderRadius:10,
     }
 });
 
