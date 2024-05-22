@@ -143,7 +143,7 @@ const ProfileUserPage = ({ route }) => {
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
         <AntDesign name="arrowleft" size={26} color="#BD4F6C" />
       </TouchableOpacity>
-      <ScrollView style={styles.scrollview}>
+      <ScrollView>
         <View style={styles.headerContainer}>
           <Image source={require('../../assets/avatar.png')} style={styles.avatar} />
           <View style={styles.userInfoContainer}>
@@ -188,9 +188,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollview: {
-    marginTop: "-15%"
-  },
+  
   headerContainer: {
     alignItems: 'center',
     padding: 20,
@@ -202,7 +200,6 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     position: 'absolute',
-    top: 70,
     alignSelf: 'center',
     zIndex: 1,
   },
@@ -212,7 +209,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     paddingTop: 60,
-    marginTop: 70,
     position: 'relative',
   },
   bold: {
@@ -248,7 +244,7 @@ const styles = StyleSheet.create({
   },
   backButtonContainer: {
     marginLeft: "5%",
-    marginTop: "10%",
+    marginTop: "15%",
     zIndex: 100
   },
   buttonText: {

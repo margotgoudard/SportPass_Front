@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     borderRadius: 20,
     padding: 20,
-    marginTop: 100,
+    marginTop: 120,
     position: 'relative',
     marginBottom: "11%"
   },
@@ -364,8 +364,8 @@ const styles = StyleSheet.create({
   topBar: {
     position: 'absolute',
     top: 40,
-    left: 20,
-    right: 20, 
+    left: 15,
+    right: 15, 
     flexDirection: 'row',
     justifyContent: 'space-between', 
     alignItems: 'center', 
@@ -373,12 +373,15 @@ const styles = StyleSheet.create({
   logoutText: {
     color: '#BD4F6C',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    marginTop:20,
   },
   editProfileText: {
     color: '#008900',
     fontWeight: 'bold',
     fontSize: 16,
+    marginTop:20,
+
   },
   loadingContainer: {
     flex: 1,
