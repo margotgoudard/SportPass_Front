@@ -109,7 +109,7 @@ export default function Accueil({ navigation }) {
 
     const scrollToPublication = (index) => {
         if (scrollViewRef.current) {
-            const offset = index * (342 + 15); 
+            const offset = index * (342+15); 
             scrollViewRef.current.scrollTo({ x: offset, animated: true });
         }
     };
@@ -164,7 +164,7 @@ export default function Accueil({ navigation }) {
                                 <ScrollView 
                                     horizontal={true}
                                     ref={scrollViewRef}
-                                    pagingEnabled={true}
+                                    pagingEnabled={false}
                                 >
                                     {alaUnePublications.map((post, index) => (
                                             <View key={index} style={styles.imageContainer}>
