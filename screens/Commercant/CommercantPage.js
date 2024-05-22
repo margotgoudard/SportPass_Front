@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     },
     checkboxText: {
         color: "black",
-        marginRight:15,
+        marginRight:20,
     },
     checkboxContainer2 : {
         backgroundColor:"#D9D9D9",
