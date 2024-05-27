@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import AppLoader from '../../components/AppLoader';
 import ProgressBar from '../../components/ProgressBar';
 import { StripeProvider, CardForm, useConfirmPayment, useStripe } from '@stripe/stripe-react-native';
@@ -145,66 +145,71 @@ export default function PaiementPage({ route, navigation }) {
   return (
     <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY}>
       <ImageBackground source={require('../../assets/background.png')} style={styles.background}>
-        <ScrollView>
-          <ProgressBar currentPage={4} />
-          <View style={styles.totalPriceContainer}>
-            <Text style={styles.totalLabel}>Total à payer :  </Text>
-            <Text style={useCashback ? styles.totalPriceBarre : styles.totalPriceStyle}>{totalPrice}€</Text>
-            {useCashback && (
-              <Text style={styles.finalPriceStyle}>{finalPrice}€</Text>
-            )}
-          </View>
-          <View style={styles.container}>
-            <View style={styles.selectedPlaceDetails}>
-              <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
-              <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billet(s)</Text>
-              {selectedPlaces.map((place, index) => (
-                <View key={index} style={styles.containerPlace}>
-                  <View style={styles.Detcontainer}>
-                    <View style={styles.detailsContainer}>
-                      <View style={styles.textContainer}>
-                        <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero}</Text>
-                        <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+        >
+          <ScrollView>
+            <ProgressBar currentPage={4} />
+            <View style={styles.totalPriceContainer}>
+              <Text style={styles.totalLabel}>Total à payer :  </Text>
+              <Text style={useCashback ? styles.totalPriceBarre : styles.totalPriceStyle}>{totalPrice}€</Text>
+              {useCashback && (
+                <Text style={styles.finalPriceStyle}>{finalPrice}€</Text>
+              )}
+            </View>
+            <View style={styles.container}>
+              <View style={styles.selectedPlaceDetails}>
+                <Text style={styles.textTribune}>{selectedTribune.nom}</Text>
+                <Text style={styles.nombreBilletStyle}>{selectedPlaces.length} billet(s)</Text>
+                {selectedPlaces.map((place, index) => (
+                  <View key={index} style={styles.containerPlace}>
+                    <View style={styles.Detcontainer}>
+                      <View style={styles.detailsContainer}>
+                        <View style={styles.textContainer}>
+                          <Text style={styles.textPlace}>Rang {place.numRangee} - Siège {place.numero}</Text>
+                          <Text style={styles.textPrix}>{place.type} - {place.price}€</Text>
+                        </View>
+                        <Text style={styles.textGuestInfo}>Titulaire - {place.guestPrenom} {place.guestNom}</Text>
                       </View>
-                      <Text style={styles.textGuestInfo}>Titulaire - {place.guestPrenom} {place.guestNom}</Text>
                     </View>
                   </View>
-                </View>
-              ))}
+                ))}
+              </View>
+              <Text style={styles.cashbackText}>Montant du cashback : {cashback.toFixed(2)}€</Text>
+              <Checkbox
+                text="Utiliser le cashback"
+                isChecked={useCashback}
+                onPress={() => setUseCashback(!useCashback)}
+                containerStyle={styles.checkboxContainer}
+                textStyle={styles.checkboxText}
+                checkboxStyle={styles.checkbox}
+              />
+              <CardForm
+                style={styles.cardForm}
+                onFormComplete={(cardDetails) => setCardDetails(cardDetails)}
+                cardStyle={{
+                  backgroundColor: '#FFFFFF',
+                  textColor: '#000000',
+                }}
+                placeholder={{
+                  number: 'Numéro de carte',
+                }}
+                defaultValues={{
+                  country: 'FR',
+                }}
+                language="fr"
+              />
+              <TouchableOpacity
+                style={styles.payButton}
+                onPress={handlePayment}
+                disabled={!cardDetails.complete}
+              >
+                <Text style={styles.payButtonText}>Payer</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.cashbackText}>Montant du cashback : {cashback.toFixed(2)}€</Text>
-            <Checkbox
-              text="Utiliser le cashback"
-              isChecked={useCashback}
-              onPress={() => setUseCashback(!useCashback)}
-              containerStyle={styles.checkboxContainer}
-              textStyle={styles.checkboxText}
-              checkboxStyle={styles.checkbox}
-            />
-            <CardForm
-              style={styles.cardForm}
-              onFormComplete={(cardDetails) => setCardDetails(cardDetails)}
-              cardStyle={{
-                backgroundColor: '#FFFFFF',
-                textColor: '#000000',
-              }}
-              placeholder={{
-                number: 'Numéro de carte',
-              }}
-              defaultValues={{
-                country: 'FR',
-              }}
-              language="fr"
-            />
-            <TouchableOpacity
-              style={styles.payButton}
-              onPress={handlePayment}
-              disabled={!cardDetails.complete}
-            >
-              <Text style={styles.payButtonText}>Payer</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </ImageBackground>
     </StripeProvider>
   );
